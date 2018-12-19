@@ -51,8 +51,7 @@ class Installer:
                    
         variables = {
             'app_dir': self.app_dir,
-            'app_data_dir': self.app_data_dir,
-            'db_psql_port': PSQL_PORT
+            'app_data_dir': self.app_data_dir
         }
         gen.generate_files(templates_path, config_path, variables)
 
@@ -78,9 +77,9 @@ class Installer:
     def database_init(self):
         
         if not isdir(self.database_path):
-            initdb_cmd = '{0}/mariadb/scripts/mysql_install_db --user={1} --basedir={0}/mariadb --datadir={2}'.format(self.app_dir, user, self.database_path)
+            initdb_cmd = '{0}/mariadb/scripts/mysql_install_db --user={1} --basedir={0}/mariadb --datadir={2}'.format(self.app_dir, DB_USER, self.database_path)
             check_output(initdb_cmd, shell=True)
         else:
-            self.logger.info('Database path "{0}" already exists'.format(database_path))
+            self.logger.info('Database path "{0}" already exists'.format(self.database_path))
 
 
