@@ -7,7 +7,7 @@ if [[ -z "$1" ]]; then
     exit 1
 fi
 
-export LD_LIBRARY_PATH=${DIR}/php/lib:${DIR}/postgresql/lib
+export LD_LIBRARY_PATH=${DIR}/php/lib:${DIR}/mariadb/lib
 
 case $1 in
 start)
