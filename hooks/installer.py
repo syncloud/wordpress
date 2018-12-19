@@ -59,7 +59,7 @@ class Installer:
 
     def install(self):
         self.install_config()
-        self.database_init(self.log, self.app_dir, self.app_data_dir, USER_NAME)
+        self.database_init()
         
     def configure(self):
         self.prepare_storage()
