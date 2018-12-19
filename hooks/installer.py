@@ -43,7 +43,10 @@ class Installer:
 
         home_folder = join('/home', USER_NAME)
         linux.useradd(USER_NAME, home_folder=home_folder)
-
+        
+        fs.makepath(join(self.app_data_dir, 'log'))
+        fs.makepath(join(self.app_data_dir, 'nginx'))
+        
         storage.init_storage(APP_NAME, USER_NAME)
 
         templates_path = join(self.app_dir, 'config.templates')
