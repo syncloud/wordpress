@@ -42,7 +42,7 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir, 
     run_ssh(device_host, 'cp /var/log/syslog {0}/syslog.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)
     run_ssh(device_host, 'cp /var/log/messages {0}/messages.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
     run_ssh(device_host, 'ls -la /snap > {0}/snap.ls.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
-    run_ssh(device_host, 'ls -la /snap/{0} > {1}/snap.{0}.ls.log'.format(app, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
+    run_ssh(device_host, 'ls -la /snap/{0}/ > {1}/snap.{0}.ls.log'.format(app, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
 
     app_log_dir  = join(log_dir, 'log')
     os.mkdir(app_log_dir )
