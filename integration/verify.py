@@ -93,11 +93,6 @@ def test_install(app_archive_path, device_host, app_domain, device_password):
     local_install(device_host, device_password, app_archive_path)
     wait_for_rest(requests.session(), app_domain, '/', 200, 500)
 
-
-def test_mongo_config(device_host, app_dir, data_dir, device_password):
-    run_scp('{0}/mongodb.config.dump.js root@{1}:/'.format(DIR, device_host), password=device_password, throw=False)
-    run_ssh(device_host, '{0}/mongodb/bin/mongo /mongodb.config.dump.js > {1}/log/mongo.config.dump.log'.format(app_dir, data_dir), password=device_password, throw=False)
-
 def test_storage_change(device_host, app_dir, data_dir, device_password):
     run_ssh(device_host, 'SNAP_COMMON={1} {0}/hooks/storage-change > {1}/log/storage-change.log'.format(app_dir, data_dir), password=device_password, throw=False)
 
