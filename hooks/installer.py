@@ -83,6 +83,6 @@ class Installer:
             initdb_cmd = '{0}/mariadb/scripts/mysql_install_db --user={1} --basedir={0}/mariadb --datadir={2}'.format(self.app_dir, DB_USER, self.database_path)
             check_output(initdb_cmd, shell=True)
         else:
-            self.logger.info('Database path "{0}" already exists'.format(self.database_path))
+            self.log.info('Database path "{0}" already exists'.format(self.database_path))
 
 
