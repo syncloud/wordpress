@@ -53,6 +53,7 @@ class Installer:
         config_path = join(self.app_data_dir, 'config')
                    
         variables = {
+            'app': APP_NAME,
             'app_dir': self.app_dir,
             'app_data_dir': self.app_data_dir
         }
