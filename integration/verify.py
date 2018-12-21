@@ -91,7 +91,7 @@ def test_activate_device(main_domain, device_host, domain, device_user, device_p
 
 def test_install(app_archive_path, device_host, app_domain, device_password):
     local_install(device_host, device_password, app_archive_path)
-    wait_for_rest(requests.session(), app_domain, '/', 200, 500)
+    wait_for_rest(requests.session(), app_domain, '/', 200, 50)
 
 def test_storage_change(device_host, app_dir, data_dir, device_password):
     run_ssh(device_host, 'SNAP_COMMON={1} {0}/hooks/storage-change > {1}/log/storage-change.log'.format(app_dir, data_dir), password=device_password, throw=False)
