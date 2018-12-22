@@ -25,11 +25,11 @@ TMP_DIR = '/tmp/syncloud'
 
 
 @pytest.fixture(scope="session")
-def module_setup(request, device_host, data_dir, platform_data_dir, app_dir, log_dir, app):
-    request.addfinalizer(lambda: module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir, app))
+def module_setup(request, device_host, data_dir, platform_data_dir, app_dir, log_dir, app, data_dir):
+    request.addfinalizer(lambda: module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir, app, data_dir))
 
 
-def module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir, app):
+def module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir, app, data_dir):
     platform_log_dir = join(log_dir, 'platform_log')
     os.mkdir(platform_log_dir)
     run_scp('root@{0}:{1}/log/* {2}'.format(device_host, platform_data_dir, platform_log_dir), password=LOGS_SSH_PASSWORD, throw=False)
@@ -43,7 +43,8 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir, 
     run_ssh(device_host, 'cp {0}/database/*.err {1}/'.format(data_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)
     run_ssh(device_host, 'cp /var/log/messages {0}/messages.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
     run_ssh(device_host, 'ls -la /snap > {0}/snap.ls.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
-    run_ssh(device_host, 'ls -la /snap/{0}/ > {1}/snap.{0}.ls.log'.format(app, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
+    run_ssh(device_host, 'ls -la {0}/ > {1}/app.ls.log'.format(app_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
+    run_ssh(device_host, 'ls -la {0}/ > {1}/data.ls.log'.format(data_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
 
     app_log_dir  = join(log_dir, 'log')
     os.mkdir(app_log_dir )
