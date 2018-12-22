@@ -25,11 +25,11 @@ TMP_DIR = '/tmp/syncloud'
 
 
 @pytest.fixture(scope="session")
-def module_setup(request, device_host, data_dir, platform_data_dir, app_dir, log_dir, app, data_dir):
-    request.addfinalizer(lambda: module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir, app, data_dir))
+def module_setup(request, device_host, data_dir, platform_data_dir, app_dir, log_dir, app):
+    request.addfinalizer(lambda: module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir, app))
 
 
-def module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir, app, data_dir):
+def module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir, app):
     platform_log_dir = join(log_dir, 'platform_log')
     os.mkdir(platform_log_dir)
     run_scp('root@{0}:{1}/log/* {2}'.format(device_host, platform_data_dir, platform_log_dir), password=LOGS_SSH_PASSWORD, throw=False)
