@@ -59,11 +59,13 @@ class Installer:
         }
         gen.generate_files(templates_path, config_path, variables)
 
-        fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
-
+        
     def install(self):
         self.install_config()
         self.database_init()
+        
+        fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
+
         
     def configure(self):
         self.prepare_storage()
