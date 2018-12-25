@@ -9,11 +9,9 @@ fi
 
 case $1 in
 start)
-    exec ${DIR}/mariadb/support-files/mysql.server start
+    exec ${DIR}/mariadb/mysqld --basedir=$SNAP/mariadb --datadir=$SNAP_COMMON/database --plugin-dir=$SNAP/mariadb/lib/plugin --log-error=$SNAP_COMMON/log/mariadb.err.log --pid-file=$SNAP_COMMON/database/mariadb.pid
     ;;
-stop)
-    exec ${DIR}/mariadb/support-files/mysql.server stop
-    ;;
+
 *)
     echo "not valid command"
     exit 1
