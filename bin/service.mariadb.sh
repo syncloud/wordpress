@@ -9,6 +9,7 @@ fi
 
 case $1 in
 start)
+    export MYSQL_HOME=$SNAP_COMMON/config
     exec ${DIR}/mariadb/bin/mysqld --basedir=$SNAP/mariadb --datadir=$SNAP_COMMON/database --plugin-dir=$SNAP/mariadb/lib/plugin --log-error=$SNAP_COMMON/log/mariadb.err.log --pid-file=$SNAP_COMMON/database/mariadb.pid
     ;;
 
