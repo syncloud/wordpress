@@ -9,7 +9,7 @@ fi
 
 case $1 in
 start)
-    exec ${DIR}/mariadb/mysqld --basedir=$SNAP/mariadb --datadir=$SNAP_COMMON/database --plugin-dir=$SNAP/mariadb/lib/plugin --log-error=$SNAP_COMMON/log/mariadb.err.log --pid-file=$SNAP_COMMON/database/mariadb.pid
+    exec ${DIR}/mariadb/bin/mysqld --basedir=$SNAP/mariadb --datadir=$SNAP_COMMON/database --plugin-dir=$SNAP/mariadb/lib/plugin --log-error=$SNAP_COMMON/log/mariadb.err.log --pid-file=$SNAP_COMMON/database/mariadb.pid
     ;;
 
 *)
