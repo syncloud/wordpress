@@ -25,6 +25,15 @@ def test_start(app, device_host):
 
     add_host_alias(app, device_host)
     
+def test_install(driver, app_domain):
+
+    driver.get("https://{0}/wp-admon/install.php".format(app_domain))
+    time.sleep(10)
+    print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
+    screenshots(driver, screenshot_dir, 'install')
+    print(driver.page_source.encode('utf-8'))
+
+
 def test_index(driver, app_domain):
 
     driver.get("https://{0}".format(app_domain))
