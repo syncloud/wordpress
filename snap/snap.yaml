@@ -2,7 +2,7 @@ apps:
   mariadb:
     user: wordpress
     command: bin/service.mariadb.sh start
-    daemon: simple
+    daemon: notify
     plugs:
     - network
     - network-bind
