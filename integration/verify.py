@@ -96,6 +96,13 @@ def test_install(app_archive_path, device_host, app_domain, device_password):
     local_install(device_host, device_password, app_archive_path)
     wait_for_rest(requests.session(), app_domain, '/', 200, 50)
 
+def test_index(app_domain):
+
+    response = requests.get('https://{0}/index.php'.format(app_domain))
+                             
+    assert response.status_code == 200, response.text
+
+
 def test_storage_change(device_host, app_dir, data_dir, device_password):
     run_ssh(device_host, 'SNAP_COMMON={1} {0}/hooks/storage-change > {1}/log/storage-change.log'.format(app_dir, data_dir), password=device_password, throw=False)
 
