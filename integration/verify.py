@@ -46,6 +46,7 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir, 
     run_ssh(device_host, 'ls -la {0}/ > {1}/app.ls.log'.format(app_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
     run_ssh(device_host, 'ls -la {0}/ > {1}/data.ls.log'.format(data_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
     run_ssh(device_host, 'ls -la {0}/database/ > {1}/database.ls.log'.format(data_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
+    run_ssh(device_host, 'ls -la {0}/wordpress/ > {1}/wordpress.ls.log'.format(app_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
 
     app_log_dir  = join(log_dir, 'log')
     os.mkdir(app_log_dir )
@@ -94,7 +95,7 @@ def test_activate_device(main_domain, device_host, domain, device_user, device_p
 
 def test_install(app_archive_path, device_host, app_domain, device_password):
     local_install(device_host, device_password, app_archive_path)
-    wait_for_rest(requests.session(), app_domain, '/', 200, 50)
+    wait_for_rest(requests.session(), app_domain, '/', 200, 10)
 
 def test_index(app_domain):
 
