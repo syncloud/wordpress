@@ -98,7 +98,7 @@ def test_install(app_archive_path, device_host, app_domain, device_password):
 
 def test_index(app_domain):
 
-    response = requests.get('https://{0}/index.php'.format(app_domain))
+    response = requests.get('https://{0}/index.php'.format(app_domain), verify=False)
                              
     assert response.status_code == 200, response.text
 
