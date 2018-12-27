@@ -41,7 +41,7 @@ cd ${BUILD_DIR}/wordpress
 
 for f in ${DIR}/patches/*.patch
 do
-  patch -p1 < $f
+  patch -p0 < $f
 done
 
 cd ${DIR}
