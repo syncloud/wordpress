@@ -32,17 +32,17 @@ coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/python-${ARCH}.tar.gz
 
 mv ${BUILD_DIR}/php7 ${BUILD_DIR}/php
 
-sed -i 's#^basedir=.*#basedir=$SNAP/mariadb#g' ${BUILD_DIR}/mariadb/support-files/mysql.server
-sed -i 's#^datadir=.*#datadir=$SNAP_COMMON/database#g' ${BUILD_DIR}/mariadb/support-files/mysql.server
-sed -i 's#^lockdir=.*#lockdir=$SNAP_COMMON/database/lock#g' ${BUILD_DIR}/mariadb/support-files/mysql.server
-
-cat ${BUILD_DIR}/mariadb/support-files/mysql.server
-
 ${BUILD_DIR}/python/bin/pip install -r ${DIR}/requirements.txt
 
 cd ${DIR}/build
 wget https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz --progress dot:giga
 tar xf wordpress-${WORDPRESS_VERSION}.tar.gz -C ${BUILD_DIR}
+cd ${BUILD_DIR}/wordpress
+
+for f in ${DIR}/patches/*.patch
+do
+  patch -p1 < $f
+done
 
 cd ${DIR}
 cp -r ${DIR}/bin ${BUILD_DIR}

@@ -1,0 +1,17 @@
+diff --git a/wp-load.php b/wp-load.php
+index 21cba39..ecbac38 100644
+--- a/wp-load.php
++++ b/wp-load.php
+@@ -31,7 +31,11 @@ error_reporting( E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_ERROR | E_W
+  *
+  * If neither set of conditions is true, initiate loading the setup process.
+  */
+-if ( file_exists( ABSPATH . 'wp-config.php' ) ) {
++if (getenv('WP_CONFIG_DIR')) {
++
++    require_once( getenv('WP_CONFIG_DIR') . '/' . 'wp-config.php' );
++
++} elseif ( file_exists( ABSPATH . 'wp-config.php' ) ) {
+
+        /** The config file resides in ABSPATH */
+        require_once( ABSPATH . 'wp-config.php' );
