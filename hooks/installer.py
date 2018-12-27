@@ -79,12 +79,18 @@ class Installer:
         
     def on_domain_change(self):
         app_domain = urls.get_app_domain_name(APP_NAME)
-        
+    
+    def execute_sql(self, sql):
+        check_output('{0}/mariadb/bin/mysql --user={1} --socket={2}/mysql.sock -e \'{3};\''.format(self.app_dir, DB_USER, self.app_data_dir, sql), shell=True)
+          
     def database_init(self):
         
         if not isdir(self.database_path):
             initdb_cmd = '{0}/mariadb/scripts/mysql_install_db --user={1} --basedir={0}/mariadb --datadir={2}'.format(self.app_dir, DB_USER, self.database_path)
             check_output(initdb_cmd, shell=True)
+            execute_sql('CREATE DATABASE {0};'.format(DB_NAME))
+            execute_sql('GRANT ALL PRIVILEGES ON {0}.* TO "{1}"@"localhost" IDENTIFIED BY "{2}";'.format(DB_NAME, DB_USER, DB_PASSWORD;), shell=True)
+            execute_sql('FLUSH PRIVILEGES;')
         else:
             self.log.info('Database path "{0}" already exists'.format(self.database_path))
 
