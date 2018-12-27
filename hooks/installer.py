@@ -1,21 +1,10 @@
-from os.path import dirname, join, abspath, isdir, realpath
-from os import listdir
-import sys
-
-from os import environ
-from os.path import isfile
-import shutil
-import uuid
-from subprocess import check_output
-
 import logging
+from os.path import isdir
+from os.path import join
+from subprocess import check_output
 
 from syncloudlib import fs, linux, gen, logger
-from syncloudlib.application import paths, urls, storage, users, service
-
-from subprocess import check_output
-from os.path import join
-
+from syncloudlib.application import paths, urls, storage
 
 APP_NAME = 'wordpress'
 
@@ -59,38 +48,39 @@ class Installer:
         }
         gen.generate_files(templates_path, config_path, variables)
 
-        
     def install(self):
         self.install_config()
         self.database_init()
         
         fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
 
-        
     def configure(self):
         self.prepare_storage()
-        app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
+        # app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
   
     def on_disk_change(self):
         self.prepare_storage()
         
     def prepare_storage(self):
-        app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
+        # app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
         
     def on_domain_change(self):
-        app_domain = urls.get_app_domain_name(APP_NAME)
+        # app_domain = urls.get_app_domain_name(APP_NAME)
     
     def execute_sql(self, sql):
-        check_output('{0}/mariadb/bin/mysql --user={1} --socket={2}/mysql.sock -e \'{3};\''.format(self.app_dir, DB_USER, self.app_data_dir, sql), shell=True)
+        check_output('{0}/mariadb/bin/mysql --user={1} --socket={2}/mysql.sock -e \'{3};\''.format(
+            self.app_dir, DB_USER, self.app_data_dir, sql), shell=True)
           
     def database_init(self):
         
         if not isdir(self.database_path):
-            initdb_cmd = '{0}/mariadb/scripts/mysql_install_db --user={1} --basedir={0}/mariadb --datadir={2}'.format(self.app_dir, DB_USER, self.database_path)
+            initdb_cmd = '{0}/mariadb/scripts/mysql_install_db --user={1} --basedir={0}/mariadb --datadir={2}'.format(
+                self.app_dir, DB_USER, self.database_path)
             check_output(initdb_cmd, shell=True)
-            execute_sql('CREATE DATABASE {0};'.format(DB_NAME))
-            execute_sql('GRANT ALL PRIVILEGES ON {0}.* TO "{1}"@"localhost" IDENTIFIED BY "{2}";'.format(DB_NAME, DB_USER, DB_PASSWORD;), shell=True)
-            execute_sql('FLUSH PRIVILEGES;')
+            self.execute_sql('CREATE DATABASE {0};'.format(DB_NAME))
+            self.execute_sql('GRANT ALL PRIVILEGES ON {0}.* TO "{1}"@"localhost" IDENTIFIED BY "{2}";'.format(
+                DB_NAME, DB_USER, DB_PASSWORD))
+            self.execute_sql('FLUSH PRIVILEGES;')
         else:
             self.log.info('Database path "{0}" already exists'.format(self.database_path))
 
