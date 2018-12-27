@@ -62,10 +62,10 @@ class Installer:
         self.prepare_storage()
         
     def prepare_storage(self):
-        # app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
+        app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
         
     def on_domain_change(self):
-        # app_domain = urls.get_app_domain_name(APP_NAME)
+        app_domain = urls.get_app_domain_name(APP_NAME)
     
     def execute_sql(self, sql):
         check_output('{0}/mariadb/bin/mysql --user={1} --socket={2}/mysql.sock -e \'{3};\''.format(
