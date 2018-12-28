@@ -61,6 +61,10 @@ class Installer:
             self.execute_sql('GRANT ALL PRIVILEGES ON {0}.* TO "{1}"@"localhost" IDENTIFIED BY "{2}";'.format(
                 DB_NAME, DB_USER, DB_PASSWORD))
             self.execute_sql('FLUSH PRIVILEGES;')
+           
+            check_output('{0}/bin/wp-cli core install --url=localhost --title=Syncloud --admin_user=admin --admin_password=admon --admin_email=info@example.com'.format(
+                self.app_dir), shell=True)
+             
             fs.touchfile(install_file)
             
         # else:
