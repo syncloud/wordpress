@@ -45,9 +45,12 @@ do
 done
 
 cd ${DIR}
+
 cp -r ${DIR}/bin ${BUILD_DIR}
 cp -r ${DIR}/config ${BUILD_DIR}/config.templates
 cp -r ${DIR}/hooks ${BUILD_DIR}
+
+wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -O ${BUILD_DIR}/bin/wp-cli.phar
 
 mkdir ${DIR}/build/${NAME}/META
 echo ${NAME} >> ${DIR}/build/${NAME}/META/app
