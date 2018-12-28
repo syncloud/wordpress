@@ -76,8 +76,8 @@ class Installer:
         app_domain = urls.get_app_domain_name(APP_NAME)
     
     def execute_sql(self, sql):
-        check_output('{0}/mariadb/bin/mysql --user={1} --socket={2}/mysql.sock -e \'{3};\''.format(
-            self.app_dir, DB_USER, self.app_data_dir, sql), shell=True)
+        check_output('{0}/mariadb/bin/mysql --socket={1}/mysql.sock -e \'{2}\''.format(
+            self.app_dir, self.app_data_dir, sql), shell=True)
           
     def database_init(self):
         
