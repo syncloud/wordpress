@@ -57,7 +57,6 @@ phar extract -f wp-cli.phar phar
 rm wp-cli.phar
 cd phar/vendor/wp-cli/wp-cli/php
 patch -p0 < ${DIR}/patches/wp-cli.patch
-cd ${BUILD_DIR}/bin
 phar pack -f wp-cli.phar phar/*
 cp wp-cli.phar ${BUILD_DIR}/bin/wp-cli.phar
 
