@@ -19,6 +19,7 @@ VERSION=$2
 
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 
+apt update
 apt install -y php5-cli
 
 rm -rf ${DIR}/build
