@@ -39,10 +39,7 @@ wget https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz --progress dot:
 tar xf wordpress-${WORDPRESS_VERSION}.tar.gz -C ${BUILD_DIR}
 cd ${BUILD_DIR}/wordpress
 
-for f in ${DIR}/patches/*.patch
-do
-  patch -p0 < $f
-done
+patch -p0 < ${DIR}/patches/wp-load.patch
 
 cd ${DIR}
 
@@ -50,8 +47,17 @@ cp -r ${DIR}/bin ${BUILD_DIR}
 cp -r ${DIR}/config ${BUILD_DIR}/config.templates
 cp -r ${DIR}/hooks ${BUILD_DIR}
 
-wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -O ${BUILD_DIR}/bin/wp-cli.phar
-chmod +x ${BUILD_DIR}/bin/wp-cli.phar
+${DIR}/build/
+wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+
+cd ${BUILD_DIR}/bin
+phar extract -f wp-cli.phar phar
+rm wp-cli.phar
+cd phar/vendor/wp-cli/wp-cli/php
+patch -p0 < ${DIR}/patches/wp-cli.patch
+cd ${BUILD_DIR}/bin
+phar pack -f wp-cli.phar phar/*
+cp wp-cli.phar ${BUILD_DIR}/bin/wp-cli.phar
 
 mkdir ${DIR}/build/${NAME}/META
 echo ${NAME} >> ${DIR}/build/${NAME}/META/app
