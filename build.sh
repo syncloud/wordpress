@@ -19,6 +19,8 @@ VERSION=$2
 
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 
+apt install -y php-cli
+
 rm -rf ${DIR}/build
 BUILD_DIR=${DIR}/build/${NAME}
 mkdir -p ${BUILD_DIR}
