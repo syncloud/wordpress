@@ -53,7 +53,6 @@ cp -r ${DIR}/hooks ${BUILD_DIR}
 cd ${DIR}/build/
 wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 
-cd ${BUILD_DIR}/bin
 phar extract -f wp-cli.phar phar
 rm wp-cli.phar
 cd phar/vendor/wp-cli/wp-cli/php
