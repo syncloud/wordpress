@@ -1,6 +1,5 @@
 import logging
-from os.path import isdir
-from os.path import join
+from os.path import isdir, join, isfile
 from subprocess import check_output
 
 from syncloudlib import fs, linux, gen, logger
@@ -56,8 +55,17 @@ class Installer:
 
     def configure(self):
         self.prepare_storage()
-        # app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
-  
+        install_file = join(self.app_data_dir, 'installed')
+        if not isfile(install_file):
+            self.execute_sql('CREATE DATABASE {0};'.format(DB_NAME))
+            self.execute_sql('GRANT ALL PRIVILEGES ON {0}.* TO "{1}"@"localhost" IDENTIFIED BY "{2}";'.format(
+                DB_NAME, DB_USER, DB_PASSWORD))
+            self.execute_sql('FLUSH PRIVILEGES;')
+            fs.touchfile(install_file)
+            
+        # else:
+            # upgrade
+            
     def on_disk_change(self):
         self.prepare_storage()
         
@@ -77,10 +85,7 @@ class Installer:
             initdb_cmd = '{0}/mariadb/scripts/mysql_install_db --user={1} --basedir={0}/mariadb --datadir={2}'.format(
                 self.app_dir, DB_USER, self.database_path)
             check_output(initdb_cmd, shell=True)
-            self.execute_sql('CREATE DATABASE {0};'.format(DB_NAME))
-            self.execute_sql('GRANT ALL PRIVILEGES ON {0}.* TO "{1}"@"localhost" IDENTIFIED BY "{2}";'.format(
-                DB_NAME, DB_USER, DB_PASSWORD))
-            self.execute_sql('FLUSH PRIVILEGES;')
+            
         else:
             self.log.info('Database path "{0}" already exists'.format(self.database_path))
 
