@@ -53,12 +53,14 @@ cp -r ${DIR}/hooks ${BUILD_DIR}
 cd ${DIR}/build/
 wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 sed -i 's/;phar.readonly = On/phar.readonly = Off/g' /etc/php5/cli/php.ini
+php wp-cli.phar info
 phar extract -f wp-cli.phar phar
 rm wp-cli.phar
 cd phar/vendor/wp-cli/wp-cli/php
 patch -p0 < ${DIR}/patches/wp-cli.patch
 cd ${DIR}/build/
 phar pack -f wp-cli.phar phar/*
+php wp-cli.phar info
 cp wp-cli.phar ${BUILD_DIR}/bin/wp-cli.phar
 
 mkdir ${DIR}/build/${NAME}/META
