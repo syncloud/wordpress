@@ -47,6 +47,8 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir, 
     run_ssh(device_host, 'ls -la {0}/ > {1}/data.ls.log'.format(data_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
     run_ssh(device_host, 'ls -la {0}/database/ > {1}/database.ls.log'.format(data_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
     run_ssh(device_host, 'ls -la {0}/wordpress/ > {1}/wordpress.ls.log'.format(app_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)  
+    run_ssh(device_host, 'ls -la {0}/log/ > {1}/log.ls.log'.format(app_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)  
+    run_ssh(device_host, '{0}/bin/wp-cli core is-installed; echo "is installed: $?"'.format(app_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False, env_vars='SNAP_COMMON={0}'.format(data_dir))
     run_ssh(device_host, '{0}/bin/wp-cli --info > {1}/wp-cli.info.log 2>&1'.format(app_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False, env_vars='SNAP_COMMON={0}'.format(data_dir))  
 
     app_log_dir  = join(log_dir, 'log')
