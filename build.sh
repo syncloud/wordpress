@@ -47,7 +47,7 @@ cp -r ${DIR}/bin ${BUILD_DIR}
 cp -r ${DIR}/config ${BUILD_DIR}/config.templates
 cp -r ${DIR}/hooks ${BUILD_DIR}
 
-cp ${DIR}/config/worspress/phpinfo.php ${BUILD_DIR}/wordpress
+cp ${DIR}/config/wordpress/phpinfo.php ${BUILD_DIR}/wordpress
 
 cd ${DIR}/build/
 wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar --progress dot:giga
