@@ -90,3 +90,5 @@ require_once(ABSPATH . 'wp-settings.php');
 
 define('FS_METHOD', 'direct');
 
+define( 'WP_DEBUG_LOG', true );
+define( 'WP_DEBUG_DISPLAY', true );
