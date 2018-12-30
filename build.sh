@@ -19,9 +19,6 @@ VERSION=$2
 
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 
-apt update
-apt install -y php5-cli
-
 rm -rf ${DIR}/build
 BUILD_DIR=${DIR}/build/${NAME}
 mkdir -p ${BUILD_DIR}
@@ -51,15 +48,17 @@ cp -r ${DIR}/config ${BUILD_DIR}/config.templates
 cp -r ${DIR}/hooks ${BUILD_DIR}
 
 cd ${DIR}/build/
-wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar --progress dot:giga
 sed -i 's/;phar.readonly = On/phar.readonly = Off/g' /etc/php5/cli/php.ini
 php wp-cli.phar --allow-root cli info
-phar extract -f wp-cli.phar phar
-rm wp-cli.phar
+phar extract -f wp-cli.phar -i utils.php phar
 cd phar/vendor/wp-cli/wp-cli/php
 patch -p0 < ${DIR}/patches/wp-cli.patch
 cd ${DIR}/build/
-phar pack -f wp-cli.phar phar/*
+phar delete -f wp-cli.phar -e vendor/wp-cli/wp-cli/php/utils.php
+phar add -f wp-cli.phar -l 1 phar 
+phar list -f wp-cli.phar -i utils.php
+
 php wp-cli.phar --allow-root cli info
 cp wp-cli.phar ${BUILD_DIR}/bin/wp-cli.phar
 
