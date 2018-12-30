@@ -55,8 +55,9 @@ phar extract -f wp-cli.phar -i utils.php phar
 cd phar/vendor/wp-cli/wp-cli/php
 patch -p0 < ${DIR}/patches/wp-cli.patch
 cd ${DIR}/build/
+phar list -f wp-cli.phar -i utils.php
 phar delete -f wp-cli.phar -e vendor/wp-cli/wp-cli/php/utils.php
-phar add -f wp-cli.phar -l 1 phar 
+phar add -f wp-cli.phar phar 
 phar list -f wp-cli.phar -i utils.php
 
 php wp-cli.phar --allow-root cli info
