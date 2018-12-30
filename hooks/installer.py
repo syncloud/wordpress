@@ -62,7 +62,7 @@ class Installer:
                 DB_NAME, DB_USER, DB_PASSWORD))
             self.execute_sql('FLUSH PRIVILEGES;')
            
-            check_output('sudo -H -u {0} {1}/bin/wp-cli core install --path={1}/wordpress --url=localhost --title=Syncloud --admin_user=admin --admin_password=admon --admin_email=info@example.com'.format(
+            check_output('sudo -H -E -u {0} {1}/bin/wp-cli core install --path={1}/wordpress --url=localhost --title=Syncloud --admin_user=admin --admin_password=admon --admin_email=info@example.com'.format(
                 USER_NAME, self.app_dir), shell=True)
              
             fs.touchfile(install_file)
