@@ -104,16 +104,16 @@ def test_install(app_archive_path, device_host, app_domain, device_password):
 #    assert response.status_code == 200, response.text
 
 
-def test_storage_change(device_host, app_dir, data_dir, device_password):
-    run_ssh(device_host, 'SNAP_COMMON={1} {0}/hooks/storage-change > {1}/log/storage-change.log'.format(app_dir, data_dir), password=device_password, throw=False)
+#def test_storage_change(device_host, app_dir, data_dir, device_password):
+#    run_ssh(device_host, 'SNAP_COMMON={1} {0}/hooks/storage-change > {1}/log/storage-change.log'.format(app_dir, data_dir), password=device_password, throw=False)
 
-def test_upgrade(app_archive_path, device_host, device_password):
-    local_install(device_host, device_password, app_archive_path)
+#def test_upgrade(app_archive_path, device_host, device_password):
+#    local_install(device_host, device_password, app_archive_path)
 
-def test_remove(syncloud_session, device_host, app):
-    response = syncloud_session.get('https://{0}/rest/remove?app_id={1}'.format(device_host, app), allow_redirects=False, verify=False)
-    assert response.status_code == 200, response.text
+#def test_remove(syncloud_session, device_host, app):
+#    response = syncloud_session.get('https://{0}/rest/remove?app_id={1}'.format(device_host, app), allow_redirects=False, verify=False)
+#    assert response.status_code == 200, response.text
 
 
-def test_reinstall(app_archive_path, device_host, device_password):
-    local_install(device_host, device_password, app_archive_path)
+#def test_reinstall(app_archive_path, device_host, device_password):
+#    local_install(device_host, device_password, app_archive_path)
