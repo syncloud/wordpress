@@ -57,7 +57,6 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir, 
     run_scp('root@{0}:{1}/* {2}'.format(device_host, TMP_DIR, app_log_dir), password=LOGS_SSH_PASSWORD, throw=False)
     
  
-
 @pytest.fixture(scope='function')
 def syncloud_session(device_host, device_user, device_password):
     session = requests.session()
@@ -71,7 +70,6 @@ def rocketcaht_session_domain(app_domain, device_host):
     response = session.get('https://{0}'.format(app_domain), allow_redirects=True, verify=False)
     print(response.text)
     return session
-
 
 def test_start(module_setup, device_host, app, log_dir):
     shutil.rmtree(log_dir, ignore_errors=True)
@@ -98,6 +96,14 @@ def test_activate_device(main_domain, device_host, domain, device_user, device_p
 def test_install(app_archive_path, device_host, app_domain, device_password):
     local_install(device_host, device_password, app_archive_path)
     wait_for_rest(requests.session(), app_domain, '/', 200, 10)
+
+
+def test_info(app_domain, log_dir):
+    response = requests.get('https://{0}/phpinfo.php'.format(app_domain), verify=False)                          
+    assert response.status_code == 200, response.text
+    with open('{0}/phpinfo.log'.format(log_dir), 'w') as the_file:
+        the_file.write(response.text)
+
 
 #def test_index(app_domain):
 #    response = requests.get('https://{0}/index.php'.format(app_domain), verify=False)                          
