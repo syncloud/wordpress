@@ -97,12 +97,9 @@ def test_install(app_archive_path, device_host, app_domain, device_password):
     local_install(device_host, device_password, app_archive_path)
     wait_for_rest(requests.session(), app_domain, '/', 200, 10)
 
-
-def test_info(app_domain, log_dir):
-    response = requests.get('https://{0}/phpinfo.php'.format(app_domain), verify=False)                          
-    assert response.status_code == 200, response.text
-    with open('{0}/phpinfo.log'.format(log_dir), 'w') as the_file:
-        the_file.write(response.text.encode("UTF-8"))
+def test_phpinfo(device_host, app_dir, data_dir):
+    run_ssh(device_host, '{0}/bin/php-runner -i > {1}/log/phpinfo.log'.format(app_dir, data_dir),
+            password=DEVICE_PASSWORD, env_vars='DATA_DIR={0}'.format(data_dir))
 
 
 #def test_index(app_domain):
