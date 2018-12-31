@@ -61,15 +61,23 @@ class Installer:
             self.execute_sql('GRANT ALL PRIVILEGES ON {0}.* TO "{1}"@"localhost" IDENTIFIED BY "{2}";'.format(
                 DB_NAME, DB_USER, DB_PASSWORD))
             self.execute_sql('FLUSH PRIVILEGES;')
+            
             app_url = urls.get_app_url(APP_NAME)
-            check_output('sudo -H -E -u {0} {1}/bin/wp-cli core install --path={1}/wordpress --url={2} --title=Syncloud --admin_user=admin --admin_password=admon --admin_email=info@example.com'.format(
-                USER_NAME, self.app_dir, app_url), shell=True)
-             
+            self._wp_cli('core install --path={0}/wordpress --url={1} --title=Syncloud --admin_user=admin --admin_password=admon --admin_email=info@example.com'.format(
+                self.app_dir, app_url))
+                
+            self.on_domain_change()
+            
             fs.touchfile(install_file)
             
         # else:
             # upgrade
-            
+    
+    def _wp_cli(self, cmd):
+        check_output('sudo -H -E -u {0} {1}/bin/wp-cli core install --path={1}/wordpress --url={2} --title=Syncloud --admin_user=admin --admin_password=admon --admin_email=info@example.com'.format(
+            USER_NAME, self.app_dir, cmd), shell=True)
+             
+    
     def on_disk_change(self):
         self.prepare_storage()
         
@@ -78,7 +86,9 @@ class Installer:
         
     def on_domain_change(self):
         app_url = urls.get_app_url(APP_NAME)
-    
+        self._wp_cli('option update siteurl {0}'.format(app_url))
+        self._wp_cli('option update home {0}'.format(app_url))
+             
     def execute_sql(self, sql):
         check_output('{0}/mariadb/bin/mysql --socket={1}/mysql.sock -e \'{2}\''.format(
             self.app_dir, self.app_data_dir, sql), shell=True)
