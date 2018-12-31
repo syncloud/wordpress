@@ -74,7 +74,7 @@ class Installer:
             # upgrade
     
     def _wp_cli(self, cmd):
-        check_output('sudo -H -E -u {0} {1}/bin/wp-cli core install --path={1}/wordpress --url={2} --title=Syncloud --admin_user=admin --admin_password=admon --admin_email=info@example.com'.format(
+        check_output('sudo -H -E -u {0} {1}/bin/wp-cli {2}'.format(
             USER_NAME, self.app_dir, cmd), shell=True)
              
     
