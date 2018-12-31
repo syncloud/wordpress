@@ -102,7 +102,7 @@ def test_info(app_domain, log_dir):
     response = requests.get('https://{0}/phpinfo.php'.format(app_domain), verify=False)                          
     assert response.status_code == 200, response.text
     with open('{0}/phpinfo.log'.format(log_dir), 'w') as the_file:
-        the_file.write(response.text)
+        the_file.write(response.text.encode("UTF-8"))
 
 
 #def test_index(app_domain):
