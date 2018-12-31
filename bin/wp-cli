@@ -2,7 +2,6 @@
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )
 
-export LD_LIBRARY_PATH=${DIR}/php/lib
 export WP_CONFIG_DIR=${SNAP_COMMON}/config/wordpress
 
-sudo -H -E -u wordpress ${DIR}/php/bin/php -c ${SNAP_COMMON}/config/php.ini ${DIR}/bin/wp-cli.phar --path=${SNAP}/wordpress "$@"
+sudo -H -E -u wordpress LD_LIBRARY_PATH=${DIR}/php/lib ${DIR}/php/bin/php -c ${SNAP_COMMON}/config/php.ini ${DIR}/bin/wp-cli.phar --path=${SNAP}/wordpress "$@"
