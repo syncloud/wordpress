@@ -98,8 +98,8 @@ def test_install(app_archive_path, device_host, app_domain, device_password):
     wait_for_rest(requests.session(), app_domain, '/', 200, 10)
 
 def test_phpinfo(device_host, app_dir, data_dir, device_password):
-    run_ssh(device_host, '{0}/bin/php-runner -i > {1}/log/phpinfo.log'.format(app_dir, data_dir),
-            password=device_password, env_vars='DATA_DIR={0}'.format(data_dir))
+    run_ssh(device_host, '{0}/bin/php -i > {1}/log/phpinfo.log'.format(app_dir, data_dir),
+            password=device_password, env_vars='SNAP_COMMON={0}'.format(data_dir))
 
 
 #def test_index(app_domain):
