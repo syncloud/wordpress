@@ -61,6 +61,8 @@ pipeline:
       - pip2 install -r dev_requirements.txt
       - syncloud-upload-artifact.sh $NAME integration/log $DRONE_BUILD_NUMBER-$(dpkg --print-architecture)
       - syncloud-upload-artifact.sh $NAME integration/screenshot $DRONE_BUILD_NUMBER-$(dpkg --print-architecture)
+      - syncloud-upload-artifact.sh $NAME $(cat package.name) $DRONE_BUILD_NUMBER-$(dpkg --print-architecture)
+
     when:
       status: [ failure, success ] 
 
