@@ -73,8 +73,7 @@ class Installer:
             # upgrade
     
     def _wp_cli(self, cmd):
-        check_output('sudo -H -E -u {0} {1}/bin/wp-cli {2}'.format(
-            USER_NAME, self.app_dir, cmd), shell=True)
+        check_output('{0}/bin/wp-cli {1}'.format(self.app_dir, cmd), shell=True)
              
     
     def on_disk_change(self):
