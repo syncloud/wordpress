@@ -61,9 +61,9 @@ class Installer:
             self.execute_sql('GRANT ALL PRIVILEGES ON {0}.* TO "{1}"@"localhost" IDENTIFIED BY "{2}";'.format(
                 DB_NAME, DB_USER, DB_PASSWORD))
             self.execute_sql('FLUSH PRIVILEGES;')
-           
-            check_output('sudo -H -E -u {0} {1}/bin/wp-cli core install --path={1}/wordpress --url=localhost --title=Syncloud --admin_user=admin --admin_password=admon --admin_email=info@example.com'.format(
-                USER_NAME, self.app_dir), shell=True)
+            app_url = urls.get_app_url(APP_NAME)
+            check_output('sudo -H -E -u {0} {1}/bin/wp-cli core install --path={1}/wordpress --url={2} --title=Syncloud --admin_user=admin --admin_password=admon --admin_email=info@example.com'.format(
+                USER_NAME, self.app_dir, app_url), shell=True)
              
             fs.touchfile(install_file)
             
@@ -77,7 +77,7 @@ class Installer:
         app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
         
     def on_domain_change(self):
-        app_domain = urls.get_app_domain_name(APP_NAME)
+        app_url = urls.get_app_url(APP_NAME)
     
     def execute_sql(self, sql):
         check_output('{0}/mariadb/bin/mysql --socket={1}/mysql.sock -e \'{2}\''.format(
