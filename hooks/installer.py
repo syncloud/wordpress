@@ -63,8 +63,7 @@ class Installer:
             self.execute_sql('FLUSH PRIVILEGES;')
             
             app_url = urls.get_app_url(APP_NAME)
-            self._wp_cli('core install --path={0}/wordpress --url={1} --title=Syncloud --admin_user=admin --admin_password=admon --admin_email=info@example.com'.format(
-                self.app_dir, app_url))
+            self._wp_cli('core install --url={0} --title=Syncloud --admin_user=admin --admin_password=admon --admin_email=info@example.com'.format(app_url))
                 
             self.on_domain_change()
             
@@ -74,7 +73,7 @@ class Installer:
             # upgrade
     
     def _wp_cli(self, cmd):
-        check_output('sudo -H -E -u {0} {1}/bin/wp-cli {2}'.format(
+        check_output('sudo -H -E -u {0} {1}/bin/wp-cli --path={1}/wordpress {2}'.format(
             USER_NAME, self.app_dir, cmd), shell=True)
              
     
