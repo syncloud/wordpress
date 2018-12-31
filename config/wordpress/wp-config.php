@@ -29,7 +29,7 @@ define('DB_USER', 'wordpress');
 define('DB_PASSWORD', 'wordpress');
 
 /** MySQL hostname */
-define('DB_HOST', getenv('WP_MYSQL_HOST'));
+define('DB_HOST', 'localhost:' . getenv('SNAP_COMMON') . '/mysql.sock');
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
