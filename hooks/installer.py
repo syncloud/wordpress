@@ -73,7 +73,7 @@ class Installer:
             # upgrade
     
     def _wp_cli(self, cmd):
-        check_output('sudo -H -E -u {0} {1}/bin/wp-cli --path={1}/wordpress {2}'.format(
+        check_output('sudo -H -E -u {0} {1}/bin/wp-cli {2}'.format(
             USER_NAME, self.app_dir, cmd), shell=True)
              
     
