@@ -63,7 +63,9 @@ class Installer:
             self.execute_sql('FLUSH PRIVILEGES;')
             
             app_url = urls.get_app_url(APP_NAME)
-            self._wp_cli('core install --url={0} --title=Syncloud --admin_user=admin --admin_password=admon --admin_email=info@example.com'.format(app_url))
+            app_domain = urls.get_app_domain_name(APP_NAME)
+            
+            self._wp_cli('core install --url={0} --title=Syncloud --admin_user=admin --admin_password=admon --admin_email=info@example.com'.format(app_domain))
                 
             self.on_domain_change()
             
@@ -86,9 +88,9 @@ class Installer:
         app_url = urls.get_app_url(APP_NAME)
         app_domain = urls.get_app_domain_name(APP_NAME)
         
-        self._wp_cli("option update siteurl '{0}'".format(app_url))
-        self._wp_cli("option update home '{0}'".format(app_url))
-        self._wp_cli("search-replace 'http://{0}' '{1}'".format(app_domain, app_url))
+        #self._wp_cli("option update siteurl '{0}'".format(app_url))
+        #self._wp_cli("option update home '{0}'".format(app_url))
+        #self._wp_cli("search-replace 'http://{0}' '{1}'".format(app_domain, app_url))
         
     def execute_sql(self, sql):
         check_output('{0}/mariadb/bin/mysql --socket={1}/mysql.sock -e \'{2}\''.format(
