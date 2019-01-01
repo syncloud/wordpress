@@ -84,9 +84,12 @@ class Installer:
         
     def on_domain_change(self):
         app_url = urls.get_app_url(APP_NAME)
+        app_domain = urls.get_app_domain_name(APP_NAME)
+        
         self._wp_cli("option update siteurl '{0}'".format(app_url))
         self._wp_cli("option update home '{0}'".format(app_url))
-             
+        self._wp_cli("search-replace 'http://{0}' '{1}'".format(app_domain, app_url))
+        
     def execute_sql(self, sql):
         check_output('{0}/mariadb/bin/mysql --socket={1}/mysql.sock -e \'{2}\''.format(
             self.app_dir, self.app_data_dir, sql), shell=True)
