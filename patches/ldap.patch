@@ -1,0 +1,26 @@
+--- class-mo-ldap-utility.php   2018-12-31 09:49:52.000000000 +0000
++++ class-mo-ldap-utility.php.new       2019-01-02 17:59:40.817153133 +0000
+@@ -67,6 +67,8 @@
+        }
+
+        public static function encrypt($str) {
++               return $str;
++
+                if(!Mo_Ldap_Local_Util::is_extension_installed('openssl')) {
+                        return;
+                }
+@@ -79,6 +81,7 @@
+        }
+
+        public static function decrypt($value) {
++               return $value;
+                if(!Mo_Ldap_Local_Util::is_extension_installed('openssl')) {
+                        return;
+                }
+@@ -109,4 +112,4 @@
+                }
+        }
+ }
+-?>
+\ No newline at end of file
++?>

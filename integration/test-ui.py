@@ -35,6 +35,15 @@ def test_index(driver, app_domain):
     print(driver.page_source.encode('utf-8'))
 
 
+def test_login(driver, app_domain):
+
+    driver.get("https://{0}/wp-login.php".format(app_domain))
+    time.sleep(10)
+    print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
+    screenshots(driver, screenshot_dir, 'login')
+    print(driver.page_source.encode('utf-8'))
+
+
 def test_admin(driver, app_domain):
 
     driver.get("https://{0}/wp-admin".format(app_domain))
@@ -44,5 +53,20 @@ def test_admin(driver, app_domain):
     print(driver.page_source.encode('utf-8'))
 
 
+def test_profile(driver, app_domain):
 
-#https://wordpress.borishelios.syncloud.it:10002/wp-admin/admin.php?page=mo_ldap_local_login&tab=default
+    driver.get("https://{0}/wp-admin/profile.php".format(app_domain))
+    time.sleep(10)
+    print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
+    screenshots(driver, screenshot_dir, 'profile')
+    print(driver.page_source.encode('utf-8'))
+
+
+def test_ldap(driver, app_domain):
+
+    driver.get("https://{0}/wp-admin/admin.php?page=mo_ldap_local_login".format(app_domain))
+    time.sleep(10)
+    print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
+    screenshots(driver, screenshot_dir, 'ldap')
+    print(driver.page_source.encode('utf-8'))
+
