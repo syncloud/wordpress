@@ -12,7 +12,8 @@ export TMPDIR=/tmp
 export TMP=/tmp
 
 NAME=$1
-WORDPRESS_VERSION=5.0.1
+WORDPRESS_VERSION=5.0.2
+WORDPRESS_LDAP_VERSION=3.0.2
 ARCH=$(uname -m)
 SNAP_ARCH=$(dpkg --print-architecture)
 VERSION=$2
@@ -62,6 +63,10 @@ phar list -f wp-cli.phar -i utils.php
 
 php wp-cli.phar --allow-root cli info
 cp wp-cli.phar ${BUILD_DIR}/bin/wp-cli.phar
+
+wget https://downloads.wordpress.org/plugin/ldap-login-for-intranet-sites.${WORDPRESS_LDAP_VERSION}.zip --progress dot:giga
+unzip ldap-login-for-intranet-sites.${WORDPRESS_LDAP_VERSION}.zip
+mv ldap-login-for-intranet-sites ${BUILD_DIR}/wordpress/wp-content/plugins/
 
 mkdir ${DIR}/build/${NAME}/META
 echo ${NAME} >> ${DIR}/build/${NAME}/META/app
