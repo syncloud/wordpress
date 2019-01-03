@@ -76,7 +76,7 @@ class Installer:
             self._wp_cli("option update mo_ldap_local_server_url ldap://localhost")
             self._wp_cli("option update mo_ldap_local_server_dn dc=syncloud,dc=org")
             self._wp_cli("option update mo_ldap_local_server_password syncloud")
-            self._wp_cli("option update mo_ldap_local_search_filter (&(objectClass=*)(cn=?))")
+            self._wp_cli("option update mo_ldap_local_search_filter '(&(objectClass=*)(cn=?))'")
             self._wp_cli("option update mo_ldap_local_search_base ou=users,dc=syncloud,dc=org")
             self._wp_cli("option update mo_ldap_local_enable_role_mapping 1")
             self._wp_cli("option update mo_ldap_local_enable_login 1")
