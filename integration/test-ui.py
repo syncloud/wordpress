@@ -30,43 +30,45 @@ def test_index(driver, app_domain):
 
     driver.get("https://{0}".format(app_domain))
     time.sleep(10)
-    print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
+  
     screenshots(driver, screenshot_dir, 'index')
-    print(driver.page_source.encode('utf-8'))
+    
 
-
-def test_login(driver, app_domain):
+def test_login(driver, app_domain, device_user, device_password):
 
     driver.get("https://{0}/wp-login.php".format(app_domain))
-    time.sleep(10)
-    print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
-    screenshots(driver, screenshot_dir, 'login')
-    print(driver.page_source.encode('utf-8'))
+    wait_driver = WebDriverWait(driver, 120)
+    wait_driver.until(EC.element_to_be_clickable((By.ID, 'user_login')))
 
+    user = driver.find_element_by_id("user_login")
+    user.send_keys(device_user)
+    password = driver.find_element_by_id("user_pass")
+    password.send_keys(device_password)
+    screenshots(driver, screenshot_dir, 'login')
+    password.send_keys(Keys.RETURN)
+    
+    time.sleep(10)
+    
+    screenshots(driver, screenshot_dir, 'login-complete')
+    
 
 def test_admin(driver, app_domain):
 
     driver.get("https://{0}/wp-admin".format(app_domain))
     time.sleep(10)
-    print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
     screenshots(driver, screenshot_dir, 'admin')
-    print(driver.page_source.encode('utf-8'))
-
+    
 
 def test_profile(driver, app_domain):
 
     driver.get("https://{0}/wp-admin/profile.php".format(app_domain))
     time.sleep(10)
-    print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
     screenshots(driver, screenshot_dir, 'profile')
-    print(driver.page_source.encode('utf-8'))
-
+    
 
 def test_ldap(driver, app_domain):
 
     driver.get("https://{0}/wp-admin/admin.php?page=mo_ldap_local_login".format(app_domain))
     time.sleep(10)
-    print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
     screenshots(driver, screenshot_dir, 'ldap')
-    print(driver.page_source.encode('utf-8'))
-
+    
