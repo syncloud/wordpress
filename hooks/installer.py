@@ -66,7 +66,24 @@ class Installer:
             app_domain = urls.get_app_domain_name(APP_NAME)
             
             self._wp_cli('core install --url={0} --title=Syncloud --admin_user=admin --admin_password=admon --admin_email=info@example.com'.format(app_domain))
-                
+           
+            self._wp_cli("option update mo_ldap_local_register_user 1")
+            self._wp_cli("option update mo_ldap_local_host_name https://auth.miniorange.com")
+            self._wp_cli("option update mo_ldap_local_mapping_memberof_attribute memberOf")
+            self._wp_cli("option update mo_ldap_local_new_registration true")
+            self._wp_cli("option update mo_ldap_local_enable_admin_wp_login 1")
+            self._wp_cli("option update mo_ldap_local_anonymous_bind 0")
+            self._wp_cli("option update mo_ldap_local_server_url ldap://localhost")
+            self._wp_cli("option update mo_ldap_local_server_dn dc=syncloud,dc=org")
+            self._wp_cli("option update mo_ldap_local_server_password syncloud")
+            self._wp_cli("option update mo_ldap_local_search_filter (&(objectClass=*)(cn=?))")
+            self._wp_cli("option update mo_ldap_local_search_base ou=users,dc=syncloud,dc=org")
+            self._wp_cli("option update mo_ldap_local_enable_role_mapping 1")
+            self._wp_cli("option update mo_ldap_local_enable_login 1")
+            self._wp_cli("option update mo_ldap_local_server_url_status VALID")
+            self._wp_cli("option update mo_ldap_local_service_account_status VALID")
+            self._wp_cli("option update mo_ldap_local_user_mapping_status VALID")
+
             self.on_domain_change()
             
             fs.touchfile(install_file)
@@ -89,7 +106,7 @@ class Installer:
         app_domain = urls.get_app_domain_name(APP_NAME)
         
         self._wp_cli("option update siteurl '{0}'".format(app_url))
-        self._wp_cli("option update home '{0}'".format(app_url))
+        #self._wp_cli("option update home '{0}'".format(app_url))
         #self._wp_cli("search-replace 'http://{0}' '{1}'".format(app_domain, app_url))
         
     def execute_sql(self, sql):
