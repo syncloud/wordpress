@@ -66,6 +66,9 @@ cp wp-cli.phar ${BUILD_DIR}/bin/wp-cli.phar
 
 wget https://downloads.wordpress.org/plugin/ldap-login-for-intranet-sites.${WORDPRESS_LDAP_VERSION}.zip --progress dot:giga
 unzip ldap-login-for-intranet-sites.${WORDPRESS_LDAP_VERSION}.zip
+cd ldap-login-for-intranet-sites
+patch -p0 < ${DIR}/patches/ldap.patch
+cd ..
 mv ldap-login-for-intranet-sites ${BUILD_DIR}/wordpress/wp-content/plugins/
 
 mkdir ${DIR}/build/${NAME}/META
