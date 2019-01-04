@@ -1,7 +1,7 @@
 import logging
 from os.path import isdir, join, isfile
 from subprocess import check_output
-
+import shutil
 from syncloudlib import fs, linux, gen, logger
 from syncloudlib.application import paths, urls, storage
 
@@ -64,6 +64,8 @@ class Installer:
             
             app_url = urls.get_app_url(APP_NAME)
             app_domain = urls.get_app_domain_name(APP_NAME)
+           
+            shutil.copytree(join(self.app_dir, 'wordpress/wp-content'), self.app_data_dir)
             
             self._wp_cli('core install --url={0} --title=Syncloud --admin_user=admin --admin_password=admon --admin_email=info@example.com'.format(app_domain))
             self._wp_cli('plugin activate ldap-login-for-intranet-sites')
