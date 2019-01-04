@@ -83,7 +83,8 @@ class Installer:
             self._wp_cli("option update mo_ldap_local_server_url_status VALID")
             self._wp_cli("option update mo_ldap_local_service_account_status VALID")
             self._wp_cli("option update mo_ldap_local_user_mapping_status VALID")
-
+            self._wp_cli("option update Filter_search cn")
+            self._wp_cli("option update mo_ldap_local_mapping_value_default admin")
             self.on_domain_change()
             
             fs.touchfile(install_file)
