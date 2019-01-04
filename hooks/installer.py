@@ -65,7 +65,7 @@ class Installer:
             app_url = urls.get_app_url(APP_NAME)
             app_domain = urls.get_app_domain_name(APP_NAME)
            
-            shutil.copytree(join(self.app_dir, 'wordpress/wp-content'), self.app_data_dir)
+            shutil.copytree(join(self.app_dir, 'wordpress/wp-content'), join(self.app_data_dir, '/wp-content'))
             
             self._wp_cli('core install --url={0} --title=Syncloud --admin_user=admin --admin_password=admon --admin_email=info@example.com'.format(app_domain))
             self._wp_cli('plugin activate ldap-login-for-intranet-sites')
