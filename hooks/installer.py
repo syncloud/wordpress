@@ -66,7 +66,7 @@ class Installer:
             app_domain = urls.get_app_domain_name(APP_NAME)
             
             self._wp_cli('core install --url={0} --title=Syncloud --admin_user=admin --admin_password=admon --admin_email=info@example.com'.format(app_domain))
-            self._wp_cli('wp plugin activate ldap-login-for-intranet-sites")
+            self._wp_cli('wp plugin activate ldap-login-for-intranet-sites')
             self._wp_cli("option update mo_ldap_local_register_user 1")
             self._wp_cli("option update mo_ldap_local_host_name https://auth.miniorange.com")
             self._wp_cli("option update mo_ldap_local_mapping_memberof_attribute memberOf")
