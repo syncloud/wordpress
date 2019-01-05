@@ -90,5 +90,5 @@ require_once(ABSPATH . 'wp-settings.php');
 
 define('FS_METHOD', 'direct');
 
-define('WP_CONTENT_DIR', getenv('SNAP_COMMON') . '/wp-content');
+//define('WP_CONTENT_DIR', getenv('SNAP_COMMON') . '/wp-content');
 //define('WP_PLUGINS_DIR', WP_CONTENT_DIR . '/plugins');

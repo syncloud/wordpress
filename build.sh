@@ -72,7 +72,7 @@ cd ..
 mv ldap-login-for-intranet-sites ${BUILD_DIR}/wordpress/wp-content/plugins/
 
 mv ${BUILD_DIR}/wordpress/wp-content ${BUILD_DIR}/wp-content.template
-
+ln -sf /var/snap/wordpress/common/wp-content ${BUILD_DIR}/wordpress/wp-content
 mkdir ${DIR}/build/${NAME}/META
 echo ${NAME} >> ${DIR}/build/${NAME}/META/app
 echo ${VERSION} >> ${DIR}/build/${NAME}/META/version
