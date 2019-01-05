@@ -71,6 +71,8 @@ patch -p0 < ${DIR}/patches/ldap.patch
 cd ..
 mv ldap-login-for-intranet-sites ${BUILD_DIR}/wordpress/wp-content/plugins/
 
+mv ${BUILD_DIR}/wordpress/wp-content ${BUILD_DIR}/wordpress/wp-content.template
+
 mkdir ${DIR}/build/${NAME}/META
 echo ${NAME} >> ${DIR}/build/${NAME}/META/app
 echo ${VERSION} >> ${DIR}/build/${NAME}/META/version
