@@ -67,9 +67,9 @@ class Installer:
             app_url = urls.get_app_url(APP_NAME)
             app_domain = urls.get_app_domain_name(APP_NAME)
            
-            
-            self._wp_cli('core install --url={0} --title=Syncloud --admin_user=admin --admin_password=admon --admin_email=info@example.com'.format(app_domain))
+            self._wp_cli('core install --url={0} --title=Syncloud --admin_user=installer --admin_email=info@example.com --skip-email'.format(app_domain))
             self._wp_cli('plugin activate ldap-login-for-intranet-sites')
+            self._wp_cli('user delete installer')
             self._wp_cli("option update mo_ldap_local_register_user 1")
             self._wp_cli("option update mo_ldap_local_mapping_memberof_attribute memberOf")
             self._wp_cli("option update mo_ldap_local_new_registration true")
