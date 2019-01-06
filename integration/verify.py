@@ -53,6 +53,7 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir, 
     run_ssh(device_host, '{0}/bin/wp-cli core is-installed; echo "is installed: $?" > {1}/wp-cli.isinstalled.log'.format(app_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False, env_vars='SNAP_COMMON={0}'.format(data_dir))
     run_ssh(device_host, '{0}/bin/wp-cli option list > {1}/wp-cli.options.log'.format(app_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False, env_vars='SNAP_COMMON={0}'.format(data_dir))
     run_ssh(device_host, '{0}/bin/wp-cli --info > {1}/wp-cli.info.log 2>&1'.format(app_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False, env_vars='SNAP_COMMON={0}'.format(data_dir))  
+    run_ssh(device_host, '{0}/bin/wp-cli user list > {1}/wp-cli.user.list.log 2>&1'.format(app_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False, env_vars='SNAP_COMMON={0}'.format(data_dir))  
 
     app_log_dir  = join(log_dir, 'log')
     os.mkdir(app_log_dir )
@@ -105,21 +106,21 @@ def test_phpinfo(device_host, app_dir, data_dir, device_password):
             password=device_password, env_vars='SNAP_COMMON={0}'.format(data_dir))
 
 
-#def test_index(app_domain):
-#    response = requests.get('https://{0}/index.php'.format(app_domain), verify=False)                          
-#    assert response.status_code == 200, response.text
+def test_index(app_domain):
+    response = requests.get('https://{0}'.format(app_domain), verify=False)                          
+    assert response.status_code == 200, response.text
 
 
 #def test_storage_change(device_host, app_dir, data_dir, device_password):
 #    run_ssh(device_host, 'SNAP_COMMON={1} {0}/hooks/storage-change > {1}/log/storage-change.log'.format(app_dir, data_dir), password=device_password, throw=False)
 
-#def test_upgrade(app_archive_path, device_host, device_password):
-#    local_install(device_host, device_password, app_archive_path)
+def test_upgrade(app_archive_path, device_host, device_password):
+    local_install(device_host, device_password, app_archive_path)
 
-#def test_remove(syncloud_session, device_host, app):
-#    response = syncloud_session.get('https://{0}/rest/remove?app_id={1}'.format(device_host, app), allow_redirects=False, verify=False)
-#    assert response.status_code == 200, response.text
+def test_remove(syncloud_session, device_host, app):
+    response = syncloud_session.get('https://{0}/rest/remove?app_id={1}'.format(device_host, app), allow_redirects=False, verify=False)
+    assert response.status_code == 200, response.text
 
 
-#def test_reinstall(app_archive_path, device_host, device_password):
-#    local_install(device_host, device_password, app_archive_path)
+def test_reinstall(app_archive_path, device_host, device_password):
+    local_install(device_host, device_password, app_archive_path)

@@ -34,6 +34,7 @@ class Installer:
         
         fs.makepath(join(self.app_data_dir, 'log'))
         fs.makepath(join(self.app_data_dir, 'nginx'))
+        fs.makepath(join(self.app_data_dir, 'temp'))
         
         storage.init_storage(APP_NAME, USER_NAME)
 
@@ -55,6 +56,10 @@ class Installer:
             
         fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
 
+    def refresh(self):
+        self.install_config()
+        fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
+
     def configure(self):
         self.prepare_storage()
         install_file = join(self.app_data_dir, 'installed')
@@ -67,9 +72,9 @@ class Installer:
             app_url = urls.get_app_url(APP_NAME)
             app_domain = urls.get_app_domain_name(APP_NAME)
            
-            self._wp_cli('core install --url={0} --title=Syncloud --admin_user=installer --admin_email=info@example.com --skip-email'.format(app_domain))
+            self._wp_cli('core install --url={0} --title=Syncloud --admin_user=installer --admin_email=admin@example.com --skip-email'.format(app_domain))
             self._wp_cli('plugin activate ldap-login-for-intranet-sites')
-            self._wp_cli('user delete installer')
+            self._wp_cli('user delete installer --yes')
             self._wp_cli("option update mo_ldap_local_register_user 1")
             self._wp_cli("option update mo_ldap_local_mapping_memberof_attribute memberOf")
             self._wp_cli("option update mo_ldap_local_new_registration true")
@@ -96,7 +101,6 @@ class Installer:
     def _wp_cli(self, cmd):
         check_output('{0}/bin/wp-cli {1}'.format(self.app_dir, cmd), shell=True)
              
-    
     def on_disk_change(self):
         self.prepare_storage()
         
@@ -117,12 +121,8 @@ class Installer:
           
     def database_init(self):
         
-        if not isdir(self.database_path):
-            initdb_cmd = '{0}/mariadb/scripts/mysql_install_db --user={1} --basedir={0}/mariadb --datadir={2}'.format(
-                self.app_dir, DB_USER, self.database_path)
-            check_output(initdb_cmd, shell=True)
-            
-        else:
-            self.log.info('Database path "{0}" already exists'.format(self.database_path))
+        initdb_cmd = '{0}/mariadb/scripts/mysql_install_db --user={1} --basedir={0}/mariadb --datadir={2}'.format(
+            self.app_dir, DB_USER, self.database_path)
+        check_output(initdb_cmd, shell=True)
 
 
