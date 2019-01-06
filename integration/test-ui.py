@@ -82,5 +82,8 @@ def test_users(driver, app_domain):
 def test_media(driver, app_domain):
 
     driver.get("https://{0}/wp-admin/media-new.php".format(app_domain))
-    time.sleep(10)
+    time.sleep(2)
+    file = driver.find_element_by_css_selector('input[type="file"][id="async-upload"]')
+    file.send_keys(join(DIR, 'images', 'profile.jpeg'))
+    time.sleep(2)
     screenshots(driver, screenshot_dir, 'media')
