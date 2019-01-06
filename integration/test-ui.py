@@ -79,4 +79,8 @@ def test_users(driver, app_domain):
     time.sleep(10)
     screenshots(driver, screenshot_dir, 'users')
     
+def test_media(driver, app_domain):
 
+    driver.get("https://{0}/wp-admin/media-new.php".format(app_domain))
+    time.sleep(10)
+    screenshots(driver, screenshot_dir, 'media')
