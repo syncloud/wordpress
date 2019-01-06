@@ -56,6 +56,10 @@ class Installer:
             
         fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
 
+    def refresh(self):
+        self.install_config()
+        fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
+
     def configure(self):
         self.prepare_storage()
         install_file = join(self.app_data_dir, 'installed')
@@ -97,7 +101,6 @@ class Installer:
     def _wp_cli(self, cmd):
         check_output('{0}/bin/wp-cli {1}'.format(self.app_dir, cmd), shell=True)
              
-    
     def on_disk_change(self):
         self.prepare_storage()
         
@@ -118,12 +121,8 @@ class Installer:
           
     def database_init(self):
         
-        if not isdir(self.database_path):
-            initdb_cmd = '{0}/mariadb/scripts/mysql_install_db --user={1} --basedir={0}/mariadb --datadir={2}'.format(
-                self.app_dir, DB_USER, self.database_path)
-            check_output(initdb_cmd, shell=True)
-            
-        else:
-            self.log.info('Database path "{0}" already exists'.format(self.database_path))
+        initdb_cmd = '{0}/mariadb/scripts/mysql_install_db --user={1} --basedir={0}/mariadb --datadir={2}'.format(
+            self.app_dir, DB_USER, self.database_path)
+        check_output(initdb_cmd, shell=True)
 
 
