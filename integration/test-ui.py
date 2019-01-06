@@ -87,7 +87,7 @@ def test_media(driver, app_domain):
     file = driver.find_element_by_css_selector('p[class="upload-flash-bypass"] input[type="file"]')
     file.send_keys(join(DIR, 'images', 'profile.jpeg'))
     time.sleep(2)
-    save = driver.find_element_by_css_selector('p[class="upload-flash-bypass"] input[type="submit"]')
+    save = driver.find_element_by_css_selector('div[id="plupload-upload-ui"] input[type="submit"]')
     save.click()
     time.sleep(5)
     screenshots(driver, screenshot_dir, 'media')
