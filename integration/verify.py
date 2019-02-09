@@ -60,20 +60,6 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir, 
     run_scp('root@{0}:{1}/log/*.log {2}'.format(device_host, data_dir, app_log_dir), password=LOGS_SSH_PASSWORD, throw=False)
     run_scp('root@{0}:{1}/* {2}'.format(device_host, TMP_DIR, app_log_dir), password=LOGS_SSH_PASSWORD, throw=False)
     
- 
-@pytest.fixture(scope='function')
-def syncloud_session(device_host, device_user, device_password):
-    session = requests.session()
-    session.post('https://{0}/rest/login'.format(device_host), data={'name': device_user, 'password': device_password}, verify=False)
-    return session
-
-
-@pytest.fixture(scope='function')
-def rocketcaht_session_domain(app_domain, device_host):
-    session = requests.session()
-    response = session.get('https://{0}'.format(app_domain), allow_redirects=True, verify=False)
-    print(response.text)
-    return session
 
 def test_start(module_setup, device_host, app, log_dir):
     shutil.rmtree(log_dir, ignore_errors=True)
