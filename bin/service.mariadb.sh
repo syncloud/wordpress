@@ -7,6 +7,8 @@ if [[ -z "$1" ]]; then
     exit 1
 fi
 
+export LD_LIBRARY_PATH=${DIR}/mariadb/lib
+
 case $1 in
 start)
     export MYSQL_HOME=$SNAP_COMMON/config
