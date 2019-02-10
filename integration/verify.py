@@ -103,8 +103,8 @@ def test_index(app_domain):
 def test_upgrade(app_archive_path, device_host, device_password):
     local_install(device_host, device_password, app_archive_path)
 
-def test_remove(syncloud_session, device_host, app):
-    response = syncloud_session.get('https://{0}/rest/remove?app_id={1}'.format(device_host, app), allow_redirects=False, verify=False)
+def test_remove(device, app):
+    response = device.app_remove(app)
     assert response.status_code == 200, response.text
 
 
