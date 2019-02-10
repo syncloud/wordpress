@@ -7,10 +7,12 @@ if [[ -z "$1" ]]; then
     exit 1
 fi
 
+export LD_LIBRARY_PATH=${DIR}/mariadb/lib
+
 case $1 in
 start)
     export MYSQL_HOME=$SNAP_COMMON/config
-    exec ${DIR}/mariadb/bin/mariadb.sh --basedir=$SNAP/mariadb --datadir=$SNAP_COMMON/database --plugin-dir=$SNAP/mariadb/lib/plugin --pid-file=$SNAP_COMMON/database/mariadb.pid
+    exec ${DIR}/mariadb/bin/mysqld --basedir=$SNAP/mariadb --datadir=$SNAP_COMMON/database --plugin-dir=$SNAP/mariadb/lib/plugin --pid-file=$SNAP_COMMON/database/mariadb.pid
     ;;
 
 *)
