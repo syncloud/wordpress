@@ -12,7 +12,7 @@ export TMPDIR=/tmp
 export TMP=/tmp
 
 NAME=$1
-WORDPRESS_VERSION=5.0.2
+WORDPRESS_VERSION=5.0.3
 WORDPRESS_LDAP_VERSION=3.0.2
 ARCH=$(uname -m)
 SNAP_ARCH=$(dpkg --print-architecture)
