@@ -6,7 +6,7 @@
  
 -		if ( getenv( 'WP_CONFIG_PATH' ) && file_exists( getenv( 'WP_CONFIG_PATH' ) ) ) {
 -			$path = getenv( 'WP_CONFIG_PATH' );
-+		if ( getenv( 'WP_CONFIG_PATH' ) && file_exists( getenv( 'WP_CONFIG_PATH' ) . '/wp-config.php' ) ) {
++		if ( getenv( 'WP_CONFIG_PATH' ) ) {
 +			$path = getenv( 'WP_CONFIG_PATH' ) . '/wp-config.php';
  		} elseif ( file_exists( ABSPATH . 'wp-config.php' ) ) {
  			$path = ABSPATH . 'wp-config.php';
