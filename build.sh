@@ -63,7 +63,8 @@ phar delete -f wp-cli.phar -e vendor/wp-cli/wp-cli/php/utils.php
 phar add -f wp-cli.phar phar 
 phar list -f wp-cli.phar -i utils.php
 
-php wp-cli.phar --allow-root cli info
+WP_CONFIG_DIR=$DIR/config/wordpress php wp-cli.phar --allow-root cli info
+
 cp wp-cli.phar ${BUILD_DIR}/bin/wp-cli.phar
 
 wget https://downloads.wordpress.org/plugin/ldap-login-for-intranet-sites.${WORDPRESS_LDAP_VERSION}.zip --progress dot:giga
