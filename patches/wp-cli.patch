@@ -1,13 +1,13 @@
---- utils.php	2018-12-28 20:50:23.363387561 +0000
-+++ utils.php.new	2018-12-28 20:53:15.079977471 +0000
-@@ -237,7 +237,9 @@
+--- utils.php
++++ utils.php
+@@ -236,8 +236,8 @@ function locate_wp_config() {
  	if ( null === $path ) {
  		$path = false;
  
--		if ( file_exists( ABSPATH . 'wp-config.php' ) ) {
-+		if (getenv('WP_CONFIG_DIR')) {
-+			$path = getenv('WP_CONFIG_DIR') . '/wp-config.php' ;
-+		} elseif ( file_exists( ABSPATH . 'wp-config.php' ) ) {
+-		if ( getenv( 'WP_CONFIG_PATH' ) && file_exists( getenv( 'WP_CONFIG_PATH' ) ) ) {
+-			$path = getenv( 'WP_CONFIG_PATH' );
++		if ( getenv( 'WP_CONFIG_PATH' ) && file_exists( getenv( 'WP_CONFIG_PATH' ) . '/wp-config.php' ) ) {
++			$path = getenv( 'WP_CONFIG_PATH' ) . '/wp-config.php';
+ 		} elseif ( file_exists( ABSPATH . 'wp-config.php' ) ) {
  			$path = ABSPATH . 'wp-config.php';
  		} elseif ( file_exists( dirname( ABSPATH ) . '/wp-config.php' ) && ! file_exists( dirname( ABSPATH ) . '/wp-settings.php' ) ) {
- 			$path = dirname( ABSPATH ) . '/wp-config.php';

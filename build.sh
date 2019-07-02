@@ -14,9 +14,11 @@ export TMP=/tmp
 NAME=$1
 WORDPRESS_VERSION=5.2.2
 WORDPRESS_LDAP_VERSION=3.0.2
+WORDPRESS_CLI_VERSION=2.2.0
 ARCH=$(uname -m)
 SNAP_ARCH=$(dpkg --print-architecture)
 VERSION=$2
+
 
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 
@@ -49,7 +51,7 @@ cp -r ${DIR}/config ${BUILD_DIR}/config.templates
 cp -r ${DIR}/hooks ${BUILD_DIR}
 
 cd ${DIR}/build/
-wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar --progress dot:giga
+wget https://github.com/wp-cli/wp-cli/releases/download/v${WORDPRESS_CLI_VERSION}/wp-cli-${WORDPRESS_CLI_VERSION}.phar --progress dot:giga
 sed -i 's/;phar.readonly = On/phar.readonly = Off/g' /etc/php5/cli/php.ini
 php wp-cli.phar --allow-root cli info
 phar extract -f wp-cli.phar -i utils.php phar
