@@ -4,7 +4,7 @@
   *
   * If neither set of conditions is true, initiate loading the setup process.
   */
--if ( file_exists( ABSPATH . 'wp-config.php') ) {
+-if ( file_exists( ABSPATH . 'wp-config.php' ) ) {
 +if (getenv('WP_CONFIG_DIR')) {
 +
 +    require_once( getenv('WP_CONFIG_DIR') . '/' . 'wp-config.php' );

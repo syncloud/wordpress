@@ -8,8 +8,7 @@ from subprocess import check_output
 import pytest
 import shutil
 
-from syncloudlib.integration.installer import local_install, wait_for_rest, local_remove, \
-    get_data_dir, get_app_dir, get_service_prefix, get_ssh_env_vars
+from syncloudlib.integration.installer import local_install, wait_for_rest, local_remove, wait_for_installer
 from syncloudlib.integration.loop import loop_device_cleanup
 from syncloudlib.integration.ssh import run_scp, run_ssh
 from syncloudlib.integration.hosts import add_host_alias
@@ -83,9 +82,9 @@ def test_activate_device(main_domain, device_host, domain, device_user, device_p
     LOGS_SSH_PASSWORD = device_password
 
 
-def test_install(app_archive_path, device_host, app_domain, device_password):
+def test_install(app_archive_path, device_host, app_domain, device_password, device_session):
     local_install(device_host, device_password, app_archive_path)
-    wait_for_rest(requests.session(), app_domain, '/', 200, 10)
+    wait_for_installer(device_session, device_host)
 
 def test_phpinfo(device_host, app_dir, data_dir, device_password):
     run_ssh(device_host, '{0}/bin/php -i > {1}/log/phpinfo.log'.format(app_dir, data_dir),
@@ -100,8 +99,9 @@ def test_index(app_domain):
 #def test_storage_change(device_host, app_dir, data_dir, device_password):
 #    run_ssh(device_host, 'SNAP_COMMON={1} {0}/hooks/storage-change > {1}/log/storage-change.log'.format(app_dir, data_dir), password=device_password, throw=False)
 
-def test_upgrade(app_archive_path, device_host, device_password):
+def test_upgrade(app_archive_path, device_host, device_password, device_session):
     local_install(device_host, device_password, app_archive_path)
+    wait_for_installer(device_session, device_host)
 
 def test_remove(device, app):
     response = device.app_remove(app)

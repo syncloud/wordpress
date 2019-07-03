@@ -12,8 +12,9 @@ export TMPDIR=/tmp
 export TMP=/tmp
 
 NAME=$1
-WORDPRESS_VERSION=5.0.2
-WORDPRESS_LDAP_VERSION=3.0.2
+WORDPRESS_VERSION=5.2.2
+WORDPRESS_LDAP_VERSION=3.0.10
+WORDPRESS_CLI_VERSION=2.2.0
 ARCH=$(uname -m)
 SNAP_ARCH=$(dpkg --print-architecture)
 VERSION=$2
@@ -49,7 +50,8 @@ cp -r ${DIR}/config ${BUILD_DIR}/config.templates
 cp -r ${DIR}/hooks ${BUILD_DIR}
 
 cd ${DIR}/build/
-wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar --progress dot:giga
+wget https://github.com/wp-cli/wp-cli/releases/download/v${WORDPRESS_CLI_VERSION}/wp-cli-${WORDPRESS_CLI_VERSION}.phar --progress dot:giga
+mv wp-cli-${WORDPRESS_CLI_VERSION}.phar wp-cli.phar
 sed -i 's/;phar.readonly = On/phar.readonly = Off/g' /etc/php5/cli/php.ini
 php wp-cli.phar --allow-root cli info
 phar extract -f wp-cli.phar -i utils.php phar
@@ -62,6 +64,7 @@ phar add -f wp-cli.phar phar
 phar list -f wp-cli.phar -i utils.php
 
 php wp-cli.phar --allow-root cli info
+
 cp wp-cli.phar ${BUILD_DIR}/bin/wp-cli.phar
 
 wget https://downloads.wordpress.org/plugin/ldap-login-for-intranet-sites.${WORDPRESS_LDAP_VERSION}.zip --progress dot:giga
