@@ -63,7 +63,7 @@ phar delete -f wp-cli.phar -e vendor/wp-cli/wp-cli/php/utils.php
 phar add -f wp-cli.phar phar 
 phar list -f wp-cli.phar -i utils.php
 
-WP_CONFIG_DIR=$DIR/config/wordpress php wp-cli.phar --allow-root cli info
+php wp-cli.phar --allow-root cli info
 
 cp wp-cli.phar ${BUILD_DIR}/bin/wp-cli.phar
 
