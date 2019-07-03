@@ -95,9 +95,9 @@ class Installer:
             
             fs.touchfile(install_file)
             
-        # else:
-            # upgrade
-    
+        else:
+            self._wp_cli("core update-db")
+         
     def _wp_cli(self, cmd):
         check_output('{0}/bin/wp-cli {1}'.format(self.app_dir, cmd), shell=True)
              
