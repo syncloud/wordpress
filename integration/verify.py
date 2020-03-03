@@ -26,7 +26,7 @@ def module_setup(request, device, platform_data_dir, app_dir, artifact_dir, data
     def module_teardown():
         platform_log_dir = join(artifact_dir, 'platform_log')
         os.mkdir(platform_log_dir)
-        devuce.scp_from_device('{0}/log/*'.format(platform_data_dir), platform_log_dir))
+        devuce.scp_from_device('{0}/log/*'.format(platform_data_dir), platform_log_dir)
     
         device.run_ssh('mkdir {0}'.format(TMP_DIR))
         device.run_ssh('top -bn 1 -w 500 -c > {0}/top.log'.format(TMP_DIR))
@@ -51,8 +51,8 @@ def module_setup(request, device, platform_data_dir, app_dir, artifact_dir, data
 
         app_log_dir  = join(artifact_dir, 'log')
         os.mkdir(app_log_dir )
-        device.scp_from_device('{0}/log/*.log'.format(data_dir, app_log_dir))
-        device.scp_from_device('{0}/*'.format(TMP_DIR) app_log_dir)
+        device.scp_from_device('{0}/log/*.log'.format(data_dir), app_log_dir)
+        device.scp_from_device('{0}/*'.format(TMP_DIR), app_log_dir)
     
     request.addfinalizer(module_teardown)
 
