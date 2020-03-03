@@ -17,77 +17,64 @@ from syncloudlib.integration import conftest
 import requests
 
 
-DEFAULT_DEVICE_PASSWORD = 'syncloud'
-LOGS_SSH_PASSWORD = DEFAULT_DEVICE_PASSWORD
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud'
 
 
 @pytest.fixture(scope="session")
-def module_setup(request, device_host, data_dir, platform_data_dir, app_dir, log_dir, app):
-    request.addfinalizer(lambda: module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir, app))
-
-
-def module_teardown(device_host, data_dir, platform_data_dir, app_dir, log_dir, app):
-    platform_log_dir = join(log_dir, 'platform_log')
-    os.mkdir(platform_log_dir)
-    run_scp('root@{0}:{1}/log/* {2}'.format(device_host, platform_data_dir, platform_log_dir), password=LOGS_SSH_PASSWORD, throw=False)
+def module_setup(request, device, platform_data_dir, app_dir, artifact_dir, data_dir):
+    def module_teardown():
+        platform_log_dir = join(artifact_dir, 'platform_log')
+        os.mkdir(platform_log_dir)
+        devuce.scp_from_device('{0}/log/*'.format(platform_data_dir), platform_log_dir))
     
-    run_ssh(device_host, 'mkdir {0}'.format(TMP_DIR), password=LOGS_SSH_PASSWORD)
-    run_ssh(device_host, 'top -bn 1 -w 500 -c > {0}/top.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)
-    run_ssh(device_host, 'ps auxfw > {0}/ps.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)
-    run_ssh(device_host, 'netstat -nlp > {0}/netstat.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)
-    run_ssh(device_host, 'journalctl > {0}/journalctl.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)
-    run_ssh(device_host, 'cp /var/log/syslog {0}/syslog.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)
-    run_ssh(device_host, 'cp {0}/database/*.err {1}/'.format(data_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)
-    run_ssh(device_host, 'cp /var/log/messages {0}/messages.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
-    run_ssh(device_host, 'ls -la /snap > {0}/snap.ls.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
-    run_ssh(device_host, 'ls -la {0}/ > {1}/app.ls.log'.format(app_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
-    run_ssh(device_host, 'ls -la {0}/ > {1}/data.ls.log'.format(data_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
-    run_ssh(device_host, 'ls -la {0}/wp-content/ > {1}/data.wp-content.ls.log'.format(data_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
-    run_ssh(device_host, 'ls -la {0}/database/ > {1}/database.ls.log'.format(data_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)    
-    run_ssh(device_host, 'ls -la {0}/wordpress/ > {1}/wordpress.ls.log'.format(app_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)  
-    run_ssh(device_host, 'ls -la {0}/wp-content.template/ > {1}/wp-content.template.ls.log'.format(app_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)  
-    run_ssh(device_host, 'ls -la {0}/log/ > {1}/log.ls.log'.format(data_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)  
-    run_ssh(device_host, '{0}/bin/wp-cli core is-installed; echo "is installed: $?" > {1}/wp-cli.isinstalled.log'.format(app_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False, env_vars='SNAP_COMMON={0}'.format(data_dir))
-    run_ssh(device_host, '{0}/bin/wp-cli option list > {1}/wp-cli.options.log'.format(app_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False, env_vars='SNAP_COMMON={0}'.format(data_dir))
-    run_ssh(device_host, '{0}/bin/wp-cli --info > {1}/wp-cli.info.log 2>&1'.format(app_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False, env_vars='SNAP_COMMON={0}'.format(data_dir))  
-    run_ssh(device_host, '{0}/bin/wp-cli user list > {1}/wp-cli.user.list.log 2>&1'.format(app_dir, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False, env_vars='SNAP_COMMON={0}'.format(data_dir))  
+        device.run_ssh('mkdir {0}'.format(TMP_DIR))
+        device.run_ssh('top -bn 1 -w 500 -c > {0}/top.log'.format(TMP_DIR))
+        device.run_ssh('ps auxfw > {0}/ps.log'.format(TMP_DIR))
+        device.run_ssh('netstat -nlp > {0}/netstat.log'.format(TMP_DIR))
+        device.run_ssh('journalctl > {0}/journalctl.log'.format(TMP_DIR))
+        device.run_ssh('cp /var/log/syslog {0}/syslog.log'.format(TMP_DIR))
+        device.run_ssh('cp /var/snap/wordpress/common/database/*.err {0}/'.format(TMP_DIR))
+        device.run_ssh('cp /var/log/messages {0}/messages.log'.format(TMP_DIR))    
+        device.run_ssh('ls -la /snap > {0}/snap.ls.log'.format(TMP_DIR))    
+        device.run_ssh('ls -la {0}/ > {1}/app.ls.log'.format(app_dir, TMP_DIR))    
+        device.run_ssh('ls -la /var/snap/wordpress/common/ > {0}/data.ls.log'.format(TMP_DIR))    
+        device.run_ssh('ls -la /var/snap/wordpress/common/wp-content/ > {0}/data.wp-content.ls.log'.format(TMP_DIR))    
+        device.run_ssh('ls -la /var/snap/wordpress/common/database/ > {0}/database.ls.log'.format(TMP_DIR))    
+        device.run_ssh('ls -la {0}/wordpress/ > {1}/wordpress.ls.log'.format(app_dir, TMP_DIR))  
+        device.run_ssh('ls -la {0}/wp-content.template/ > {0}/wp-content.template.ls.log'.format(app_dir, TMP_DIR))  
+        device.run_ssh('ls -la /var/snap/wordpress/common/log/ > {0}/log.ls.log'.format(TMP_DIR))  
+        device.run_ssh('{0}/bin/wp-cli core is-installed; echo "is installed: $?" > {1}/wp-cli.isinstalled.log'.format(app_dir, TMP_DIR), env_vars='SNAP_COMMON={0}'.format(data_dir))
+        device.run_ssh('{0}/bin/wp-cli option list > {1}/wp-cli.options.log'.format(app_dir, TMP_DIR), env_vars='SNAP_COMMON={0}'.format(data_dir))
+        device.run_ssh('{0}/bin/wp-cli --info > {1}/wp-cli.info.log 2>&1'.format(app_dir, TMP_DIR), env_vars='SNAP_COMMON={0}'.format(data_dir))  
+        device.run_ssh('{0}/bin/wp-cli user list > {1}/wp-cli.user.list.log 2>&1'.format(app_dir, TMP_DIR), env_vars='SNAP_COMMON={0}'.format(data_dir))  
 
-    app_log_dir  = join(log_dir, 'log')
-    os.mkdir(app_log_dir )
-    run_scp('root@{0}:{1}/log/*.log {2}'.format(device_host, data_dir, app_log_dir), password=LOGS_SSH_PASSWORD, throw=False)
-    run_scp('root@{0}:{1}/* {2}'.format(device_host, TMP_DIR, app_log_dir), password=LOGS_SSH_PASSWORD, throw=False)
+        app_log_dir  = join(artifact_dir, 'log')
+        os.mkdir(app_log_dir )
+        device.scp_from_device('{0}/log/*.log'.format(data_dir, app_log_dir))
+        device.scp_from_device('{0}/*'.format(TMP_DIR) app_log_dir)
     
-
-def test_start(module_setup, device_host, app, log_dir):
-    shutil.rmtree(log_dir, ignore_errors=True)
-    os.mkdir(log_dir)
-    add_host_alias(app, device_host)
-    print(check_output('date', shell=True))
-    run_ssh(device_host, 'date', password=LOGS_SSH_PASSWORD)
+    request.addfinalizer(module_teardown)
 
 
-def test_activate_device(main_domain, device_host, domain, device_user, device_password, redirect_user, redirect_password):
+def test_start(module_setup, device, device_host, app, domain):
+    add_host_alias_by_ip(app, domain, device_host)
+    device.run_ssh('date', retries=100)
+    device.run_ssh('mkdir {0}'.format(TMP_DIR))
 
-    response = requests.post('http://{0}:81/rest/activate'.format(device_host),
-                             data={'main_domain': main_domain,
-                                   'redirect_email': redirect_user,
-                                   'redirect_password': redirect_password,
-                                   'user_domain': domain,
-                                   'device_username': device_user,
-                                   'device_password': device_password})
+
+def test_activate_device(device):
+    response = device.activate()
     assert response.status_code == 200, response.text
-    global LOGS_SSH_PASSWORD
-    LOGS_SSH_PASSWORD = device_password
 
 
-def test_install(app_archive_path, device_host, app_domain, device_password, device_session):
+def test_install(app_archive_path, device_session, device_host, device_password):
     local_install(device_host, device_password, app_archive_path)
     wait_for_installer(device_session, device_host)
 
+
 def test_phpinfo(device_host, app_dir, data_dir, device_password):
-    run_ssh(device_host, '{0}/bin/php -i > {1}/log/phpinfo.log'.format(app_dir, data_dir),
+    device.run_ssh('{0}/bin/php -i > {1}/log/phpinfo.log'.format(app_dir, data_dir),
             password=device_password, env_vars='SNAP_COMMON={0}'.format(data_dir))
 
 
@@ -97,7 +84,7 @@ def test_index(app_domain):
 
 
 #def test_storage_change(device_host, app_dir, data_dir, device_password):
-#    run_ssh(device_host, 'SNAP_COMMON={1} {0}/hooks/storage-change > {1}/log/storage-change.log'.format(app_dir, data_dir), password=device_password, throw=False)
+#    device.run_ssh('SNAP_COMMON={1} {0}/hooks/storage-change > {1}/log/storage-change.log'.format(app_dir, data_dir), password=device_password, throw=False)
 
 def test_upgrade(app_archive_path, device_host, device_password, device_session):
     local_install(device_host, device_password, app_archive_path)
