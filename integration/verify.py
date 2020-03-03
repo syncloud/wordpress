@@ -72,9 +72,9 @@ def test_install(app_archive_path, device_session, device_host, device_password)
     wait_for_installer(device_session, device_host)
 
 
-def test_phpinfo(device_host, app_dir, data_dir, device_password):
+def test_phpinfo(device, app_dir, data_dir, device_password):
     device.run_ssh('{0}/bin/php -i > {1}/log/phpinfo.log'.format(app_dir, data_dir),
-            password=device_password, env_vars='SNAP_COMMON={0}'.format(data_dir))
+            env_vars='SNAP_COMMON={0}'.format(data_dir))
 
 
 def test_index(app_domain):
