@@ -3,6 +3,7 @@ import shutil
 from os.path import dirname, join, exists
 import time
 import pytest
+from subprocess import check_output
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
