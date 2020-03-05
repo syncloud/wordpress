@@ -92,15 +92,16 @@ def test_users(driver, app_domain, screenshot_dir, ui_mode):
     
 def test_media(driver, app_domain, screenshot_dir, ui_mode):
 
-    driver.get("https://{0}/wp-admin/media-new.php".format(app_domain))
-    time.sleep(2)
-    screenshots(driver, screenshot_dir, 'media-new-' + ui_mode)
-    driver.find_element_by_css_selector('p[class="upload-flash-bypass"] a').click()
-    file = driver.find_element_by_css_selector('input[id="async-upload"][type="file"]')
-    file.send_keys(join(DIR, 'images', 'profile.jpeg'))
-    time.sleep(2)
-    screenshots(driver, screenshot_dir, 'media-' + ui_mode)
-    save = driver.find_element_by_css_selector('input[id="html-upload"][type="submit"]')
-    save.click()
-    time.sleep(5)
-    screenshots(driver, screenshot_dir, 'media-done-' + ui_mode)
+    if ui_mode == "desktop":
+        driver.get("https://{0}/wp-admin/media-new.php".format(app_domain))
+        time.sleep(2)
+        screenshots(driver, screenshot_dir, 'media-new-' + ui_mode)
+        driver.find_element_by_css_selector('p[class="upload-flash-bypass"] a').click()
+        file = driver.find_element_by_css_selector('input[id="async-upload"][type="file"]')
+        file.send_keys(join(DIR, 'images', 'profile.jpeg'))
+        time.sleep(2)
+        screenshots(driver, screenshot_dir, 'media-' + ui_mode)
+        save = driver.find_element_by_css_selector('input[id="html-upload"][type="submit"]')
+        save.click()
+        time.sleep(5)
+        screenshots(driver, screenshot_dir, 'media-done-' + ui_mode)
