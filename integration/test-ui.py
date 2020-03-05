@@ -37,15 +37,15 @@ def test_start(module_setup, app, domain, device_host):
     add_host_alias_by_ip(app, domain, device_host)
     
 
-def test_index(driver, app_domain, screenshot_dir):
+def test_index(driver, app_domain, screenshot_dir, ui_mode):
 
     driver.get("https://{0}".format(app_domain))
     time.sleep(10)
   
-    screenshots(driver, screenshot_dir, 'index')
+    screenshots(driver, screenshot_dir, 'index-' + ui_mode)
     
 
-def test_login(driver, app_domain, device_user, device_password, screenshot_dir):
+def test_login(driver, app_domain, device_user, device_password, screenshot_dir, ui_mode):
 
     driver.get("https://{0}/wp-login.php".format(app_domain))
     wait_driver = WebDriverWait(driver, 120)
@@ -55,52 +55,52 @@ def test_login(driver, app_domain, device_user, device_password, screenshot_dir)
     user.send_keys(device_user)
     password = driver.find_element_by_id("user_pass")
     password.send_keys(device_password)
-    screenshots(driver, screenshot_dir, 'login')
+    screenshots(driver, screenshot_dir, 'login-' + ui_mode)
     password.send_keys(Keys.RETURN)
     
     time.sleep(10)
     
-    screenshots(driver, screenshot_dir, 'login-complete')
+    screenshots(driver, screenshot_dir, 'login-complete-' + ui_mode)
     
 
-def test_admin(driver, app_domain, screenshot_dir):
+def test_admin(driver, app_domain, screenshot_dir, ui_mode):
 
     driver.get("https://{0}/wp-admin".format(app_domain))
     time.sleep(10)
-    screenshots(driver, screenshot_dir, 'admin')
+    screenshots(driver, screenshot_dir, 'admin-' + ui_mode)
     
 
-def test_profile(driver, app_domain, screenshot_dir):
+def test_profile(driver, app_domain, screenshot_dir, ui_mode):
 
     driver.get("https://{0}/wp-admin/profile.php".format(app_domain))
     time.sleep(10)
-    screenshots(driver, screenshot_dir, 'profile')
+    screenshots(driver, screenshot_dir, 'profile-' + ui_mode)
     
 
-def test_ldap(driver, app_domain, screenshot_dir):
+def test_ldap(driver, app_domain, screenshot_dir, ui_mode):
 
     driver.get("https://{0}/wp-admin/admin.php?page=mo_ldap_local_login".format(app_domain))
     time.sleep(10)
-    screenshots(driver, screenshot_dir, 'ldap')
+    screenshots(driver, screenshot_dir, 'ldap-' + ui_mode)
 
     
-def test_users(driver, app_domain, screenshot_dir):
+def test_users(driver, app_domain, screenshot_dir, ui_mode):
 
     driver.get("https://{0}/wp-admin/users.php".format(app_domain))
     time.sleep(10)
-    screenshots(driver, screenshot_dir, 'users')
+    screenshots(driver, screenshot_dir, 'users-' + ui_mode)
     
-def test_media(driver, app_domain, screenshot_dir):
+def test_media(driver, app_domain, screenshot_dir, ui_mode):
 
     driver.get("https://{0}/wp-admin/media-new.php".format(app_domain))
     time.sleep(2)
-    screenshots(driver, screenshot_dir, 'media-new')
+    screenshots(driver, screenshot_dir, 'media-new-' + ui_mode)
     driver.find_element_by_css_selector('p[class="upload-flash-bypass"] a').click()
     file = driver.find_element_by_css_selector('input[id="async-upload"][type="file"]')
     file.send_keys(join(DIR, 'images', 'profile.jpeg'))
     time.sleep(2)
-    screenshots(driver, screenshot_dir, 'media')
+    screenshots(driver, screenshot_dir, 'media-' + ui_mode)
     save = driver.find_element_by_css_selector('input[id="html-upload"][type="submit"]')
     save.click()
     time.sleep(5)
-    screenshots(driver, screenshot_dir, 'media-done')
+    screenshots(driver, screenshot_dir, 'media-done-' + ui_mode)
