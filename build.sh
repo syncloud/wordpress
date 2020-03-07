@@ -12,14 +12,12 @@ export TMPDIR=/tmp
 export TMP=/tmp
 
 NAME=$1
-WORDPRESS_VERSION=5.2.2
-WORDPRESS_LDAP_VERSION=3.0.10
+WORDPRESS_VERSION=5.3.2
+WORDPRESS_LDAP_VERSION=3.5.2
 WORDPRESS_CLI_VERSION=2.2.0
 ARCH=$(uname -m)
 SNAP_ARCH=$(dpkg --print-architecture)
 VERSION=$2
-
-DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 
 rm -rf ${DIR}/build
 BUILD_DIR=${DIR}/build/${NAME}
@@ -27,12 +25,18 @@ mkdir -p ${BUILD_DIR}
 
 cd ${DIR}/build
 
-coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
-coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/mariadb-${ARCH}.tar.gz
-coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/php7-${ARCH}.tar.gz
-coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/python-${ARCH}.tar.gz
-
-mv ${BUILD_DIR}/php7 ${BUILD_DIR}/php
+wget --progress=dot:giga https://github.com/syncloud/3rdparty/releases/download/1/nginx-${ARCH}.tar.gz
+tar xf nginx-${ARCH}.tar.gz
+mv nginx ${BUILD_DIR}
+wget --progress=dot:giga https://github.com/syncloud/3rdparty/releases/download/1/mariadb-${ARCH}.tar.gz
+tar xf mariadb-${ARCH}.tar.gz
+mv mariadb ${BUILD_DIR}
+wget --progress=dot:giga https://github.com/syncloud/3rdparty/releases/download/1/php7-${ARCH}.tar.gz
+tar xf php7-${ARCH}.tar.gz
+mv php7 ${BUILD_DIR}/php
+wget --progress=dot:giga https://github.com/syncloud/3rdparty/releases/download/1/python-${ARCH}.tar.gz
+tar xf python-${ARCH}.tar.gz
+mv python ${BUILD_DIR}
 
 ${BUILD_DIR}/python/bin/pip install -r ${DIR}/requirements.txt
 
