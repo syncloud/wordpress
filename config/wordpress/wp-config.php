@@ -89,7 +89,7 @@ if ( !defined('ABSPATH') )
 require_once(ABSPATH . 'wp-settings.php');
 
 define('FS_METHOD', 'direct');
-define( 'WP_AUTO_UPDATE_CORE', false );
-define(‘WP_TEMP_DIR’, getenv('SNAP_COMMON') . ‘/temp’);
+define('WP_AUTO_UPDATE_CORE', false );
+define('WP_TEMP_DIR', getenv('SNAP_COMMON') . ‘/temp’);
 //define('WP_CONTENT_DIR', getenv('SNAP_COMMON') . '/wp-content');
 //define('WP_PLUGINS_DIR', WP_CONTENT_DIR . '/plugins');

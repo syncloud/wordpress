@@ -10,6 +10,5 @@ fi
 sudo -H -E -u wordpress \
     LD_LIBRARY_PATH=${DIR}/php/lib \
     WP_CONFIG_DIR=${SNAP_COMMON}/config/wordpress \
-    WP_TEMP_DIR=${SNAP_COMMON}/temp \
     ${DIR}/php/bin/php -c ${SNAP_COMMON}/config/php.ini \
     ${DIR}/bin/wp-cli.phar --path=${DIR}/wordpress "$@"
