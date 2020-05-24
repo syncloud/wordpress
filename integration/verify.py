@@ -43,7 +43,7 @@ def module_setup(request, device, platform_data_dir, app_dir, artifact_dir, data
         device.run_ssh('ls -la {0}/wordpress/ > {1}/wordpress.ls.log'.format(app_dir, TMP_DIR), throw=False)  
         device.run_ssh('ls -la {0}/wp-content.template/ > {0}/wp-content.template.ls.log'.format(app_dir, TMP_DIR), throw=False)  
         device.run_ssh('ls -la /var/snap/wordpress/common/log/ > {0}/log.ls.log'.format(TMP_DIR), throw=False)  
-        device.run_ssh('{0}/bin/wp-cli core is-installed; echo "is installed: $?" > {1}/wp-cli.isinstalled.log'.format(app_dir, TMP_DIR), env_vars='SNAP_COMMON={0}'.format(data_dir), throw=False)
+        #device.run_ssh('{0}/bin/wp-cli core is-installed; echo "is installed: $?" > {1}/wp-cli.isinstalled.log'.format(app_dir, TMP_DIR), env_vars='SNAP_COMMON={0}'.format(data_dir), throw=False)
         device.run_ssh('{0}/bin/wp-cli option list > {1}/wp-cli.options.log'.format(app_dir, TMP_DIR), env_vars='SNAP_COMMON={0}'.format(data_dir), throw=False)
         device.run_ssh('{0}/bin/wp-cli --info > {1}/wp-cli.info.log 2>&1'.format(app_dir, TMP_DIR), env_vars='SNAP_COMMON={0}'.format(data_dir), throw=False)  
         device.run_ssh('{0}/bin/wp-cli user list > {1}/wp-cli.user.list.log 2>&1'.format(app_dir, TMP_DIR), env_vars='SNAP_COMMON={0}'.format(data_dir), throw=False)  
