@@ -41,6 +41,9 @@ steps:
       from_secret: AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY:
       from_secret: AWS_SECRET_ACCESS_KEY
+  when:
+    branch:
+    - stable
 
 - name: artifact
   image: appleboy/drone-scp
@@ -123,6 +126,9 @@ steps:
       from_secret: AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY:
       from_secret: AWS_SECRET_ACCESS_KEY
+  when:
+    branch:
+    - stable
 
 - name: artifact
   image: appleboy/drone-scp
@@ -216,6 +222,9 @@ steps:
       from_secret: AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY:
       from_secret: AWS_SECRET_ACCESS_KEY
+  when:
+    branch:
+    - stable
 
 - name: artifact
   image: appleboy/drone-scp
@@ -309,6 +318,9 @@ steps:
       from_secret: AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY:
       from_secret: AWS_SECRET_ACCESS_KEY
+  when:
+    branch:
+    - stable
 
 - name: artifact
   image: appleboy/drone-scp

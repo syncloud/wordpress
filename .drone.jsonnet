@@ -63,6 +63,8 @@ local build(arch, distro) = {
                     from_secret: "AWS_SECRET_ACCESS_KEY"
                 }
             },
+	    when: {                                             branch: ["stable"]
+            },
             commands: [
               "VERSION=$(cat version)",
               "PACKAGE=$(cat package.name)",
