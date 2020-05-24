@@ -7,8 +7,6 @@ if [ -z "$SNAP_COMMON" ]; then
   exit 1
 fi
 
-export 
-
 sudo -H -E -u wordpress \
     LD_LIBRARY_PATH=${DIR}/php/lib \
     WP_CONFIG_DIR=${SNAP_COMMON}/config/wordpress \

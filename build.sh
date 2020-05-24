@@ -34,9 +34,9 @@ mv mariadb ${BUILD_DIR}
 wget --progress=dot:giga https://github.com/syncloud/3rdparty/releases/download/1/php7-${ARCH}.tar.gz
 tar xf php7-${ARCH}.tar.gz
 mv php7 ${BUILD_DIR}/php
-wget --progress=dot:giga https://github.com/syncloud/3rdparty/releases/download/1/python-${ARCH}.tar.gz
-tar xf python-${ARCH}.tar.gz
-mv python ${BUILD_DIR}
+wget --progress=dot:giga https://github.com/syncloud/3rdparty/releases/download/1/python3-${ARCH}.tar.gz
+tar xf python3-${ARCH}.tar.gz
+mv python3 ${BUILD_DIR}/python
 
 ${BUILD_DIR}/python/bin/pip install -r ${DIR}/requirements.txt
 
