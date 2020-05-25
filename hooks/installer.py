@@ -116,7 +116,7 @@ class Installer:
         #self._wp_cli("search-replace 'http://{0}' '{1}'".format(app_domain, app_url))
         
     def execute_sql(self, sql):
-        check_output('{0}/mariadb/bin/mysql --socket={1}/mysql.sock -e \'{2}\''.format(
+        check_output('{0}/bin/mysql.sh --socket={1}/mysql.sock -e \'{2}\''.format(
             self.app_dir, self.app_data_dir, sql), shell=True)
           
     def database_init(self):
