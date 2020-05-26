@@ -96,7 +96,7 @@ local build(arch, distro) = {
     ],
     services: [{
         name: "device",
-        image: "syncloud/systemd-" + arch,
+        image: "syncloud/platform-" + distro + "-" + arch,
         privileged: true,
         volumes: [
             {
@@ -131,7 +131,7 @@ local build(arch, distro) = {
 
 [
     build("arm", "jessie"),
-    //build("arm", "buster"),
+    build("arm", "buster"),
     build("amd64", "jessie"),
-    //build("amd64", "buster"),
+    build("amd64", "buster"),
 ]
