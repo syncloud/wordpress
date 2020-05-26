@@ -31,9 +31,6 @@ mv nginx ${BUILD_DIR}
 wget --progress=dot:giga https://github.com/syncloud/3rdparty/releases/download/1/mariadb-${ARCH}.tar.gz
 tar xf mariadb-${ARCH}.tar.gz
 mv mariadb ${BUILD_DIR}
-# try to find what lib is breaking dependencies
-rm ${BUILD_DIR}/mariadb/lib/libcrypto.so*
-
 wget --progress=dot:giga https://github.com/syncloud/3rdparty/releases/download/1/php7-${ARCH}.tar.gz
 tar xf php7-${ARCH}.tar.gz
 mv php7 ${BUILD_DIR}/php
