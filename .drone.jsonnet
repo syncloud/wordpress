@@ -1,8 +1,8 @@
 local name = "wordpress";
 
-local build(arch) = {
+local build(arch, distro) = {
     kind: "pipeline",
-    name: arch,
+    name: arch + " " + distro,
 
     platform: {
         os: "linux",
@@ -14,7 +14,7 @@ local build(arch) = {
             image: "syncloud/build-deps-" + arch,
             commands: [
                 "echo $(date +%y%m%d)$DRONE_BUILD_NUMBER > version",
-                "echo " + arch + "$DRONE_BRANCH > domain"
+                "echo " + distro + arch + "$DRONE_BRANCH > domain"
             ]
         },
         {
@@ -63,6 +63,8 @@ local build(arch) = {
                     from_secret: "AWS_SECRET_ACCESS_KEY"
                 }
             },
+	    when: {                                             branch: ["stable"]
+            },
             commands: [
               "VERSION=$(cat version)",
               "PACKAGE=$(cat package.name)",
@@ -83,7 +85,7 @@ local build(arch) = {
                 },
                 timeout: "2m",
                 command_timeout: "2m",
-                target: "/home/artifact/repo/" + name + "/${DRONE_BUILD_NUMBER}-" + arch,
+                target: "/home/artifact/repo/" + name + "/${DRONE_BUILD_NUMBER}-" + distro + "-" + arch,
                 source: "artifact/*",
 		             strip_components: 1
             },
@@ -94,7 +96,7 @@ local build(arch) = {
     ],
     services: [{
         name: "device",
-        image: "syncloud/systemd-" + arch,
+        image: "syncloud/platform-" + distro + "-" + arch,
         privileged: true,
         volumes: [
             {
@@ -128,6 +130,8 @@ local build(arch) = {
 };
 
 [
-    build("arm"),
-    build("amd64")
+    build("arm", "jessie"),
+    build("arm", "buster"),
+    build("amd64", "jessie"),
+    build("amd64", "buster"),
 ]

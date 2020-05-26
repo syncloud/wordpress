@@ -52,7 +52,8 @@ def module_setup(request, device, platform_data_dir, app_dir, artifact_dir, data
         os.mkdir(app_log_dir )
         device.scp_from_device('{0}/log/*.log'.format(data_dir), app_log_dir)
         device.scp_from_device('{0}/*'.format(TMP_DIR), app_log_dir)
-    
+        check_output('chmod -R a+r {0}'.format(artifact_dir), shell=True)
+
     request.addfinalizer(module_teardown)
 
 
@@ -96,3 +97,4 @@ def test_remove(device, app):
 
 def test_reinstall(app_archive_path, device_host, device_password):
     local_install(device_host, device_password, app_archive_path)
+
