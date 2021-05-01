@@ -13,8 +13,8 @@ export TMP=/tmp
 
 NAME=$1
 WORDPRESS_VERSION=5.7.1
-WORDPRESS_LDAP_VERSION=3.5.92
-WORDPRESS_CLI_VERSION=2.2.0
+WORDPRESS_LDAP_VERSION=3.6.4
+WORDPRESS_CLI_VERSION=2.4.0
 ARCH=$(uname -m)
 SNAP_ARCH=$(dpkg --print-architecture)
 VERSION=$2
@@ -99,3 +99,4 @@ echo "- ${ARCH}" >> ${SNAP_DIR}/meta/snap.yaml
 PACKAGE=${NAME}_${VERSION}_${ARCH}.snap
 echo ${PACKAGE} > ${DIR}/package.name
 mksquashfs ${SNAP_DIR} ${DIR}/${PACKAGE} -noappend -comp xz -no-xattrs -all-root
+
