@@ -28,7 +28,7 @@ local build(arch, test_ui) = [{
             name: "build",
             image: "debian:buster-slim",
             commands: [
-                "./home-assistant/build.sh"
+                "./build.sh"
             ],
             volumes: [
                 {
