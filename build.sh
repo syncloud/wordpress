@@ -1,20 +1,6 @@
 #!/bin/bash -ex
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-cd ${DIR}
-
-if [[ -z "$2" ]]; then
-    echo "usage $0 app version"
-    exit 1
-fi
-
-
-NAME=$1
-ARCH=$(uname -m)
-SNAP_ARCH=$(dpkg --print-architecture)
-VERSION=$2
-
-rm -rf ${DIR}/build
 BUILD_DIR=${DIR}/build/snap
 
 cd ${BUILD_DIR}/wordpress
