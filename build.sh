@@ -3,6 +3,9 @@
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 BUILD_DIR=${DIR}/build/snap
 
+apt update
+apt -y install patch
+
 cd ${BUILD_DIR}/wordpress
 
 patch -p0 < ${DIR}/patches/wp-load.patch
