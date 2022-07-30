@@ -24,12 +24,10 @@ patch -p0 < ${DIR}/patches/wp-load.patch
 cd ${DIR}
 
 cp -r ${DIR}/bin ${BUILD_DIR}
-cp -r ${DIR}/config ${BUILD_DIR}
-cp -r ${DIR}/hooks ${BUILD_DIR}
 
 cd ${DIR}/build/
-wget https://github.com/wp-cli/wp-cli/releases/download/v${WORDPRESS_CLI_VERSION}/wp-cli-${WORDPRESS_CLI_VERSION}.phar --progress dot:giga
-mv wp-cli-${WORDPRESS_CLI_VERSION}.phar wp-cli.phar
+
+# cli
 sed -i 's/;phar.readonly = On/phar.readonly = Off/g' /etc/php5/cli/php.ini
 php wp-cli.phar --allow-root cli info
 phar extract -f wp-cli.phar -i utils.php phar
@@ -45,8 +43,7 @@ php wp-cli.phar --allow-root cli info
 
 cp wp-cli.phar ${BUILD_DIR}/bin/wp-cli.phar
 
-wget https://downloads.wordpress.org/plugin/ldap-login-for-intranet-sites.${WORDPRESS_LDAP_VERSION}.zip --progress dot:giga
-unzip ldap-login-for-intranet-sites.${WORDPRESS_LDAP_VERSION}.zip
+# ldap
 cd ldap-login-for-intranet-sites
 patch -p0 < ${DIR}/patches/ldap.patch
 cd ..
@@ -54,4 +51,3 @@ mv ldap-login-for-intranet-sites ${BUILD_DIR}/wordpress/wp-content/plugins/
 
 mv ${BUILD_DIR}/wordpress/wp-content ${BUILD_DIR}/wp-content.template
 ln -sf /var/snap/wordpress/common/wp-content ${BUILD_DIR}/wordpress/wp-content
-

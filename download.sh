@@ -22,3 +22,9 @@ mv nginx ${BUILD_DIR}
 wget https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz --progress dot:giga
 tar xf wordpress-${WORDPRESS_VERSION}.tar.gz
 mv wordpress ${BUILD_DIR}
+
+wget https://github.com/wp-cli/wp-cli/releases/download/v${WORDPRESS_CLI_VERSION}/wp-cli-${WORDPRESS_CLI_VERSION}.phar --progress dot:giga
+mv wp-cli-${WORDPRESS_CLI_VERSION}.phar wp-cli.phar
+
+wget https://downloads.wordpress.org/plugin/ldap-login-for-intranet-sites.${WORDPRESS_LDAP_VERSION}.zip --progress dot:giga
+unzip ldap-login-for-intranet-sites.${WORDPRESS_LDAP_VERSION}.zip
