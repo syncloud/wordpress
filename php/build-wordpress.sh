@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-BUILD_DIR=${DIR}/build/snap
+DIR=/
+BUILD_DIR=/
 
 apt update
 apt -y install patch
@@ -9,10 +9,6 @@ apt -y install patch
 cd ${BUILD_DIR}/wordpress
 
 patch -p0 < ${DIR}/patches/wp-load.patch
-
-cd ${DIR}
-
-cp -r ${DIR}/bin ${BUILD_DIR}
 
 cd ${DIR}/build/
 
@@ -22,6 +18,7 @@ php wp-cli.phar --allow-root cli info
 phar extract -f wp-cli.phar -i utils.php phar
 cd phar/vendor/wp-cli/wp-cli/php
 patch -p0 < ${DIR}/patches/wp-cli.patch
+
 cd ${DIR}/build/
 phar list -f wp-cli.phar -i utils.php
 phar delete -f wp-cli.phar -e vendor/wp-cli/wp-cli/php/utils.php

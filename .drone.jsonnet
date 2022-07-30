@@ -25,10 +25,10 @@ local build(arch, test_ui) = [{
             ]
         },
         {
-            name: "build",
+            name: "build php",
             image: "debian:buster-slim",
             commands: [
-                "./build.sh"
+                "./php/build.sh"
             ],
             volumes: [
                 {
@@ -41,6 +41,7 @@ local build(arch, test_ui) = [{
                 }
             ]
         },
+
         {
             name: "package mariadb",
             image: "debian:buster-slim",
