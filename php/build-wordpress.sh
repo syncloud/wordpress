@@ -1,14 +1,18 @@
 #!/bin/bash -ex
 
 DIR=/
-BUILD_DIR=/
-
+BUILD_DIR=/build
+OUT_DIR=/
 apt update
 apt -y install patch
 
 cd ${BUILD_DIR}/wordpress
 
 patch -p0 < ${DIR}/patches/wp-load.patch
+
+mv ${BUILD_DIR}/wordpress/wp-content ${BUILD_DIR}/wp-content.template
+ln -sf /var/snap/wordpress/common/wp-content ${BUILD_DIR}/wordpress/wp-content
+mv {BUILD_DIR}/wordpress ${OUT_DIR}
 
 cd ${DIR}/build/
 
@@ -27,13 +31,12 @@ phar list -f wp-cli.phar -i utils.php
 
 php wp-cli.phar --allow-root cli info
 
-cp wp-cli.phar ${BUILD_DIR}/bin/wp-cli.phar
+cp wp-cli.phar ${OUT_DIR}/bin/wp-cli.phar
 
 # ldap
 cd ldap-login-for-intranet-sites
 patch -p0 < ${DIR}/patches/ldap.patch
 cd ..
-mv ldap-login-for-intranet-sites ${BUILD_DIR}/wordpress/wp-content/plugins/
+mv ldap-login-for-intranet-sites ${OUT_DIR}/wordpress/wp-content/plugins/
 
-mv ${BUILD_DIR}/wordpress/wp-content ${BUILD_DIR}/wp-content.template
-ln -sf /var/snap/wordpress/common/wp-content ${BUILD_DIR}/wordpress/wp-content
+
