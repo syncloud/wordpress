@@ -12,9 +12,9 @@ patch -p0 < ${DIR}/patches/wp-load.patch
 
 mv ${BUILD_DIR}/wordpress/wp-content ${BUILD_DIR}/wp-content.template
 ln -sf /var/snap/wordpress/common/wp-content ${BUILD_DIR}/wordpress/wp-content
-mv {BUILD_DIR}/wordpress ${OUT_DIR}
+mv ${BUILD_DIR}/wordpress ${OUT_DIR}
 
-cd ${DIR}/build/
+cd ${DIR}/build
 
 # cli
 sed -i 's/;phar.readonly = On/phar.readonly = Off/g' /etc/php5/cli/php.ini
@@ -23,7 +23,7 @@ phar extract -f wp-cli.phar -i utils.php phar
 cd phar/vendor/wp-cli/wp-cli/php
 patch -p0 < ${DIR}/patches/wp-cli.patch
 
-cd ${DIR}/build/
+cd ${DIR}/build
 phar list -f wp-cli.phar -i utils.php
 phar delete -f wp-cli.phar -e vendor/wp-cli/wp-cli/php/utils.php
 phar add -f wp-cli.phar phar 
@@ -38,5 +38,6 @@ cd ldap-login-for-intranet-sites
 patch -p0 < ${DIR}/patches/ldap.patch
 cd ..
 mv ldap-login-for-intranet-sites ${OUT_DIR}/wordpress/wp-content/plugins/
+
 
 
