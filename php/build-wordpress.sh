@@ -18,8 +18,7 @@ cd ${DIR}/build
 
 # cli
 ls  /usr/local/etc/php
-
-sed -i 's/;phar.readonly = On/phar.readonly = Off/g' /usr/local/etc/php/cli/php.ini
+echo 'phar.readonly = Off' > /usr/local/etc/php/conf.d/php.ini
 php wp-cli.phar --allow-root cli info
 phar extract -f wp-cli.phar -i utils.php phar
 cd phar/vendor/wp-cli/wp-cli/php
@@ -40,6 +39,3 @@ cd ldap-login-for-intranet-sites
 patch -p0 < ${DIR}/patches/ldap.patch
 cd ..
 mv ldap-login-for-intranet-sites ${OUT_DIR}/wordpress/wp-content/plugins/
-
-
-
