@@ -59,5 +59,5 @@ RUN docker-php-ext-enable smbclient
 RUN docker-php-ext-install pdo pdo_pgsql
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 RUN docker-php-ext-install -j2 gd
-R&N /build-wordpress.sh
+RUN /build-wordpress.sh
 RUN rm -rf /var/lib/apt/lists/*
