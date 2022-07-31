@@ -17,7 +17,9 @@ mv ${BUILD_DIR}/wordpress ${OUT_DIR}
 cd ${DIR}/build
 
 # cli
-#sed -i 's/;phar.readonly = On/phar.readonly = Off/g' /etc/php5/cli/php.ini
+ls  /usr/local/etc/php
+
+sed -i 's/;phar.readonly = On/phar.readonly = Off/g' /usr/local/etc/php/cli/php.ini
 php wp-cli.phar --allow-root cli info
 phar extract -f wp-cli.phar -i utils.php phar
 cd phar/vendor/wp-cli/wp-cli/php
