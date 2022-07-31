@@ -12,8 +12,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
-from syncloudlib.integration.hosts import add_host_alias_by_ip
+from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.screenshots import screenshots
+from integration import lib
 
 DIR = dirname(__file__)
 
@@ -34,8 +35,8 @@ def module_setup(request, device, log_dir, ui_mode, artifact_dir):
 
 
 def test_start(module_setup, app, domain, device_host):
-    add_host_alias_by_ip(app, domain, device_host)
-    
+    add_host_alias(app, device_host, domain)
+
 
 def test_index(driver, app_domain, screenshot_dir, ui_mode):
 
@@ -45,23 +46,10 @@ def test_index(driver, app_domain, screenshot_dir, ui_mode):
     screenshots(driver, screenshot_dir, 'index-' + ui_mode)
     
 
-def test_login(driver, app_domain, device_user, device_password, screenshot_dir, ui_mode):
+def test_login(app_domain, device_user, device_password):
 
-    driver.get("https://{0}/wp-login.php".format(app_domain))
-    wait_driver = WebDriverWait(driver, 120)
-    wait_driver.until(EC.element_to_be_clickable((By.ID, 'user_login')))
+    lib.login(app_domain, device_user, device_password)
 
-    user = driver.find_element_by_id("user_login")
-    user.send_keys(device_user)
-    password = driver.find_element_by_id("user_pass")
-    password.send_keys(device_password)
-    screenshots(driver, screenshot_dir, 'login-' + ui_mode)
-    password.send_keys(Keys.RETURN)
-    
-    time.sleep(10)
-    
-    screenshots(driver, screenshot_dir, 'login-complete-' + ui_mode)
-    
 
 def test_admin(driver, app_domain, screenshot_dir, ui_mode):
 

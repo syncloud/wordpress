@@ -11,7 +11,7 @@ import shutil
 from syncloudlib.integration.installer import local_install, local_remove, wait_for_installer
 from syncloudlib.integration.loop import loop_device_cleanup
 from syncloudlib.integration.ssh import run_scp, run_ssh
-from syncloudlib.integration.hosts import add_host_alias_by_ip
+from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration import conftest
 
 import requests
@@ -57,10 +57,9 @@ def module_setup(request, device, platform_data_dir, app_dir, artifact_dir, data
     request.addfinalizer(module_teardown)
 
 
-def test_start(module_setup, device, device_host, app, domain):
-    add_host_alias_by_ip(app, domain, device_host)
-    device.run_ssh('date', retries=100)
-    device.run_ssh('mkdir {0}'.format(TMP_DIR))
+def test_start(module_setup, device, app, domain, device_host):
+    add_host_alias(app, device_host, domain)
+    device.run_ssh('date', retries=100, throw=True)
 
 
 def test_activate_device(device):
@@ -97,4 +96,3 @@ def test_remove(device, app):
 
 def test_reinstall(app_archive_path, device_host, device_password):
     local_install(device_host, device_password, app_archive_path)
-
