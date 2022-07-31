@@ -38,4 +38,4 @@ cp wp-cli.phar ${OUT_DIR}/bin/wp-cli.phar
 cd ldap-login-for-intranet-sites
 patch -p0 < ${DIR}/patches/ldap.patch
 cd ..
-mv ldap-login-for-intranet-sites ${OUT_DIR}/wordpress/wp-content/plugins/
+mv ldap-login-for-intranet-sites ${OUT_DIR}/wordpress/wp-content.template/plugins/
