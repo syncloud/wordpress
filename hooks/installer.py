@@ -38,7 +38,7 @@ class Installer:
         
         storage.init_storage(APP_NAME, USER_NAME)
 
-        templates_path = join(self.app_dir, 'config.templates')
+        templates_path = join(self.app_dir, 'config')
         config_path = join(self.app_data_dir, 'config')
                    
         variables = {
@@ -124,5 +124,4 @@ class Installer:
         initdb_cmd = '{0}/bin/initdb.sh --user={1} --basedir={0}/mariadb --datadir={2}'.format(
             self.app_dir, DB_USER, self.database_path)
         check_output(initdb_cmd, shell=True)
-
 
