@@ -1,6 +1,7 @@
 import logging
 from os.path import isdir, join, isfile
 from subprocess import check_output
+import subprocess
 import shutil
 from syncloudlib import fs, linux, gen, logger
 from syncloudlib.application import paths, urls, storage
