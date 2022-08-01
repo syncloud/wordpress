@@ -99,7 +99,7 @@ class Installer:
             self._wp_cli("core update-db")
          
     def _wp_cli(self, cmd):
-        check_output('{0}/bin/wp-cli {1}'.format(self.app_dir, cmd), shell=True)
+        check_output('{0}/bin/wp-cli {1}'.format(self.app_dir, cmd), shell=True, stderr=subprocess.STDOUT)
              
     def on_disk_change(self):
         self.prepare_storage()
@@ -117,11 +117,11 @@ class Installer:
         
     def execute_sql(self, sql):
         check_output('{0}/bin/mysql.sh --socket={1}/mysql.sock -e \'{2}\''.format(
-            self.app_dir, self.app_data_dir, sql), shell=True)
+            self.app_dir, self.app_data_dir, sql), shell=True, stderr=subprocess.STDOUT)
           
     def database_init(self):
         
         initdb_cmd = '{0}/bin/initdb.sh --user={1} --basedir={0}/mariadb --datadir={2}'.format(
             self.app_dir, DB_USER, self.database_path)
-        check_output(initdb_cmd, shell=True)
+        check_output(initdb_cmd, shell=True, stderr=subprocess.STDOUT)
 
