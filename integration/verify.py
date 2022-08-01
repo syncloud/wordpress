@@ -27,7 +27,8 @@ def module_setup(request, device, platform_data_dir, app_dir, artifact_dir, data
         platform_log_dir = join(artifact_dir, 'platform_log')
         os.mkdir(platform_log_dir)
         device.scp_from_device('{0}/log/*'.format(platform_data_dir), platform_log_dir)
-
+        
+        device.run_ssh('mkdir {0}'.format(TMP_DIR), throw=False) 
         device.run_ssh('top -bn 1 -w 500 -c > {0}/top.log'.format(TMP_DIR))
         device.run_ssh('ps auxfw > {0}/ps.log'.format(TMP_DIR))
         device.run_ssh('netstat -nlp > {0}/netstat.log'.format(TMP_DIR))
@@ -63,7 +64,7 @@ def test_start(module_setup, device, app, domain, device_host):
 
 
 def test_activate_device(device):
-    response = device.activate()
+    response = device.activate_custom()
     assert response.status_code == 200, response.text
 
 
