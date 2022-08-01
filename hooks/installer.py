@@ -5,6 +5,7 @@ import subprocess
 import shutil
 from syncloudlib import fs, linux, gen, logger
 from syncloudlib.application import paths, urls, storage
+from subprocess import check_output, CalledProcessError
 
 APP_NAME = 'wordpress'
 
@@ -124,5 +125,9 @@ class Installer:
         
         initdb_cmd = '{0}/bin/initdb.sh --user={1} --basedir={0}/mariadb --datadir={2}'.format(
             self.app_dir, DB_USER, self.database_path)
-        check_output(initdb_cmd, shell=True, stderr=subprocess.STDOUT)
+        try:
+            check_output(initdb_cmd, shell=True, stderr=subprocess.STDOUT)
+        except CalledProcessError as e:
+            self.log.error(e.output.decode())
+            raise e
 
