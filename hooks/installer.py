@@ -123,7 +123,7 @@ class Installer:
           
     def database_init(self):
         
-        initdb_cmd = '{0}/bin/initdb.sh --user={1} --basedir={0}/mariadb --datadir={2}'.format(
+        initdb_cmd = '{0}/bin/initdb.sh --user={1} --basedir={0}/mariadb/usr --datadir={2}'.format(
             self.app_dir, DB_USER, self.database_path)
         try:
             check_output(initdb_cmd, shell=True, stderr=subprocess.STDOUT)
