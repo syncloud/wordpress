@@ -18,3 +18,5 @@ docker rmi mariadb:syncloud || true
 tar xf app.tar
 rm -rf app.tar
 cp ${DIR}/mariadb.sh ${BUILD_DIR}/bin/
+mv ${BUILD_DIR}/usr/bin/resolveip ${BUILD_DIR}/usr/bin/resolveip.bin
+cp ${DIR}/resolveip ${BUILD_DIR}/usr/bin
