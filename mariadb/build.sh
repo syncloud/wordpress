@@ -17,8 +17,9 @@ docker ps -a -q --filter ancestor=mariadb:syncloud --format="{{.ID}}" | xargs do
 docker rmi mariadb:syncloud || true
 tar xf app.tar
 rm -rf app.tar
-cp ${DIR}/mariadb.sh ${BUILD_DIR}/bin/
+cp ${DIR}/mariadb.sh ${BUILD_DIR}/bin
 mv ${BUILD_DIR}/usr/bin/resolveip ${BUILD_DIR}/usr/bin/resolveip.bin
 mv ${BUILD_DIR}/usr/bin/my_print_defaults ${BUILD_DIR}/usr/bin/my_print_defaults.bin
 cp ${DIR}/resolveip ${BUILD_DIR}/usr/bin
 cp ${DIR}/my_print_defaults ${BUILD_DIR}/usr/bin
+
