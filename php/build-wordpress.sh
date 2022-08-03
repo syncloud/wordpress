@@ -16,7 +16,7 @@ mv ldap-login-for-intranet-sites ${BUILD_DIR}/wordpress/wp-content/plugins
 # wordpress
 cd ${BUILD_DIR}/wordpress
 patch -p0 < ${DIR}/patches/wp-load.patch
-mv ${BUILD_DIR}/wordpress/wp-content ${OUR_DIR}/wp-content.template
+mv ${BUILD_DIR}/wordpress/wp-content {BUILD_DIR}/wordpress/wp-content.template
 ln -sf /var/snap/wordpress/common/wp-content ${BUILD_DIR}/wordpress/wp-content
 mv ${BUILD_DIR}/wordpress ${OUT_DIR}
 

@@ -54,7 +54,7 @@ class Installer:
         self.install_config()
         self.database_init()
         
-        shutil.copytree(join(self.app_dir, 'wp-content.template'), join(self.app_data_dir, 'wp-content'))
+        shutil.copytree(join(self.app_dir, 'php', 'wordpress', 'wp-content.template'), join(self.app_data_dir, 'wp-content'))
             
         fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
 
