@@ -122,9 +122,13 @@ class Installer:
         #self._wp_cli("search-replace 'http://{0}' '{1}'".format(app_domain, app_url))
         
     def execute_sql(self, sql):
-        check_output('{0}/bin/mysql.sh --socket={1}/mysql.sock -e \'{2}\''.format(
-            self.app_dir, self.app_data_dir, sql), shell=True, stderr=subprocess.STDOUT)
-          
+        try:
+            check_output('{0}/bin/mysql.sh --socket={1}/mysql.sock -e \'{2}\''.format(
+                self.app_dir, self.app_data_dir, sql), shell=True, stderr=subprocess.STDOUT)
+        except CalledProcessError as e:
+            self.log.error(e.output.decode())
+            raise e
+
     def database_init(self):
         
         initdb_cmd = '{0}/bin/initdb.sh --user={1} --basedir={0}/mariadb/usr --datadir={2}'.format(
