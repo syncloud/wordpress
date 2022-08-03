@@ -10,7 +10,7 @@ fi
 
 case $1 in
 start)
-    export MYSQL_HOME=$SNAP_COMMON/config
+    export MYSQL_HOME=/var/snap/wordpress/current/config
     exec ${DIR}/mariadb/usr/bin/mysqld --basedir=$SNAP/mariadb/usr --datadir=$SNAP_COMMON/database --plugin-dir=$SNAP/mariadb/lib/plugin --pid-file=$SNAP_COMMON/database/mariadb.pid
     ;;
 

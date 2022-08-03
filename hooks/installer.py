@@ -26,6 +26,9 @@ class Installer:
         self.log = logger.get_logger('{0}_installer'.format(APP_NAME))
         self.app_dir = paths.get_app_dir(APP_NAME)
         self.app_data_dir = paths.get_data_dir(APP_NAME)
+        self.common_dir = paths.get_data_dir(APP_NAME)
+        self.data_dir = join('/var/snap', APP_NAME, 'current')
+        self.config_dir = join(self.data_dir, 'config')
 
         self.database_path = join(self.app_data_dir, 'database')
              
@@ -41,14 +44,13 @@ class Installer:
         storage.init_storage(APP_NAME, USER_NAME)
 
         templates_path = join(self.app_dir, 'config')
-        config_path = join(self.app_data_dir, 'config')
-                   
+        
         variables = {
             'app': APP_NAME,
             'app_dir': self.app_dir,
             'app_data_dir': self.app_data_dir
         }
-        gen.generate_files(templates_path, config_path, variables)
+        gen.generate_files(templates_path, self.config_dir, variables)
 
     def install(self):
         self.install_config()
@@ -57,10 +59,12 @@ class Installer:
         shutil.copytree(join(self.app_dir, 'php', 'wordpress', 'wp-content.template'), join(self.app_data_dir, 'wp-content'))
             
         fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
+        fs.chownpath(self.data_dir, USER_NAME, recursive=True)
 
     def refresh(self):
         self.install_config()
         fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
+        fs.chownpath(self.data_dir, USER_NAME, recursive=True)
 
     def configure(self):
         self.prepare_storage()
