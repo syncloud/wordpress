@@ -123,7 +123,7 @@ class Installer:
         
     def execute_sql(self, sql):
         try:
-            check_output('{0}/bin/mysql.sh --socket={1}/mysql.sock -e \'{2}\''.format(
+            check_output('{0}/mariadb/usr/bin/mysql.sh --socket={1}/mysql.sock -e \'{2}\''.format(
                 self.app_dir, self.app_data_dir, sql), shell=True, stderr=subprocess.STDOUT)
         except CalledProcessError as e:
             self.log.error(e.output.decode())
