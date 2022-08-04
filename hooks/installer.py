@@ -105,8 +105,12 @@ class Installer:
             self._wp_cli("core update-db")
          
     def _wp_cli(self, cmd):
-        check_output('{0}/bin/wp-cli {1}'.format(self.app_dir, cmd), shell=True, stderr=subprocess.STDOUT)
-             
+        try:
+            check_output('{0}/bin/wp-cli {1}'.format(self.app_dir, cmd), shell=True, stderr=subprocess.STDOUT)
+        except CalledProcessError as e:
+            self.log.error(e.output.decode())
+            raise e
+     
     def on_disk_change(self):
         self.prepare_storage()
         
