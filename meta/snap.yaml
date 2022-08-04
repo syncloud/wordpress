@@ -39,7 +39,7 @@ apps:
     command: bin/wp-cli
   
   php:
-    command: bin/php
+    command: php/bin/php.sh
     
 confinement: strict
 description: Wordpress
