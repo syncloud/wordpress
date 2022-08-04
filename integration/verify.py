@@ -68,14 +68,13 @@ def test_activate_device(device):
     assert response.status_code == 200, response.text
 
 
-def test_install(app_archive_path, device_session, device_host, device_password):
+def test_install(app_archive_path, device_session, device_host, device_password, domain):
     local_install(device_host, device_password, app_archive_path)
-    wait_for_installer(device_session, device_host)
+    wait_for_installer(device_session, domain)
 
 
 def test_phpinfo(device, app_dir, data_dir, device_password):
-    device.run_ssh('{0}/bin/php -i > {1}/log/phpinfo.log'.format(app_dir, data_dir),
-            env_vars='SNAP_COMMON={0}'.format(data_dir))
+    device.run_ssh('{0}/php/bin/php.sh -i > {1}/log/phpinfo.log'.format(app_dir, data_dir))
 
 
 def test_index(app_domain):
@@ -86,14 +85,6 @@ def test_index(app_domain):
 #def test_storage_change(device_host, app_dir, data_dir, device_password):
 #    device.run_ssh('SNAP_COMMON={1} {0}/hooks/storage-change > {1}/log/storage-change.log'.format(app_dir, data_dir), password=device_password, throw=False)
 
-def test_upgrade(app_archive_path, device_host, device_password, device_session):
+def test_upgrade(app_archive_path, device_host, device_password, device_session, domain):
     local_install(device_host, device_password, app_archive_path)
-    wait_for_installer(device_session, device_host)
-
-def test_remove(device, app):
-    response = device.app_remove(app)
-    assert response.status_code == 200, response.text
-
-
-def test_reinstall(app_archive_path, device_host, device_password):
-    local_install(device_host, device_password, app_archive_path)
+    wait_for_installer(device_session, domain)
