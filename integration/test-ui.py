@@ -46,9 +46,9 @@ def test_index(driver, app_domain, screenshot_dir, ui_mode):
     screenshots(driver, screenshot_dir, 'index-' + ui_mode)
     
 
-def test_login(app_domain, device_user, device_password):
+def test_login(selenium, app_domain, device_user, device_password):
 
-    lib.login(app_domain, device_user, device_password)
+    lib.login(selenium, app_domain, device_user, device_password)
 
 
 def test_admin(driver, app_domain, screenshot_dir, ui_mode):
