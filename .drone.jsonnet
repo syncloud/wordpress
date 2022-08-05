@@ -100,20 +100,20 @@ local build(arch, test_ui) = [{
             image: "selenium/video:ffmpeg-4.3.1-20220208",
             detach: true,
             environment: {
-                "DISPLAY_CONTAINER_NAME": "selenium",
-                "PRESET": "-preset ultrafast -movflags faststart"
+                DISPLAY_CONTAINER_NAME: "selenium",
+                FILE_NAME: "video.mkv"
             },
             volumes: [
-                {
-                    name: "shm",
-                    path: "/dev/shm"
-                },
-               {
-                    name: "videos",
-                    path: "/videos"
-                }
-            ]
-        }] +
+            {
+                name: "shm",
+                path: "/dev/shm"
+            },
+            {
+                name: "videos",
+                path: "/videos"
+            }
+        ]
+       }] +
         [{
             name: "test-ui-" + mode,
             image: "python:3.8-slim-buster",
