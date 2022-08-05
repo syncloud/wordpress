@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 import time
 
 
-def login(selenium, app_domain, device_user, device_password):
+def login(selenium, device_user, device_password):
 
     selenium.open_app("/wp-login.php")
     selenium.wait_or_screenshot(EC.element_to_be_clickable((By.ID, 'user_login')))
