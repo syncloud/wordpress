@@ -1,4 +1,5 @@
-from os.path import dirname, join
+from os.path import dirname
+
 from syncloudlib.integration.conftest import *
 
 DIR = dirname(__file__)

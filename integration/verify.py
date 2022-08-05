@@ -11,7 +11,7 @@ import shutil
 from syncloudlib.integration.installer import local_install, local_remove, wait_for_installer
 from syncloudlib.integration.loop import loop_device_cleanup
 from syncloudlib.integration.ssh import run_scp, run_ssh
-from syncloudlib.integration.hosts import add_host_alias_by_ip
+from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration import conftest
 
 import requests
@@ -27,7 +27,8 @@ def module_setup(request, device, platform_data_dir, app_dir, artifact_dir, data
         platform_log_dir = join(artifact_dir, 'platform_log')
         os.mkdir(platform_log_dir)
         device.scp_from_device('{0}/log/*'.format(platform_data_dir), platform_log_dir)
-
+        
+        device.run_ssh('mkdir {0}'.format(TMP_DIR), throw=False) 
         device.run_ssh('top -bn 1 -w 500 -c > {0}/top.log'.format(TMP_DIR))
         device.run_ssh('ps auxfw > {0}/ps.log'.format(TMP_DIR))
         device.run_ssh('netstat -nlp > {0}/netstat.log'.format(TMP_DIR))
@@ -57,25 +58,23 @@ def module_setup(request, device, platform_data_dir, app_dir, artifact_dir, data
     request.addfinalizer(module_teardown)
 
 
-def test_start(module_setup, device, device_host, app, domain):
-    add_host_alias_by_ip(app, domain, device_host)
-    device.run_ssh('date', retries=100)
-    device.run_ssh('mkdir {0}'.format(TMP_DIR))
+def test_start(module_setup, device, app, domain, device_host):
+    add_host_alias(app, device_host, domain)
+    device.run_ssh('date', retries=100, throw=True)
 
 
 def test_activate_device(device):
-    response = device.activate()
+    response = device.activate_custom()
     assert response.status_code == 200, response.text
 
 
-def test_install(app_archive_path, device_session, device_host, device_password):
+def test_install(app_archive_path, device_session, device_host, device_password, domain):
     local_install(device_host, device_password, app_archive_path)
-    wait_for_installer(device_session, device_host)
+    wait_for_installer(device_session, domain)
 
 
 def test_phpinfo(device, app_dir, data_dir, device_password):
-    device.run_ssh('{0}/bin/php -i > {1}/log/phpinfo.log'.format(app_dir, data_dir),
-            env_vars='SNAP_COMMON={0}'.format(data_dir))
+    device.run_ssh('{0}/php/bin/php.sh -i > {1}/log/phpinfo.log'.format(app_dir, data_dir))
 
 
 def test_index(app_domain):
@@ -86,15 +85,6 @@ def test_index(app_domain):
 #def test_storage_change(device_host, app_dir, data_dir, device_password):
 #    device.run_ssh('SNAP_COMMON={1} {0}/hooks/storage-change > {1}/log/storage-change.log'.format(app_dir, data_dir), password=device_password, throw=False)
 
-def test_upgrade(app_archive_path, device_host, device_password, device_session):
+def test_upgrade(app_archive_path, device_host, device_password, device_session, domain):
     local_install(device_host, device_password, app_archive_path)
-    wait_for_installer(device_session, device_host)
-
-def test_remove(device, app):
-    response = device.app_remove(app)
-    assert response.status_code == 200, response.text
-
-
-def test_reinstall(app_archive_path, device_host, device_password):
-    local_install(device_host, device_password, app_archive_path)
-
+    wait_for_installer(device_session, domain)

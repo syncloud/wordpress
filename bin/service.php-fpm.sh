@@ -7,14 +7,12 @@ if [[ -z "$1" ]]; then
     exit 1
 fi
 
-export LD_LIBRARY_PATH=${DIR}/php/lib:${DIR}/mariadb/lib
-
 case $1 in
 start)
-    exec $DIR/php/sbin/php-fpm -y ${SNAP_COMMON}/config/php-fpm.conf -c ${SNAP_COMMON}/config/php.ini
+    exec $DIR/php/bin/php-fpm.sh -y /var/snap/wordpress/current/config/php-fpm.conf -c /var/snap/wordpress/current/config/php.ini
     ;;
 post-start)
-    timeout 5 /bin/bash -c 'until [ -S '${SNAP_COMMON}'/log/php5-fpm.sock ]; do echo "waiting for ${SNAP_COMMON}/log/php5-fpm.sock"; sleep 1; done'
+    timeout 5 /bin/bash -c 'until [ -S /var/snap/wordpress/current/php.sock ]; do echo "waiting for /var/snap/wordpress/current/php.sock"; sleep 1; done'
     ;;
 *)
     echo "not valid command"
