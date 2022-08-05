@@ -1,9 +1,11 @@
 import logging
 from os.path import isdir, join, isfile
 from subprocess import check_output
+import subprocess
 import shutil
 from syncloudlib import fs, linux, gen, logger
 from syncloudlib.application import paths, urls, storage
+from subprocess import check_output, CalledProcessError
 
 APP_NAME = 'wordpress'
 
@@ -24,6 +26,9 @@ class Installer:
         self.log = logger.get_logger('{0}_installer'.format(APP_NAME))
         self.app_dir = paths.get_app_dir(APP_NAME)
         self.app_data_dir = paths.get_data_dir(APP_NAME)
+        self.common_dir = paths.get_data_dir(APP_NAME)
+        self.data_dir = join('/var/snap', APP_NAME, 'current')
+        self.config_dir = join(self.data_dir, 'config')
 
         self.database_path = join(self.app_data_dir, 'database')
              
@@ -38,27 +43,28 @@ class Installer:
         
         storage.init_storage(APP_NAME, USER_NAME)
 
-        templates_path = join(self.app_dir, 'config.templates')
-        config_path = join(self.app_data_dir, 'config')
-                   
+        templates_path = join(self.app_dir, 'config')
+        
         variables = {
             'app': APP_NAME,
             'app_dir': self.app_dir,
             'app_data_dir': self.app_data_dir
         }
-        gen.generate_files(templates_path, config_path, variables)
+        gen.generate_files(templates_path, self.config_dir, variables)
 
     def install(self):
         self.install_config()
         self.database_init()
         
-        shutil.copytree(join(self.app_dir, 'wp-content.template'), join(self.app_data_dir, 'wp-content'))
+        shutil.copytree(join(self.app_dir, 'php', 'wordpress', 'wp-content.template'), join(self.app_data_dir, 'wp-content'))
             
         fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
+        fs.chownpath(self.data_dir, USER_NAME, recursive=True)
 
     def refresh(self):
         self.install_config()
         fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
+        fs.chownpath(self.data_dir, USER_NAME, recursive=True)
 
     def configure(self):
         self.prepare_storage()
@@ -99,8 +105,12 @@ class Installer:
             self._wp_cli("core update-db")
          
     def _wp_cli(self, cmd):
-        check_output('{0}/bin/wp-cli {1}'.format(self.app_dir, cmd), shell=True)
-             
+        try:
+            check_output('{0}/bin/wp-cli {1}'.format(self.app_dir, cmd), shell=True, stderr=subprocess.STDOUT)
+        except CalledProcessError as e:
+            self.log.error(e.output.decode())
+            raise e
+     
     def on_disk_change(self):
         self.prepare_storage()
         
@@ -116,13 +126,20 @@ class Installer:
         #self._wp_cli("search-replace 'http://{0}' '{1}'".format(app_domain, app_url))
         
     def execute_sql(self, sql):
-        check_output('{0}/bin/mysql.sh --socket={1}/mysql.sock -e \'{2}\''.format(
-            self.app_dir, self.app_data_dir, sql), shell=True)
-          
+        try:
+            check_output('{0}/mariadb/usr/bin/mysql --socket={1}/mysql.sock -e \'{2}\''.format(
+                self.app_dir, self.app_data_dir, sql), shell=True, stderr=subprocess.STDOUT)
+        except CalledProcessError as e:
+            self.log.error(e.output.decode())
+            raise e
+
     def database_init(self):
         
-        initdb_cmd = '{0}/bin/initdb.sh --user={1} --basedir={0}/mariadb --datadir={2}'.format(
+        initdb_cmd = '{0}/bin/initdb.sh --user={1} --basedir={0}/mariadb/usr --datadir={2}'.format(
             self.app_dir, DB_USER, self.database_path)
-        check_output(initdb_cmd, shell=True)
-
+        try:
+            check_output(initdb_cmd, shell=True, stderr=subprocess.STDOUT)
+        except CalledProcessError as e:
+            self.log.error(e.output.decode())
+            raise e
 
