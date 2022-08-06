@@ -29,7 +29,8 @@ class Installer:
         self.common_dir = paths.get_data_dir(APP_NAME)
         self.data_dir = join('/var/snap', APP_NAME, 'current')
         self.config_dir = join(self.data_dir, 'config')
-
+        self.app_domain = urls.get_app_domain_name(APP_NAME)
+           
         self.database_path = join(self.app_data_dir, 'database')
              
     def install_config(self):
@@ -75,10 +76,8 @@ class Installer:
                 DB_NAME, DB_USER, DB_PASSWORD))
             self.execute_sql('FLUSH PRIVILEGES;')
             
-            app_url = urls.get_app_url(APP_NAME)
-            app_domain = urls.get_app_domain_name(APP_NAME)
-           
-            self._wp_cli('core install --url={0} --title=Syncloud --admin_user=installer --admin_email=admin@example.com --skip-email'.format(app_domain))
+            
+            self._wp_cli('core install --url={0} --title=Syncloud --admin_user=installer --admin_email=admin@example.com --skip-email'.format(self.app_domain))
             self._wp_cli('plugin activate ldap-login-for-intranet-sites')
             self._wp_cli('user delete installer --yes')
             self._wp_cli("option update mo_ldap_local_register_user 1")
@@ -97,13 +96,12 @@ class Installer:
             self._wp_cli("option update mo_ldap_local_service_account_status VALID")
             self._wp_cli("option update mo_ldap_local_user_mapping_status VALID")
             self._wp_cli("option update mo_ldap_local_mapping_value_default administrator")
-            self.on_domain_change()
-            
             fs.touchfile(install_file)
-            
         else:
             self._wp_cli("core update-db")
          
+        self.on_domain_change()
+
     def _wp_cli(self, cmd):
         try:
             check_output('{0}/bin/wp-cli {1}'.format(self.app_dir, cmd), shell=True, stderr=subprocess.STDOUT)
@@ -117,12 +115,9 @@ class Installer:
     def prepare_storage(self):
         app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
         
-    def on_domain_change(self):
-        app_url = urls.get_app_url(APP_NAME)
-        app_domain = urls.get_app_domain_name(APP_NAME)
-        
-        self._wp_cli("option update siteurl '{0}'".format(app_url))
-        self._wp_cli("option update home '{0}'".format(app_url))
+    def on_domain_change(self):   
+        self._wp_cli("option update siteurl 'https://{0}'".format(self.app_domain))
+        self._wp_cli("option update home 'https://{0}'".format(self.app_domain))
         #self._wp_cli("search-replace 'http://{0}' '{1}'".format(app_domain, app_url))
         
     def execute_sql(self, sql):
@@ -142,4 +137,3 @@ class Installer:
         except CalledProcessError as e:
             self.log.error(e.output.decode())
             raise e
-
