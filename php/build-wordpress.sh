@@ -8,9 +8,9 @@ apt -y install patch
 
 # ldap
 cd ${DIR}/build
-cd ldap-login-for-intranet-sites
-patch -p0 < ${DIR}/patches/ldap.patch
-cd ..
+#cd ldap-login-for-intranet-sites
+#patch -p0 < ${DIR}/patches/ldap.patch
+#cd ..
 mv ldap-login-for-intranet-sites ${BUILD_DIR}/wordpress/wp-content/plugins
 
 # wordpress
