@@ -38,12 +38,10 @@ def test_start(module_setup, app, domain, device_host):
     add_host_alias(app, device_host, domain)
 
 
-def test_index(driver, app_domain, screenshot_dir, ui_mode):
-
-    driver.get("https://{0}".format(app_domain))
-    time.sleep(10)
-  
-    screenshots(driver, screenshot_dir, 'index-' + ui_mode)
+def test_index(selenium):
+    selenium.open_app()
+    selenium.find_by_xpath("//h1[text()='Nothing here']")
+    selenium.screenshot('index')
     
 
 def test_login(selenium, device_user, device_password):
@@ -51,18 +49,18 @@ def test_login(selenium, device_user, device_password):
     lib.login(selenium, device_user, device_password)
 
 
-def test_admin(driver, app_domain, screenshot_dir, ui_mode):
+def test_admin(selenium, app_domain, screenshot_dir, ui_mode):
 
-    driver.get("https://{0}/wp-admin".format(app_domain))
-    time.sleep(10)
-    screenshots(driver, screenshot_dir, 'admin-' + ui_mode)
+    selenium.open_app("/wp-admin")
+    selenium.wait_or_screenshot(EC.element_to_be_clickable((By.ID, 'user_login')))
+    selenium.screenshot('admin')
     
 
-def test_profile(driver, app_domain, screenshot_dir, ui_mode):
+def test_profile(selenium):
 
-    driver.get("https://{0}/wp-admin/profile.php".format(app_domain))
-    time.sleep(10)
-    screenshots(driver, screenshot_dir, 'profile-' + ui_mode)
+    selenium.open_app("/wp-admin/profile.php")
+    selenium.find_by_xpath("//h1[text()='Personal Options']")
+    selenium.screenshot('profile')
     
 
 def test_ldap(driver, app_domain, screenshot_dir, ui_mode):
