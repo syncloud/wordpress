@@ -51,7 +51,7 @@ def test_login(selenium, device_user, device_password):
 def test_profile(selenium):
 
     selenium.open_app("/wp-admin/profile.php")
-    selenium.find_by_xpath("//h1[text()='Personal Options']")
+    selenium.find_by_xpath("//h2[text()='Personal Options']")
     selenium.screenshot('profile')
     
 
