@@ -8,9 +8,9 @@ apt -y install patch
 
 # ldap
 cd ${DIR}/build
-#cd ldap-login-for-intranet-sites
-#patch -p0 < ${DIR}/patches/ldap.patch
-#cd ..
+cd ldap-login-for-intranet-sites
+patch -p0 < ${DIR}/patches/ldap.patch
+cd ..
 mv ldap-login-for-intranet-sites ${BUILD_DIR}/wordpress/wp-content/plugins
 
 # wordpress
@@ -38,4 +38,3 @@ phar list -f wp-cli.phar -i utils.php
 php wp-cli.phar --allow-root cli info
 
 cp wp-cli.phar ${OUT_DIR}/bin/wp-cli.phar
-
