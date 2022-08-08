@@ -40,7 +40,7 @@ def test_start(module_setup, app, domain, device_host):
 
 def test_index(selenium):
     selenium.open_app()
-    selenium.find_by_xpath("//h1[text()='Nothing here']")
+    selenium.find_by_xpath("//a[text()='Syncloud']")
     selenium.screenshot('index')
     
 
