@@ -45,15 +45,7 @@ def test_index(selenium):
     
 
 def test_login(selenium, device_user, device_password):
-
     lib.login(selenium, device_user, device_password)
-
-
-def test_admin(selenium, app_domain, screenshot_dir, ui_mode):
-
-    selenium.open_app("/wp-admin")
-    selenium.wait_or_screenshot(EC.element_to_be_clickable((By.ID, 'user_login')))
-    selenium.screenshot('admin')
     
 
 def test_profile(selenium):
