@@ -2,9 +2,9 @@
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 DOWNLOAD_URL=https://github.com/syncloud/3rdparty/releases/download
-WORDPRESS_VERSION=5.7.1
-WORDPRESS_LDAP_VERSION=3.6.4
-WORDPRESS_CLI_VERSION=2.4.0
+WORDPRESS_VERSION=6.0.1
+WORDPRESS_LDAP_VERSION=4.0
+WORDPRESS_CLI_VERSION=2.6.0
 ARCH=$(uname -m)
 rm -rf ${DIR}/build
 BUILD_DIR=${DIR}/build/snap

@@ -96,6 +96,7 @@ class Installer:
             self._wp_cli("option update mo_ldap_local_service_account_status VALID")
             self._wp_cli("option update mo_ldap_local_user_mapping_status VALID")
             self._wp_cli("option update mo_ldap_local_mapping_value_default administrator")
+            self._wp_cli("option update mo_tour_skipped 1")
             fs.touchfile(install_file)
         else:
             self._wp_cli("core update-db")
