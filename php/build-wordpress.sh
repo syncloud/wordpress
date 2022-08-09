@@ -38,4 +38,3 @@ phar list -f wp-cli.phar -i utils.php
 php wp-cli.phar --allow-root cli info
 
 cp wp-cli.phar ${OUT_DIR}/bin/wp-cli.phar
-

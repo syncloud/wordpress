@@ -6,7 +6,7 @@ import time
 
 def login(selenium, device_user, device_password):
 
-    selenium.open_app("/wp-login.php")
+    selenium.open_app("/wp-admin")
     selenium.wait_or_screenshot(EC.element_to_be_clickable((By.ID, 'user_login')))
 
     user = selenium.find_by_id("user_login")
@@ -16,6 +16,6 @@ def login(selenium, device_user, device_password):
     selenium.screenshot('login')
     password.send_keys(Keys.RETURN)
     
-    time.sleep(10)
-    
+    selenium.find_by_xpath("//div[text()='Dashboard']")
+  
     selenium.screenshot('login-complete')
