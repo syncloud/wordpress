@@ -30,6 +30,7 @@ class Installer:
         self.data_dir = join('/var/snap', APP_NAME, 'current')
         self.config_dir = join(self.data_dir, 'config')
         self.app_domain = urls.get_app_domain_name(APP_NAME)
+        self.app_url = urls.get_app_url(APP_NAME)
            
         self.database_path = join(self.app_data_dir, 'database')
              
@@ -117,8 +118,8 @@ class Installer:
         app_storage_dir = storage.init_storage(APP_NAME, USER_NAME)
         
     def on_domain_change(self):   
-        self._wp_cli("option update siteurl 'https://{0}'".format(self.app_domain))
-        self._wp_cli("option update home 'https://{0}'".format(self.app_domain))
+        self._wp_cli("option update siteurl '{0}'".format(self.app_url))
+        self._wp_cli("option update home '{0}'".format(self.app_url))
         #self._wp_cli("search-replace 'http://{0}' '{1}'".format(app_domain, app_url))
         
     def execute_sql(self, sql):
