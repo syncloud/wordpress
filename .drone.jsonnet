@@ -1,7 +1,7 @@
 local name = "wordpress";
 local browser = "firefox";
 
-local build(arch, test_ui) = [{
+local build(arch, test_ui, dind) = [{
     kind: "pipeline",
     type: "docker",
     name: arch,
@@ -26,53 +26,41 @@ local build(arch, test_ui) = [{
         },
         {
             name: "build php",
-            image: "debian:buster-slim",
+            image: "docker:" + dind,
             commands: [
                 "./php/build.sh"
             ],
             volumes: [
                 {
-                    name: "docker",
-                    path: "/usr/bin/docker"
-                },
-                {
-                    name: "docker.sock",
-                    path: "/var/run/docker.sock"
+                    name: "dockersock",
+                    path: "/var/run"
                 }
             ]
         },
 
         {
             name: "package mariadb",
-            image: "debian:buster-slim",
+            image: "docker:" + dind,
             commands: [
                 "./mariadb/build.sh"
             ],
             volumes: [
                 {
-                    name: "docker",
-                    path: "/usr/bin/docker"
-                },
-                {
-                    name: "docker.sock",
-                    path: "/var/run/docker.sock"
+                    name: "dockersock",
+                    path: "/var/run"
                 }
             ]
         },
         {
             name: "package python",
-            image: "debian:buster-slim",
+            image: "docker:" + dind,
             commands: [
                 "./python/build.sh"
             ],
             volumes: [
                 {
-                    name: "docker",
-                    path: "/usr/bin/docker"
-                },
-                {
-                    name: "docker.sock",
-                    path: "/var/run/docker.sock"
+                    name: "dockersock",
+                    path: "/var/run"
                 }
             ]
         },
@@ -202,6 +190,17 @@ local build(arch, test_ui) = [{
         },
         services: [
             {
+                name: "docker",
+                image: "docker:" + dind,
+                privileged: true,
+                volumes: [
+                    {
+                        name: "dockersock",
+                        path: "/var/run"
+                    }
+                ]
+            },
+            {
                 name: name + ".buster.com",
                 image: "syncloud/platform-buster-" + arch + ":22.01",
                 privileged: true,
@@ -250,18 +249,10 @@ local build(arch, test_ui) = [{
                 name: "videos",
                 temp: {}
             },
-            {
-                name: "docker",
-                host: {
-                    path: "/usr/bin/docker"
-                }
-            },
-            {
-                name: "docker.sock",
-                host: {
-                    path: "/var/run/docker.sock"
-                }
-            }
+        {
+            name: "dockersock",
+            temp: {}
+        },
         ]
     },
     {
@@ -300,6 +291,7 @@ local build(arch, test_ui) = [{
      }
 ];
 
-build("amd64", true) +
-build("arm64", false) +
-build("arm", false)
+build("amd64", true, "20.10.21-dind") +
+build("arm64", false, "19.03.8-dind") +
+build("arm", false, "19.03.8-dind")
+

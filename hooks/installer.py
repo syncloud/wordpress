@@ -77,46 +77,43 @@ class Installer:
                 DB_NAME, DB_USER, DB_PASSWORD))
             self.execute_sql('FLUSH PRIVILEGES;')
             self.update_settings()
-     
             self._wp_cli('core install --url={0} --title=Syncloud --admin_user=installer --admin_email=admin@example.com --skip-email'.format(self.app_domain))
             self._wp_cli('plugin activate ldap-login-for-intranet-sites')
             self._wp_cli('user delete installer --yes')
-            
-
             fs.touchfile(install_file)
         else:
             self._wp_cli("core update-db")
-         
+            self.update_settings()
+
         self.on_domain_change()
 
-    def update_settings():
+    def update_settings(self):
         self._wp_cli("option update mo_ldap_local_register_user 1")
-            self._wp_cli("option update mo_ldap_local_mapping_memberof_attribute memberOf")
-            self._wp_cli("option update mo_ldap_local_new_registration true")
-            self._wp_cli("option update mo_ldap_local_enable_admin_wp_login 1")
-            self._wp_cli("option update mo_ldap_local_anonymous_bind 0")
-            self._wp_cli("option update mo_ldap_local_server_url ldap://localhost")
-            self._wp_cli("option update mo_ldap_local_server_dn dc=syncloud,dc=org")
-            self._wp_cli("option update mo_ldap_local_server_password syncloud")
-            self._wp_cli("option update mo_ldap_local_search_filter '(&(objectClass=*)(cn=?))'")
-            self._wp_cli("option update mo_ldap_local_search_base ou=users,dc=syncloud,dc=org")
-            self._wp_cli("option update mo_ldap_local_enable_role_mapping 1")
-            self._wp_cli("option update mo_ldap_local_enable_login 1")
-            self._wp_cli("option update mo_ldap_local_server_url_status VALID")
-            self._wp_cli("option update mo_ldap_local_service_account_status VALID")
-            self._wp_cli("option update mo_ldap_local_user_mapping_status VALID")
-            self._wp_cli("option update mo_ldap_local_mapping_value_default administrator")
-            self._wp_cli("option update mo_tour_skipped 1")
-            self._wp_cli("plugin auto-updates disable")
-         
+        self._wp_cli("option update mo_ldap_local_mapping_memberof_attribute memberOf")
+        self._wp_cli("option update mo_ldap_local_new_registration true")
+        self._wp_cli("option update mo_ldap_local_enable_admin_wp_login 1")
+        self._wp_cli("option update mo_ldap_local_anonymous_bind 0")
+        self._wp_cli("option update mo_ldap_local_server_url ldap://localhost")
+        self._wp_cli("option update mo_ldap_local_server_dn dc=syncloud,dc=org")
+        self._wp_cli("option update mo_ldap_local_server_password syncloud")
+        self._wp_cli("option update mo_ldap_local_search_filter '(&(objectClass=*)(cn=?))'")
+        self._wp_cli("option update mo_ldap_local_search_base ou=users,dc=syncloud,dc=org")
+        self._wp_cli("option update mo_ldap_local_enable_role_mapping 1")
+        self._wp_cli("option update mo_ldap_local_enable_login 1")
+        self._wp_cli("option update mo_ldap_local_server_url_status VALID")
+        self._wp_cli("option update mo_ldap_local_service_account_status VALID")
+        self._wp_cli("option update mo_ldap_local_user_mapping_status VALID")
+        self._wp_cli("option update mo_ldap_local_mapping_value_default administrator")
+        self._wp_cli("option update mo_tour_skipped 1")
+        self._wp_cli("plugin auto-updates disable --all", throw=False)
  
- 
-    def _wp_cli(self, cmd):
+    def _wp_cli(self, cmd, throw=True):
         try:
             check_output('{0}/bin/wp-cli {1}'.format(self.app_dir, cmd), shell=True, stderr=subprocess.STDOUT)
         except CalledProcessError as e:
             self.log.error(e.output.decode())
-            raise e
+            if throw:
+                raise e
      
     def on_disk_change(self):
         self.prepare_storage()
