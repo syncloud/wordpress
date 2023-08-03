@@ -1,13 +1,9 @@
-#!/bin/bash -ex
+#!/bin/sh -ex
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 cd ${DIR}
-apt update
-apt install -y libltdl7 libnss3
 
 BUILD_DIR=${DIR}/../build/snap/mariadb
-docker ps -a -q --filter ancestor=mariadb:syncloud --format="{{.ID}}" | xargs docker stop | xargs docker rm || true
-docker rmi mariadb:syncloud || true
 docker build -t mariadb:syncloud .
 docker create --name=mariadb mariadb:syncloud
 mkdir -p ${BUILD_DIR}
