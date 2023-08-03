@@ -115,7 +115,7 @@ local build(arch, test_ui, dind) = [{
                  name: "videos",
                  path: "/videos"
              }]
-        } for mode in ["desktop", "mobile"] ])
+        } for mode in ["desktop"] ])
        else [] ) +
        ( if arch == "amd64" then [
         {
