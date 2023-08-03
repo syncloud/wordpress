@@ -1,5 +1,5 @@
 local name = "wordpress";
-local browser = "firefox";
+local browser = "chrome";
 
 local build(arch, test_ui, dind) = [{
     kind: "pipeline",
