@@ -1,6 +1,6 @@
 #!/bin/sh -ex
 
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+DIR=$( cd "$( dirname "$0" )" && pwd )
 cd ${DIR}
 
 BUILD_DIR=${DIR}/../build/snap/mariadb
@@ -9,8 +9,6 @@ docker create --name=mariadb mariadb:syncloud
 mkdir -p ${BUILD_DIR}
 cd ${BUILD_DIR}
 docker export mariadb -o app.tar
-docker ps -a -q --filter ancestor=mariadb:syncloud --format="{{.ID}}" | xargs docker stop | xargs docker rm || true
-docker rmi mariadb:syncloud || true
 tar xf app.tar
 rm -rf app.tar
 mv ${BUILD_DIR}/usr/bin/resolveip ${BUILD_DIR}/usr/bin/resolveip.bin
