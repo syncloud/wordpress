@@ -76,12 +76,11 @@ class Installer:
             self.execute_sql('GRANT ALL PRIVILEGES ON {0}.* TO "{1}"@"localhost" IDENTIFIED BY "{2}";'.format(
                 DB_NAME, DB_USER, DB_PASSWORD))
             self.execute_sql('FLUSH PRIVILEGES;')
-            self._wp_cli("option update mo_ldap_local_register_user 1")
-            self.update_settings()
-            self._wp_cli("option update mo_tour_skipped 1")
             self._wp_cli('core install --url={0} --title=Syncloud --admin_user=installer --admin_email=admin@example.com --skip-email'.format(self.app_domain))
             self._wp_cli('plugin activate ldap-login-for-intranet-sites')
             self._wp_cli('user delete installer --yes')
+            self.update_settings()
+            self._wp_cli("option update mo_tour_skipped 1")
             fs.touchfile(install_file)
         else:
             self._wp_cli("core update-db")
@@ -90,6 +89,7 @@ class Installer:
         self.on_domain_change()
 
     def update_settings(self):
+        self._wp_cli("option update mo_ldap_local_register_user 1")
         self._wp_cli("option update mo_ldap_local_mapping_memberof_attribute memberOf")
         self._wp_cli("option update mo_ldap_local_new_registration true")
         self._wp_cli("option update mo_ldap_local_enable_admin_wp_login 1")
