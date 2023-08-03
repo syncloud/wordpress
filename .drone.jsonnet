@@ -110,7 +110,11 @@ local build(arch, test_ui, dind) = [{
               "cd integration",
               "pip install -r requirements.txt",
               "py.test -x -s test-ui.py --distro=buster --ui-mode=" + mode + " --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
-            ]
+            ],
+             volumes: [{
+                 name: "videos",
+                 path: "/videos"
+             }]
         } for mode in ["desktop", "mobile"] ])
        else [] ) +
        ( if arch == "amd64" then [
@@ -122,12 +126,7 @@ local build(arch, test_ui, dind) = [{
               "cd integration",
               "./deps.sh",
               "py.test -x -s test-upgrade.py --distro=buster --ui-mode=desktop --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
-            ],
-            privileged: true,
-            volumes: [{
-                name: "videos",
-                path: "/videos"
-            }]
+            ]
         } ] else [] ) + [
         {
             name: "upload",
@@ -169,13 +168,7 @@ local build(arch, test_ui, dind) = [{
                     "artifact/*"
                 ],
                 privileged: true,
-                strip_components: 1,
-                volumes: [
-                   {
-                        name: "videos",
-                        path: "/drone/src/artifact/videos"
-                    }
-                ]
+                strip_components: 1
             },
             when: {
               status: [ "failure", "success" ]

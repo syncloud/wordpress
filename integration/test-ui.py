@@ -1,19 +1,11 @@
-import os
-import shutil
-from os.path import dirname, join, exists
 import time
-import pytest
+from os.path import dirname, join
 from subprocess import check_output
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support.ui import Select
+
+import pytest
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.screenshots import screenshots
+
 from integration import lib
 
 DIR = dirname(__file__)
@@ -26,9 +18,8 @@ def module_setup(request, device, log_dir, ui_mode, artifact_dir):
         device.activated()
         device.run_ssh('mkdir -p {0}'.format(tmp_dir), throw=False)
         device.run_ssh('journalctl > {0}/journalctl.ui.{1}.log'.format(tmp_dir, ui_mode), throw=False)
-        device.run_ssh('cp /var/log/syslog {0}/syslog.ui.{1}.log'.format(tmp_dir, ui_mode), throw=False)
-      
         device.scp_from_device('{0}/*'.format(tmp_dir), artifact_dir)
+        check_output('cp /videos/* {0}'.format(artifact_dir), shell=True)
         check_output('chmod -R a+r {0}'.format(artifact_dir), shell=True)
 
     request.addfinalizer(module_teardown)
