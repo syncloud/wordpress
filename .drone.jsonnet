@@ -126,7 +126,11 @@ local build(arch, test_ui, dind) = [{
               "cd integration",
               "./deps.sh",
               "py.test -x -s test-upgrade.py --distro=buster --ui-mode=desktop --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
-            ]
+            ],
+              volumes: [{
+                  name: "videos",
+                  path: "/videos"
+              }]
         } ] else [] ) + [
         {
             name: "upload",

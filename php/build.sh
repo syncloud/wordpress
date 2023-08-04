@@ -7,6 +7,7 @@ BUILD_DIR=${DIR}/../build/snap/php
 
 while ! docker build -t php:syncloud . ; do
   echo "retry docker"
+  sleep 3
 done
 docker run php:syncloud php -i
 docker create --name=php php:syncloud
