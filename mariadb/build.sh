@@ -4,7 +4,10 @@ DIR=$( cd "$( dirname "$0" )" && pwd )
 cd ${DIR}
 
 BUILD_DIR=${DIR}/../build/snap/mariadb
-docker build -t mariadb:syncloud .
+while ! docker build -t mariadb:syncloud . ; do
+  echo "retry docker"
+  sleep 3
+done
 docker create --name=mariadb mariadb:syncloud
 mkdir -p ${BUILD_DIR}
 cd ${BUILD_DIR}
