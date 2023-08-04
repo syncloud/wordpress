@@ -59,13 +59,23 @@ class Installer:
         self.install_config()
         self.database_init()
         
-        shutil.copytree(join(self.app_dir, 'php', 'wordpress', 'wp-content.template'), join(self.app_data_dir, 'wp-content'))
+        shutil.copytree(
+            join(self.app_dir, 'php', 'wordpress', 'wp-content.template'),
+            join(self.app_data_dir, 'wp-content'))
             
         fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
         fs.chownpath(self.data_dir, USER_NAME, recursive=True)
 
     def refresh(self):
         self.install_config()
+        shutil.rmtree(
+            join(self.app_data_dir, 'wp-content', 'plugins', 'ldap-login-for-intranet-sites'),
+            ignore_errors=True)
+        shutil.copytree(
+            join(self.app_dir, 'php', 'wordpress', 'wp-content.template', 'mu_plugins'),
+            join(self.app_data_dir, 'wp-content', 'mu_plugins'),
+            dirs_exist_ok=True)
+
         fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
         fs.chownpath(self.data_dir, USER_NAME, recursive=True)
 
