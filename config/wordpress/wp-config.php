@@ -83,7 +83,7 @@ define('WP_DEBUG', false);
 
 /** Absolute path to the WordPress directory. */
 if ( !defined('ABSPATH') )
-	define('ABSPATH', getenv('SNAP') . '/wordpress');
+	define('ABSPATH', getenv('SNAP') . '/php/wordpress');
 
 require_once(ABSPATH . 'wp-settings.php');
 
