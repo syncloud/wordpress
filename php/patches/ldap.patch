@@ -1,25 +1,18 @@
---- class-mo-ldap-utility.php	2022-05-12 12:25:23.000000000 +0300
-+++ class-mo-ldap-utility.php.new	2022-08-08 20:03:10.192862242 +0300
-@@ -63,6 +63,7 @@
- 	}
- 	
- 	public static function encrypt($str) {
-+		return $str;
- 		if(!MoLdapLocalUtil::is_extension_installed('openssl')) {
- 			return;
- 		}
-@@ -73,6 +74,7 @@
- 	}
- 
- 	public static function decrypt($value) {
-+		return $value;
- 		if(!MoLdapLocalUtil::is_extension_installed('openssl')) {
- 			return;
- 		}
-@@ -93,4 +95,4 @@
-         return in_array ($name, get_loaded_extensions());
- 	}
- }
--?>
-\ No newline at end of file
-+?>
+--- class-mo-ldap-utility.php	2023-07-18 19:09:24.000000000 +0100
++++ class-mo-ldap-utility.php.new	2023-08-04 09:35:32.760391228 +0100
+@@ -108,6 +108,7 @@
+ 		 * @return string
+ 		 */
+ 		public static function encrypt( $str ) {
++			return $str;
+ 			if ( ! self::is_extension_installed( 'openssl' ) ) {
+ 				return;
+ 			}
+@@ -126,6 +127,7 @@
+ 		 * @return string
+ 		 */
+ 		public static function decrypt( $value ) {
++			return $value;
+ 			if ( ! self::is_extension_installed( 'openssl' ) ) {
+ 				return;
+ 			}
