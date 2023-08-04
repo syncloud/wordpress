@@ -88,7 +88,7 @@ class Installer:
                 DB_NAME, DB_USER, DB_PASSWORD))
             self.execute_sql('FLUSH PRIVILEGES;')
             self._wp_cli('core install --url={0} --title=Syncloud --admin_user=installer --admin_email=admin@example.com --skip-email'.format(self.app_domain))
-            self._wp_cli('plugin activate ldap-login-for-intranet-sites')
+            # self._wp_cli('plugin activate ldap-login-for-intranet-sites')
             self._wp_cli('user delete installer --yes')
             self.update_settings()
             self._wp_cli("option update mo_tour_skipped 1")
