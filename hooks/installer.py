@@ -50,7 +50,8 @@ class Installer:
         variables = {
             'app': APP_NAME,
             'app_dir': self.app_dir,
-            'app_data_dir': self.app_data_dir
+            'app_data_dir': self.app_data_dir,
+            'data_dir': self.data_dir
         }
         gen.generate_files(templates_path, self.config_dir, variables)
 
@@ -109,7 +110,7 @@ class Installer:
  
     def _wp_cli(self, cmd, throw=True):
         try:
-            check_output('{0}/bin/wp-cli {1}'.format(self.app_dir, cmd), shell=True, stderr=subprocess.STDOUT)
+            check_output('snap run wordpress.wp-cli {0}'.format(cmd), shell=True, stderr=subprocess.STDOUT)
         except CalledProcessError as e:
             self.log.error(e.output.decode())
             if throw:
