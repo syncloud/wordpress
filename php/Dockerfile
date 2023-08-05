@@ -2,6 +2,7 @@ FROM php:8.0.16-fpm-buster
 COPY build-wordpress.sh /
 COPY patches/ /patches
 COPY build/ /build
+COPY ldap-login-for-intranet-sites.php /build/
 RUN apt-get update && apt-get install -y \
 		libfreetype6-dev \
 		libjpeg62-turbo-dev \
