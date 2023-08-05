@@ -50,7 +50,8 @@ class Installer:
         variables = {
             'app': APP_NAME,
             'app_dir': self.app_dir,
-            'app_data_dir': self.app_data_dir
+            'app_data_dir': self.app_data_dir,
+            'data_dir': self.data_dir
         }
         gen.generate_files(templates_path, self.config_dir, variables)
 
@@ -58,13 +59,23 @@ class Installer:
         self.install_config()
         self.database_init()
         
-        shutil.copytree(join(self.app_dir, 'php', 'wordpress', 'wp-content.template'), join(self.app_data_dir, 'wp-content'))
+        shutil.copytree(
+            join(self.app_dir, 'php', 'wordpress', 'wp-content.template'),
+            join(self.app_data_dir, 'wp-content'))
             
         fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
         fs.chownpath(self.data_dir, USER_NAME, recursive=True)
 
     def refresh(self):
         self.install_config()
+        shutil.rmtree(
+            join(self.app_data_dir, 'wp-content', 'plugins', 'ldap-login-for-intranet-sites'),
+            ignore_errors=True)
+        shutil.copytree(
+            join(self.app_dir, 'php', 'wordpress', 'wp-content.template', 'mu-plugins'),
+            join(self.app_data_dir, 'wp-content', 'mu-plugins'),
+            dirs_exist_ok=True)
+
         fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
         fs.chownpath(self.data_dir, USER_NAME, recursive=True)
 
@@ -77,7 +88,7 @@ class Installer:
                 DB_NAME, DB_USER, DB_PASSWORD))
             self.execute_sql('FLUSH PRIVILEGES;')
             self._wp_cli('core install --url={0} --title=Syncloud --admin_user=installer --admin_email=admin@example.com --skip-email'.format(self.app_domain))
-            self._wp_cli('plugin activate ldap-login-for-intranet-sites')
+            # self._wp_cli('plugin activate ldap-login-for-intranet-sites')
             self._wp_cli('user delete installer --yes')
             self.update_settings()
             self._wp_cli("option update mo_tour_skipped 1")
@@ -109,7 +120,7 @@ class Installer:
  
     def _wp_cli(self, cmd, throw=True):
         try:
-            check_output('{0}/bin/wp-cli {1}'.format(self.app_dir, cmd), shell=True, stderr=subprocess.STDOUT)
+            check_output('snap run wordpress.wp-cli {0}'.format(cmd), shell=True, stderr=subprocess.STDOUT)
         except CalledProcessError as e:
             self.log.error(e.output.decode())
             if throw:
