@@ -75,6 +75,3 @@ def test_media(driver, app_domain, screenshot_dir, ui_mode):
         time.sleep(5)
         screenshots(driver, screenshot_dir, 'media-done-' + ui_mode)
 
-
-def test_teardown(driver):
-    driver.quit()
