@@ -11,6 +11,8 @@ WORDPRESS_CLI_VERSION=2.8.1
 apt update
 apt -y install patch
 
+mkdir ${DIR}/build
+
 # wordpress
 cd ${DIR}/build
 wget https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz --progress dot:giga
@@ -21,6 +23,7 @@ mv wp-content wp-content.template
 ln -sf /var/snap/wordpress/common/wp-content wp-content
 cd ..
 mv wordpress ${BUILD_DIR}
+
 # ldap
 cd ${DIR}/build
 wget https://downloads.wordpress.org/plugin/ldap-login-for-intranet-sites.${WORDPRESS_LDAP_VERSION}.zip --progress dot:giga
