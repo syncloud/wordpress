@@ -1,5 +1,16 @@
 local name = "wordpress";
 local browser = "chrome";
+local go = '1.25';
+local version = '0.6.9';
+local nginx = '1.29.3-alpine3.22';
+local php = '8.3.9-fpm-bullseye';
+local debian = 'bookworm-slim';
+local platform = '25.09';
+local selenium = '4.35.0-20250828';
+local deployer = 'https://github.com/syncloud/store/releases/download/4/syncloud-release';
+local python = '3.12-slim-bookworm';
+local distro_default = 'bookworm';
+local distros = ['bookworm'];
 
 local build(arch, test_ui, dind) = [{
     kind: "pipeline",
@@ -12,32 +23,26 @@ local build(arch, test_ui, dind) = [{
     steps: [
         {
             name: "version",
-            image: "debian:buster-slim",
+            image: 'debian:' + debian,
             commands: [
                 "echo $DRONE_BUILD_NUMBER > version"
             ]
         },
         {
-            name: "download",
-            image: "debian:buster-slim",
+            name: "php",
+            image: "php:" + php,
             commands: [
-                "./download.sh"
-            ]
-        },
-        {
-            name: "build php",
-            image: "docker:" + dind,
-            commands: [
-                "./php/build.sh"
+                "./php/build.sh",
+                "./php/build-wordpress.sh"
             ],
-            volumes: [
-                {
-                    name: "dockersock",
-                    path: "/var/run"
-                }
-            ]
         },
-
+{
+             name: 'php test',
+             image: 'syncloud/platform-'+ distro_default+'-' + arch + ':' + platform,
+             commands: [
+               './php/test.sh',
+             ],
+           },
         {
             name: "package mariadb",
             image: "docker:" + dind,
@@ -291,4 +296,10 @@ local build(arch, test_ui, dind) = [{
 build("amd64", true, "20.10.21-dind") +
 build("arm64", false, "19.03.8-dind") +
 build("arm", false, "19.03.8-dind")
+
+
+
+
+
+
 

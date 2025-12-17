@@ -2,9 +2,7 @@
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 DOWNLOAD_URL=https://github.com/syncloud/3rdparty/releases/download
-WORDPRESS_VERSION=6.2.2
-WORDPRESS_LDAP_VERSION=4.1.7
-WORDPRESS_CLI_VERSION=2.8.1
+
 ARCH=$(uname -m)
 rm -rf ${DIR}/build
 BUILD_DIR=${DIR}/build/snap
@@ -30,4 +28,6 @@ mv wp-cli-${WORDPRESS_CLI_VERSION}.phar $DIR/php/build/wp-cli.phar
 
 wget https://downloads.wordpress.org/plugin/ldap-login-for-intranet-sites.${WORDPRESS_LDAP_VERSION}.zip --progress dot:giga
 unzip ldap-login-for-intranet-sites.${WORDPRESS_LDAP_VERSION}.zip
+mv ldap-login-for-intranet-sites $DIR/php/build
+s.${WORDPRESS_LDAP_VERSION}.zip
 mv ldap-login-for-intranet-sites $DIR/php/build
