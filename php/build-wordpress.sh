@@ -31,7 +31,7 @@ patch -p0 < ${DIR}/patches/ldap.patch
 cd ..
 mkdir ${BUILD_DIR}/wordpress/wp-content/mu-plugins
 mv ldap-login-for-intranet-sites ${BUILD_DIR}/wordpress/wp-content/mu-plugins
-mv ldap-login-for-intranet-sites.php ${BUILD_DIR}/wordpress/wp-content/mu-plugins
+cp $DIR/ldap-login-for-intranet-sites.php ${BUILD_DIR}/wordpress/wp-content/mu-plugins
 
 # cli
 cd ${DIR}/build
