@@ -19,8 +19,6 @@ wget https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz --progress dot:
 tar xf wordpress-${WORDPRESS_VERSION}.tar.gz
 cd wordpress
 patch -p0 < ${DIR}/patches/wp-load.patch
-mv wp-content wp-content.template
-ln -sf /var/snap/wordpress/common/wp-content wp-content
 cd ..
 mv wordpress ${BUILD_DIR}
 
@@ -56,3 +54,6 @@ phar list -f wp-cli.phar -i utils.php
 php wp-cli.phar --allow-root cli info
 
 cp wp-cli.phar ${BUILD_DIR}/bin/wp-cli.phar
+
+mv ${BUILD_DIR}/wordpress/wp-content ${BUILD_DIR}/wordpress/wp-content.template
+ln -sf /var/snap/wordpress/common/wp-content ${BUILD_DIR}/wordpress/wp-content
