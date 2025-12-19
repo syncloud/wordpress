@@ -6,7 +6,7 @@ import pytest
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.screenshots import screenshots
 
-from integration import lib
+from test import lib
 
 DIR = dirname(__file__)
 
@@ -46,32 +46,30 @@ def test_profile(selenium):
     selenium.screenshot('profile')
     
 
-def test_ldap(driver, app_domain, screenshot_dir, ui_mode):
+def test_ldap(driver, app_domain, selenium):
 
     driver.get("https://{0}/wp-admin/admin.php?page=mo_ldap_local_login".format(app_domain))
     time.sleep(10)
-    screenshots(driver, screenshot_dir, 'ldap-' + ui_mode)
+    selenium.screenshot('ldap')
 
     
-def test_users(driver, app_domain, screenshot_dir, ui_mode):
+def test_users(driver, app_domain, selenium):
 
     driver.get("https://{0}/wp-admin/users.php".format(app_domain))
     time.sleep(10)
-    screenshots(driver, screenshot_dir, 'users-' + ui_mode)
+    selenium.screenshot('users')
     
-def test_media(driver, app_domain, screenshot_dir, ui_mode):
+def test_media(driver, app_domain, selenium):
 
-    if ui_mode == "desktop":
-        driver.get("https://{0}/wp-admin/media-new.php".format(app_domain))
-        time.sleep(2)
-        screenshots(driver, screenshot_dir, 'media-new-' + ui_mode)
-        driver.find_element_by_css_selector('p[class="upload-flash-bypass"] a').click()
-        file = driver.find_element_by_css_selector('input[id="async-upload"][type="file"]')
-        file.send_keys(join(DIR, 'images', 'profile.jpeg'))
-        time.sleep(2)
-        screenshots(driver, screenshot_dir, 'media-' + ui_mode)
-        save = driver.find_element_by_css_selector('input[id="html-upload"][type="submit"]')
-        save.click()
-        time.sleep(5)
-        screenshots(driver, screenshot_dir, 'media-done-' + ui_mode)
-
+    driver.get("https://{0}/wp-admin/media-new.php".format(app_domain))
+    time.sleep(2)
+    selenium.screenshot('media-new')
+    driver.find_element_by_css_selector('p[class="upload-flash-bypass"] a').click()
+    file = driver.find_element_by_css_selector('input[id="async-upload"][type="file"]')
+    file.send_keys(join(DIR, 'images', 'profile.jpeg'))
+    time.sleep(2)
+    screenshots(driver, screenshot_dir, 'media-' + ui_mode)
+    save = driver.find_element_by_css_selector('input[id="html-upload"][type="submit"]')
+    save.click()
+    time.sleep(5)
+    selenium.screenshot('media-done')
