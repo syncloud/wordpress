@@ -38,8 +38,8 @@ cd ${DIR}/build
 wget https://github.com/wp-cli/wp-cli/releases/download/v${WORDPRESS_CLI_VERSION}/wp-cli-${WORDPRESS_CLI_VERSION}.phar --progress dot:giga
 mv wp-cli-${WORDPRESS_CLI_VERSION}.phar wp-cli.phar
 #ls  /usr/local/etc/php
-echo 'phar.readonly = Off' > php.ini
-export PHP_INI_SCAN_DIR=php.ini
+echo 'phar.readonly = Off' > /usr/local/etc/php/php.ini
+#export PHP_INI_SCAN_DIR=php.ini
 php wp-cli.phar --allow-root cli info
 phar extract -f wp-cli.phar -i utils.php phar
 cd phar/vendor/wp-cli/wp-cli/php
