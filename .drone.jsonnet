@@ -41,6 +41,20 @@ local build(arch, test_ui, dind) = [{
           'CGO_ENABLED=0 go build -o ../build/snap/bin/cli ./cmd/cli',
         ],
       },
+{
+             name: 'nginx',
+             image: 'nginx:' + nginx,
+             commands: [
+               './nginx/build.sh',
+             ],
+           },
+           {
+             name: 'nginx test',
+             image: 'syncloud/platform-'+ distro_default+'-' + arch + ':' + platform,
+             commands: [
+               './nginx/test.sh',
+             ],
+           },
         {
             name: "php",
             image: "php:" + php,
