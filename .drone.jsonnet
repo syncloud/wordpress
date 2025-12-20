@@ -65,7 +65,7 @@ local build(arch, test_ui, dind) = [{
            },
            {
              name: 'mariadb test',
-             image: 'syncloud/platform-buster-' + arch + ':' + platform,
+             image: 'syncloud/platform-'distro_default+'-' + arch + ':' + platform,
              commands: [
                './mariadb/test.sh',
              ],
