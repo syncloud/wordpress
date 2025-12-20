@@ -2,17 +2,18 @@ package installer
 
 import (
 	"fmt"
+	"os"
+	"path"
+	"strings"
+
 	cp "github.com/otiai10/copy"
 	"github.com/syncloud/golib/config"
 	"github.com/syncloud/golib/linux"
 	"github.com/syncloud/golib/platform"
 	"go.uber.org/zap"
-	"os"
-	"path"
-	"strings"
 )
 
-const App = "invoiceninja"
+const App = "wordpress"
 
 type Variables struct {
 	App              string
@@ -82,6 +83,13 @@ func (i *Installer) Install() error {
 		return err
 	}
 
+	err = cp.Copy(
+		path.Join(i.appDir, "php", "wordpress", "wp-content.template"),
+		path.Join(i.dataDir, "wp-content"))
+	if err != nil {
+		return err
+	}
+
 	err = i.FixPermissions()
 	if err != nil {
 		return err
@@ -107,20 +115,29 @@ func (i *Installer) Configure() error {
 		}
 	}
 
-	_, err := i.executor.Run(i.artisanPath, "migrate", "--force")
-	if err != nil {
-		return err
-	}
-	_, err = i.executor.Run(i.artisanPath, "db:seed", "--force")
-	if err != nil {
-		return err
-	}
-	_, err = i.executor.Run(i.artisanPath, "cache:clear")
+	err := i.DomainChange()
 	if err != nil {
 		return err
 	}
 
 	return i.UpdateVersion()
+}
+
+func (i *Installer) DomainChange() error {
+	appUrl, err := i.platformClient.GetAppUrl(App)
+	if err != nil {
+		return err
+	}
+	err = i.wpCli("option", "update", "siteurl", appUrl)
+	if err != nil {
+		return err
+	}
+	err = i.wpCli("option", "update", "home", appUrl)
+	if err != nil {
+		return err
+	}
+	return nil
+	//self._wp_cli("search-replace 'http://{0}' '{1}'".format(app_domain, app_url))
 }
 
 func (i *Installer) Initialize() error {
@@ -134,11 +151,67 @@ func (i *Installer) Initialize() error {
 		return err
 	}
 
+	appDomain, err := i.platformClient.GetAppDomainName(App)
+	if err != nil {
+		return err
+	}
+	err = i.wpCli("core", "install", fmt.Sprint("--url=", appDomain), "--title=Syncloud", "--admin_user=installer", "--admin_email=admin@example.com", "--skip-email")
+	if err != nil {
+		return err
+	}
+	err = i.wpCli("user", "delete", "installer", "--yes")
+	if err != nil {
+		return err
+	}
+	err = i.updateSettings()
+	if err != nil {
+		return err
+	}
+
+	err = i.wpCli("option", "update", "mo_tour_skipped", "1")
+	if err != nil {
+		return err
+	}
+
 	err = os.WriteFile(i.installFile, []byte("installed"), 0644)
 	if err != nil {
 		return err
 	}
 
+	return nil
+}
+
+func (i *Installer) wpCli(args ...string) error {
+	full := append([]string{"run", "wordpress.wp-cli"}, args...)
+	_, err := i.executor.Run("snap", full...)
+	return err
+}
+
+func (i *Installer) updateSettings() error {
+	cmds := [][]string{
+		{"option", "update", "mo_ldap_local_register_user", "1"},
+		{"option", "update", "mo_ldap_local_mapping_memberof_attribute", "memberOf"},
+		{"option", "update", "mo_ldap_local_new_registration", "true"},
+		{"option", "update", "mo_ldap_local_enable_admin_wp_login", "1"},
+		{"option", "update", "mo_ldap_local_anonymous_bind", "0"},
+		{"option", "update", "mo_ldap_local_server_url", "ldap://localhost"},
+		{"option", "update", "mo_ldap_local_server_dn", "dc=syncloud,dc=org"},
+		{"option", "update", "mo_ldap_local_server_password", "syncloud"},
+		{"option", "update", "mo_ldap_local_search_filter", "(&(objectClass=*)(cn=?))"},
+		{"option", "update", "mo_ldap_local_search_base", "ou=users,dc=syncloud,dc=org"},
+		{"option", "update", "mo_ldap_local_enable_role_mapping", "1"},
+		{"option", "update", "mo_ldap_local_enable_login", "1"},
+		{"option", "update", "mo_ldap_local_server_url_status", "VALID"},
+		{"option", "update", "mo_ldap_local_service_account_status", "VALID"},
+		{"option", "update", "mo_ldap_local_user_mapping_status", "VALID"},
+		{"option", "update", "mo_ldap_local_mapping_value_default", "administrator"},
+	}
+	for _, c := range cmds {
+		if err := i.wpCli(c...); err != nil {
+			return err
+		}
+	}
+	_ = i.wpCli("plugin", "auto-updates", "disable", "--all")
 	return nil
 }
 
@@ -182,6 +255,20 @@ func (i *Installer) PostRefresh() error {
 		return err
 	}
 
+	pluginDir := path.Join(i.dataDir, "wp-content", "plugins", "ldap-login-for-intranet-sites")
+	err = os.RemoveAll(pluginDir)
+	if err != nil {
+		return err
+	}
+
+	err = cp.Copy(
+		path.Join(i.appDir, "php", "wordpress", "wp-content.template", "mu-plugins"),
+		path.Join(i.dataDir, "wp-content", "mu-plugins"),
+	)
+	if err != nil {
+		return err
+	}
+
 	err = i.ClearVersion()
 	if err != nil {
 		return err
@@ -218,9 +305,7 @@ func (i *Installer) UpdateVersion() error {
 func (i *Installer) UpdateConfigs() error {
 	err := linux.CreateMissingDirs(
 		path.Join(i.dataDir, "nginx"),
-		path.Join(i.dataDir, "storage/framework/sessions"),
-		path.Join(i.dataDir, "storage/framework/views"),
-		path.Join(i.dataDir, "storage/framework/cache"),
+		path.Join(i.dataDir, "temp"),
 	)
 	if err != nil {
 		return err
@@ -231,41 +316,11 @@ func (i *Installer) UpdateConfigs() error {
 		return err
 	}
 
-	appKey, err := i.getOrCreateAppKey()
-	if err != nil {
-		return err
-	}
-	appUrl, err := i.platformClient.GetAppUrl(App)
-	if err != nil {
-		return err
-	}
-
-	domain, err := i.platformClient.GetAppDomainName(App)
-	if err != nil {
-		return err
-	}
-	authUrl, err := i.platformClient.GetAppUrl("auth")
-	if err != nil {
-		return err
-	}
-	redirectUri := "/auth/authelia"
-	password, err := i.platformClient.RegisterOIDCClient(App, redirectUri, false, "client_secret_post")
-	if err != nil {
-		return err
-	}
-
 	variables := Variables{
-		App:              App,
-		AppDir:           i.appDir,
-		DataDir:          i.dataDir,
-		CommonDir:        i.commonDir,
-		AppKey:           appKey,
-		AppUrl:           appUrl,
-		Domain:           domain,
-		AuthUrl:          authUrl,
-		AuthClientId:     App,
-		AuthClientSecret: password,
-		AuthRedirectUri:  redirectUri,
+		App:       App,
+		AppDir:    i.appDir,
+		DataDir:   i.dataDir,
+		CommonDir: i.commonDir,
 	}
 
 	err = config.Generate(
@@ -293,6 +348,10 @@ func (i *Installer) RestorePostStart() error {
 }
 
 func (i *Installer) AccessChange() error {
+	err := i.DomainChange()
+	if err != nil {
+		return err
+	}
 	return i.UpdateConfigs()
 }
 
