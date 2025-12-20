@@ -5,6 +5,7 @@ local version = '0.6.9';
 local nginx = '1.29.3-alpine3.22';
 local php = '8.3.9-fpm-bullseye';
 local debian = 'bookworm-slim';
+local mariadb = '10.5.16-alpine';
 local platform = '25.09';
 local selenium = '4.35.0-20250828';
 local deployer = 'https://github.com/syncloud/store/releases/download/4/syncloud-release';
@@ -28,6 +29,18 @@ local build(arch, test_ui, dind) = [{
                 "echo $DRONE_BUILD_NUMBER > version"
             ]
         },
+{
+        name: 'cli',
+        image: 'golang:' + go,
+        commands: [
+          'cd cli',
+          'CGO_ENABLED=0 go build -o ../build/snap/meta/hooks/install ./cmd/install',
+          'CGO_ENABLED=0 go build -o ../build/snap/meta/hooks/configure ./cmd/configure',
+          'CGO_ENABLED=0 go build -o ../build/snap/meta/hooks/pre-refresh ./cmd/pre-refresh',
+          'CGO_ENABLED=0 go build -o ../build/snap/meta/hooks/post-refresh ./cmd/post-refresh',
+          'CGO_ENABLED=0 go build -o ../build/snap/bin/cli ./cmd/cli',
+        ],
+      },
         {
             name: "php",
             image: "php:" + php,
@@ -44,31 +57,20 @@ local build(arch, test_ui, dind) = [{
              ],
            },
         {
-            name: "package mariadb",
-            image: "docker:" + dind,
-            commands: [
-                "./mariadb/build.sh"
-            ],
-            volumes: [
-                {
-                    name: "dockersock",
-                    path: "/var/run"
-                }
-            ]
-        },
-        {
-            name: "package python",
-            image: "docker:" + dind,
-            commands: [
-                "./python/build.sh"
-            ],
-            volumes: [
-                {
-                    name: "dockersock",
-                    path: "/var/run"
-                }
-            ]
-        },
+             name: 'mariadb',
+             image: 'linuxserver/mariadb:' + mariadb,
+             commands: [
+               './mariadb/build.sh',
+             ],
+           },
+           {
+             name: 'mariadb test',
+             image: 'syncloud/platform-buster-' + arch + ':' + platform,
+             commands: [
+               './mariadb/test.sh',
+             ],
+           },
+        
         {
             name: "package",
             image: 'debian:' + debian,
@@ -299,12 +301,3 @@ local build(arch, test_ui, dind) = [{
 build("amd64", true, "20.10.21-dind") +
 build("arm64", false, "19.03.8-dind") +
 build("arm", false, "19.03.8-dind")
-
-
-
-
-
-
-
-
-
