@@ -3,14 +3,15 @@
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 cd ${DIR}
 
-BUILD_DIR=${DIR}/../build/snap/php
-TEST_CONFIG_DIR=${DIR}/../build/config.test
-cp -r ${DIR}/../config $TEST_CONFIG_DIR
-sed -i "s#extension_dir.*#extension_dir=$BUILD_DIR/lib/php/extensions#g" $TEST_CONFIG_DIR/php.ini
+BUILD_DIR=${DIR}/../build/snap
+TEST_DIR={DIR}/../build
+cp -r ${DIR}/../config ${DIR}/../build/
+sed -i "s#{{ .AppDir }}#$BUILD_DIR#g" $TEST_DIR/config/php.ini
 sed -i "s#include=.*#include=$TEST_CONFIG_DIR/www.conf#g" $TEST_CONFIG_DIR/php-fpm.conf
+export SNAP_DATA=$TEST_DIR
 
-${BUILD_DIR}/bin/php-fpm.sh -y $TEST_CONFIG_DIR/php-fpm.conf -c $TEST_CONFIG_DIR/php.ini --version
-${BUILD_DIR}/bin/php-fpm.sh -y $TEST_CONFIG_DIR/php-fpm.conf -c $TEST_CONFIG_DIR/php.ini --version | ( ! grep Warning )
-${BUILD_DIR}/bin/php.sh -c $TEST_CONFIG_DIR/php.ini --version
-${BUILD_DIR}/bin/php.sh -c $TEST_CONFIG_DIR/php.ini -i
-${BUILD_DIR}/bin/php.sh -c $TEST_CONFIG_DIR/php.ini -i | grep -i "gd support" | grep -i enabled
+${BUILD_DIR}/php/bin/php-fpm.sh --version
+${BUILD_DIR}/php/bin/php-fpm.sh --version | ( ! grep Warning )
+${BUILD_DIR}/php/bin/php.sh --version
+${BUILD_DIR}/php/bin/php.sh -i
+${BUILD_DIR}/php/bin/php.sh -i | grep -i "gd support" | grep -i enabled
