@@ -4,7 +4,7 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 cd ${DIR}
 
 BUILD_DIR=${DIR}/../build/snap
-TEST_DIR={DIR}/../build
+TEST_DIR=${DIR}/../build
 cp -r ${DIR}/../config ${DIR}/../build/
 sed -i "s#{{ .AppDir }}#$BUILD_DIR#g" $TEST_DIR/config/php.ini
 sed -i "s#include=.*#include=$TEST_CONFIG_DIR/www.conf#g" $TEST_CONFIG_DIR/php-fpm.conf
