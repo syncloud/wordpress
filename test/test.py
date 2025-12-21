@@ -33,12 +33,8 @@ def module_setup(request, device, platform_data_dir, app_dir, artifact_dir, data
         device.run_ssh('ps auxfw > {0}/ps.log'.format(TMP_DIR))
         device.run_ssh('netstat -nlp > {0}/netstat.log'.format(TMP_DIR))
         device.run_ssh('journalctl > {0}/journalctl.log'.format(TMP_DIR))
-        device.run_ssh('cp /var/snap/wordpress/common/database/*.err {0}/'.format(TMP_DIR), throw=False)
         device.run_ssh('ls -la /snap > {0}/snap.ls.log'.format(TMP_DIR), throw=False)    
         device.run_ssh('ls -la {0}/ > {1}/app.ls.log'.format(app_dir, TMP_DIR), throw=False)    
-        device.run_ssh('ls -la /var/snap/wordpress/common/ > {0}/data.ls.log'.format(TMP_DIR), throw=False)    
-        device.run_ssh('ls -la /var/snap/wordpress/common/wp-content/ > {0}/data.wp-content.ls.log'.format(TMP_DIR), throw=False)    
-        device.run_ssh('ls -la /var/snap/wordpress/common/database/ > {0}/database.ls.log'.format(TMP_DIR), throw=False)    
         device.run_ssh('ls -la {0}/wordpress/ > {1}/wordpress.ls.log'.format(app_dir, TMP_DIR), throw=False)  
         device.run_ssh('ls -la {0}/wp-content.template/ > {0}/wp-content.template.ls.log'.format(app_dir, TMP_DIR), throw=False)  
         device.run_ssh('ls -la /var/snap/wordpress/common/log/ > {0}/log.ls.log'.format(TMP_DIR), throw=False)  
@@ -72,7 +68,7 @@ def test_install(app_archive_path, device_session, device_host, device_password,
 
 
 def test_phpinfo(device, app_dir, data_dir, device_password):
-    device.run_ssh('{0}/php/bin/php.sh -i > {1}/log/phpinfo.log'.format(app_dir, data_dir))
+    device.run_ssh('{0}/php/bin/php.sh -i > {1}/phpinfo.log'.format(app_dir, TMP_DIR))
 
 
 def test_index(app_domain):
@@ -86,3 +82,4 @@ def test_index(app_domain):
 def test_upgrade(app_archive_path, device_host, device_password, device_session, domain):
     local_install(device_host, device_password, app_archive_path)
     wait_for_installer(device_session, domain)
+
