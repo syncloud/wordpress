@@ -54,6 +54,7 @@ def module_setup(request, device, platform_data_dir, app_dir, artifact_dir, data
 def test_start(module_setup, device, app, domain, device_host):
     add_host_alias(app, device_host, domain)
     device.run_ssh('date', retries=100, throw=True)
+    device.run_ssh('mkdir {0}'.format(TMP_DIR))
 
 
 def test_activate_device(device):
@@ -67,7 +68,7 @@ def test_install(app_archive_path, device_session, device_host, device_password,
 
 
 def test_phpinfo(device, app_dir, data_dir, device_password):
-    device.run_ssh('{0}/php/bin/php.sh -i > {1}/phpinfo.log'.format(app_dir, TMP_DIR))
+    device.run_ssh('snap run php -i > {1}/phpinfo.log'.format(app_dir, TMP_DIR))
 
 
 def test_index(app_domain):
