@@ -3,6 +3,7 @@ from os.path import dirname, join
 from subprocess import check_output
 import requests
 import pytest
+from selenium.webdriver.common.by import By
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.screenshots import screenshots
 
@@ -38,7 +39,7 @@ def test_visible_through_platform(app_domain):
 @pytest.mark.flaky(retries=10, delay=5)
 def test_index(selenium):
     selenium.open_app()
-    selenium.find_by_xpath("//a[text()='Syncloud']")
+    selenium.find_by(By.XPATH, "//a[text()='Syncloud']")
     selenium.screenshot('index')
     
 
@@ -49,7 +50,7 @@ def test_login(selenium, device_user, device_password):
 def test_profile(selenium):
 
     selenium.open_app("/wp-admin/profile.php")
-    selenium.find_by_xpath("//h2[text()='Personal Options']")
+    selenium.find_by(By.XPATH, "//h2[text()='Personal Options']")
     selenium.screenshot('profile')
     
 
@@ -71,12 +72,12 @@ def test_media(driver, app_domain, selenium):
     driver.get("https://{0}/wp-admin/media-new.php".format(app_domain))
     time.sleep(2)
     selenium.screenshot('media-new')
-    driver.find_element_by_css_selector('p[class="upload-flash-bypass"] a').click()
-    file = driver.find_element_by_css_selector('input[id="async-upload"][type="file"]')
+    selenium.find_by(By.CSS_SELECTOR, 'p[class="upload-flash-bypass"] a').click()
+    file = selenium.find_by(By.CSS_SELECTOR, 'input[id="async-upload"][type="file"]')
     file.send_keys(join(DIR, 'images', 'profile.jpeg'))
     time.sleep(2)
-    screenshots(driver, screenshot_dir, 'media-' + ui_mode)
-    save = driver.find_element_by_css_selector('input[id="html-upload"][type="submit"]')
+    selenium.screenshot('media')
+    save = selenium.find_by(By.CSS_SELECTOR, 'input[id="html-upload"][type="submit"]')
     save.click()
     time.sleep(5)
     selenium.screenshot('media-done')
