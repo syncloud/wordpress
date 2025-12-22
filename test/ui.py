@@ -1,7 +1,7 @@
 import time
 from os.path import dirname, join
 from subprocess import check_output
-
+import requests
 import pytest
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.screenshots import screenshots
