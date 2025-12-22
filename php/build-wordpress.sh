@@ -57,3 +57,4 @@ cp wp-cli.phar ${BUILD_DIR}/bin/wp-cli.phar
 
 mv ${BUILD_DIR}/wordpress/wp-content ${BUILD_DIR}/wordpress/wp-content.template
 ln -sf /var/snap/wordpress/common/wp-content ${BUILD_DIR}/wordpress/wp-content
+

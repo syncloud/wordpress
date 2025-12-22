@@ -85,7 +85,7 @@ func (i *Installer) Install() error {
 
 	err = cp.Copy(
 		path.Join(i.appDir, "php", "wordpress", "wp-content.template"),
-		path.Join(i.dataDir, "wp-content"))
+		path.Join(i.commonDir, "wp-content"))
 	if err != nil {
 		return err
 	}
@@ -263,7 +263,7 @@ func (i *Installer) PostRefresh() error {
 
 	err = cp.Copy(
 		path.Join(i.appDir, "php", "wordpress", "wp-content.template", "mu-plugins"),
-		path.Join(i.dataDir, "wp-content", "mu-plugins"),
+		path.Join(i.commonDir, "wp-content", "mu-plugins"),
 	)
 	if err != nil {
 		return err
