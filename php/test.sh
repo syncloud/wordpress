@@ -7,7 +7,7 @@ BUILD_DIR=${DIR}/../build/snap
 TEST_DIR=${DIR}/../build
 cp -r ${DIR}/../config ${DIR}/../build/
 sed -i "s#{{ .AppDir }}#$BUILD_DIR#g" $TEST_DIR/config/php.ini
-sed -i "s#include=.*#include=$TEST_CONFIG_DIR/www.conf#g" $TEST_CONFIG_DIR/php-fpm.conf
+#sed -i "s#include=.*#include=$TEST_DIR/config/www.conf#g" $TEST_DIR/config/php-fpm.conf
 export SNAP_DATA=$TEST_DIR
 
 ${BUILD_DIR}/php/bin/php-fpm.sh --version
