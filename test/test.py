@@ -68,7 +68,7 @@ def test_install(app_archive_path, device_session, device_host, device_password,
 
 
 def test_phpinfo(device, app_dir, data_dir, device_password):
-    device.run_ssh('snap run php -i > {1}/phpinfo.log'.format(app_dir, TMP_DIR))
+    device.run_ssh('snap run wordpress.php -i > {0}/phpinfo.log'.format(TMP_DIR))
 
 
 def test_index(app_domain):
@@ -76,8 +76,13 @@ def test_index(app_domain):
     assert response.status_code == 200, response.text
 
 
-#def test_storage_change(device_host, app_dir, data_dir, device_password):
-#    device.run_ssh('SNAP_COMMON={1} {0}/hooks/storage-change > {1}/log/storage-change.log'.format(app_dir, data_dir), password=device_password, throw=False)
+def test_storage_change_event(device):
+    device.run_ssh('snap run wordpress.storage-change > {0}/storage-change.log'.format(TMP_DIR))
+
+
+def test_access_change_event(device):
+    device.run_ssh('snap run wordpress.access-change > {0}/access-change.log'.format(TMP_DIR))
+
 
 def test_upgrade(app_archive_path, device_host, device_password, device_session, domain):
     local_install(device_host, device_password, app_archive_path)
