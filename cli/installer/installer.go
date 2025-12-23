@@ -242,7 +242,19 @@ func (i *Installer) PreRefresh() error {
 }
 
 func (i *Installer) PostRefresh() error {
-	err := i.UpdateConfigs()
+	backupFile := path.Join(i.dataDir, "database.dump")
+	_, err := os.Stat(backupFile)
+	if err != nil {
+		err = cp.Copy(
+			path.Join(i.commonDir, "database.dump"),
+			backupFile,
+		)
+		if err != nil {
+			return err
+		}
+	}
+
+	err = i.UpdateConfigs()
 	if err != nil {
 		return err
 	}
