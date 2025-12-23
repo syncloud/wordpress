@@ -15,7 +15,7 @@ def login(selenium, device_user, device_password):
     selenium.screenshot('login')
     password.send_keys(Keys.RETURN)
     
-    selenium.find_by(By,XPATH, "//div[text()='Dashboard']")
+    selenium.find_by(By.XPATH, "//div[text()='Dashboard']")
   
     selenium.screenshot('login-complete')
 
