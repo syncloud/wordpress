@@ -8,7 +8,7 @@ def login(selenium, device_user, device_password):
 
     selenium.open_app("/wp-login.php")
 
-    user = selenium.click_by(By.ID, "user_login")
+    user = selenium.find_by(By.ID, "user_login")
     user.send_keys(device_user)
     password = selenium.find_by(By.ID, "user_pass")
     password.send_keys(device_password)
@@ -18,3 +18,4 @@ def login(selenium, device_user, device_password):
     selenium.find_by(By,XPATH, "//div[text()='Dashboard']")
   
     selenium.screenshot('login-complete')
+
