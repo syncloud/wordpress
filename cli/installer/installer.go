@@ -236,7 +236,20 @@ func (i *Installer) Upgrade() error {
 }
 
 func (i *Installer) IsInstalled() bool {
-	_, err := os.Stat(i.installFile)
+	// migrate from common start, remove after the next release
+	old := path.Join(i.commonDir, "installed")
+	_, err := os.Stat(old)
+	if err == nil {
+		err = os.WriteFile(i.installFile, []byte("installed"), 0644)
+		if err != nil {
+			i.logger.Error("cannot migrate installed status", zap.Error(err))
+			return true
+		}
+		return true
+	}
+	// migrate end
+
+	_, err = os.Stat(i.installFile)
 	return err == nil
 }
 
