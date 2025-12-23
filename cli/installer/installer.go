@@ -216,15 +216,18 @@ func (i *Installer) updateSettings() error {
 }
 
 func (i *Installer) Upgrade() error {
+	/* enable after the next release when we have a db backup working
 	err := i.database.createDb()
-	if err != nil {
-		return err
-	}
-	err = i.database.Restore()
-	if err != nil {
-		return err
-	}
-	err = i.StorageChange()
+		if err != nil {
+			return err
+		}
+		err = i.database.Restore()
+		if err != nil {
+			return err
+		}
+	*/
+
+	err := i.StorageChange()
 	if err != nil {
 		return err
 	}
@@ -242,30 +245,21 @@ func (i *Installer) PreRefresh() error {
 }
 
 func (i *Installer) PostRefresh() error {
-	backupFile := path.Join(i.dataDir, "database.dump")
-	_, err := os.Stat(backupFile)
+
+	err := i.UpdateConfigs()
 	if err != nil {
-		err = cp.Copy(
-			path.Join(i.commonDir, "database.dump"),
-			backupFile,
-		)
+		return err
+	}
+	/* enable after the next release when we have a db backup working
+	 err = i.database.Remove()
 		if err != nil {
 			return err
 		}
-	}
-
-	err = i.UpdateConfigs()
-	if err != nil {
-		return err
-	}
-	err = i.database.Remove()
-	if err != nil {
-		return err
-	}
-	err = i.database.Init()
-	if err != nil {
-		return err
-	}
+		err = i.database.Init()
+		if err != nil {
+			return err
+		}
+	*/
 
 	pluginDir := path.Join(i.dataDir, "wp-content", "plugins", "ldap-login-for-intranet-sites")
 	err = os.RemoveAll(pluginDir)
