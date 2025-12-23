@@ -236,7 +236,7 @@ func (i *Installer) Upgrade() error {
 }
 
 func (i *Installer) IsInstalled() bool {
-	// migrate from common start, remove after the next release
+	// migrate from common status, remove after the next release
 	old := path.Join(i.commonDir, "installed")
 	_, err := os.Stat(old)
 	if err == nil {
@@ -273,6 +273,21 @@ func (i *Installer) PostRefresh() error {
 			return err
 		}
 	*/
+
+	// migrate from common database, remove after the next release
+	databaseDir := path.Join(i.dataDir, "database")
+	_, err = os.Stat(databaseDir)
+	if err != nil {
+
+		err = cp.Copy(
+			path.Join(i.commonDir, "database"),
+			databaseDir,
+		)
+		if err != nil {
+			return err
+		}
+	}
+	// migrate end
 
 	pluginDir := path.Join(i.dataDir, "wp-content", "plugins", "ldap-login-for-intranet-sites")
 	err = os.RemoveAll(pluginDir)
