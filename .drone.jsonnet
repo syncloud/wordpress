@@ -60,7 +60,7 @@ local build(arch, test_ui, dind) = [{
             image: "php:" + php,
             commands: [
                 "./php/build.sh",
-                "./php/build-wordpress.sh"
+                "./php/build-wordpress.sh " + version
             ],
         },
 {

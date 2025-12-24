@@ -4,7 +4,7 @@ DIR=$( cd "$( dirname "$0" )" && pwd )
 cd ${DIR}
 
 BUILD_DIR=${DIR}/../build/snap/php
-WORDPRESS_VERSION=6.2.2
+WORDPRESS_VERSION=$1
 WORDPRESS_LDAP_VERSION=4.1.7
 WORDPRESS_CLI_VERSION=2.8.1
 
@@ -57,4 +57,3 @@ cp wp-cli.phar ${BUILD_DIR}/bin/wp-cli.phar
 
 mv ${BUILD_DIR}/wordpress/wp-content ${BUILD_DIR}/wordpress/wp-content.template
 ln -sf /var/snap/wordpress/common/wp-content ${BUILD_DIR}/wordpress/wp-content
-
