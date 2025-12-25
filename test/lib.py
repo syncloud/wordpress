@@ -23,7 +23,9 @@ def login(selenium, device_user, device_password):
 def post(selenium):
     selenium.open_app("/wp-admin")
     selenium.click_by(By.XPATH, '//div[.="Posts"]')
-    selenium.click_by(By.XPATH, '//button[.="new post"]')
+    selenium.click_by(By.XPATH, '//a[.="Add Post"]')
+    post = selenium.find_by(By.XPATH, '//textarea[.="Post"]')
+    post.send_keys("test post")
 
 
 def read(selenium):
