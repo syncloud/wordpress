@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"time"
 )
 
 type Database struct {
@@ -145,4 +146,36 @@ func (d *Database) ActivatePremium(email string) error {
 		return err
 	}
 	return nil
+}
+
+func (d *Database) WaitForDatabase(timeout time.Duration) error {
+	d.logger.Info("Waiting for MariaDB to become available...")
+
+	deadline := time.Now().Add(timeout)
+	attempt := 1
+
+	for time.Now().Before(deadline) {
+		d.logger.Debug("Checking database connection", zap.Int("attempt", attempt))
+
+		_, err := d.executor.Run(
+			fmt.Sprintf("%s/bin/mysql", d.appDir),
+			"--execute", "SELECT 1",
+		)
+
+		if err == nil {
+			d.logger.Info("Database is now available",
+				zap.Int("attempts", attempt),
+				zap.Duration("elapsed", time.Since(time.Now().Add(-timeout))))
+			return nil
+		}
+
+		d.logger.Debug("Database not ready yet",
+			zap.Int("attempt", attempt),
+			zap.Error(err))
+
+		time.Sleep(2 * time.Second)
+		attempt++
+	}
+
+	return fmt.Errorf("database did not become available after %v", timeout)
 }

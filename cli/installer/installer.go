@@ -2,15 +2,15 @@ package installer
 
 import (
 	"fmt"
-	"os"
-	"path"
-	"strings"
-
 	cp "github.com/otiai10/copy"
 	"github.com/syncloud/golib/config"
 	"github.com/syncloud/golib/linux"
 	"github.com/syncloud/golib/platform"
 	"go.uber.org/zap"
+	"os"
+	"path"
+	"strings"
+	"time"
 )
 
 const App = "wordpress"
@@ -103,6 +103,12 @@ func (i *Installer) Install() error {
 }
 
 func (i *Installer) Configure() error {
+
+	err := i.database.WaitForDatabase(60 * time.Second)
+	if err != nil {
+		return err
+	}
+
 	if i.IsInstalled() {
 		err := i.Upgrade()
 		if err != nil {
@@ -115,7 +121,7 @@ func (i *Installer) Configure() error {
 		}
 	}
 
-	err := i.DomainChange()
+	err = i.DomainChange()
 	if err != nil {
 		return err
 	}
