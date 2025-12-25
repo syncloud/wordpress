@@ -57,27 +57,26 @@ def test_profile(selenium):
 def test_ldap(driver, app_domain, selenium):
 
     driver.get("https://{0}/wp-admin/admin.php?page=mo_ldap_local_login".format(app_domain))
-    time.sleep(10)
+    selenium.find_by(By.XPATH, '//h3[.="LDAP Connection Information"]')
     selenium.screenshot('ldap')
 
     
-def test_users(driver, app_domain, selenium):
+def test_users(driver, app_domain, selenium, device_user):
 
-    driver.get("https://{0}/wp-admin/users.php".format(app_domain))
-    time.sleep(10)
+    selenium.open_app("/wp-admin/users.php")
+    selenium.find_by(By.XPATH, f'//a[.="{device_user}"]')
     selenium.screenshot('users')
     
 def test_media(driver, app_domain, selenium):
 
     driver.get("https://{0}/wp-admin/media-new.php".format(app_domain))
-    time.sleep(2)
-    selenium.screenshot('media-new')
-    selenium.find_by(By.CSS_SELECTOR, 'p[class="upload-flash-bypass"] a').click()
+    selenium.find_by(By.XPATH, '//h1[.="Upload New Media"]')
+    selenium.screenshot('media')
+    selenium.find_by(By.XPATH, '//button[.="browswr uploader"]').click()
     file = selenium.find_by(By.CSS_SELECTOR, 'input[id="async-upload"][type="file"]')
     file.send_keys(join(DIR, 'images', 'profile.jpeg'))
-    time.sleep(2)
-    selenium.screenshot('media')
-    save = selenium.find_by(By.CSS_SELECTOR, 'input[id="html-upload"][type="submit"]')
-    save.click()
-    time.sleep(5)
+    
+    selenium.screenshot('media-uploader')
+    selenium.find_by(By.CSS_SELECTOR, 'input[id="html-upload"][type="submit"]').click()
+    
     selenium.screenshot('media-done')
