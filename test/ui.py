@@ -69,7 +69,7 @@ def test_users(driver, app_domain, selenium, device_user):
     
 def test_media(driver, app_domain, selenium):
 
-    selenium.opwn_app("/wp-admin/media-new.php")
+    selenium.open_app("/wp-admin/media-new.php")
     selenium.find_by(By.XPATH, '//h1[.="Upload New Media"]')
     selenium.screenshot('media')
     selenium.find_by(By.XPATH, '//button[.="browser uploader"]').click()
