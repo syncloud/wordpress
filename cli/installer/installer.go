@@ -233,7 +233,12 @@ func (i *Installer) Upgrade() error {
 		}
 	*/
 
-	err := i.StorageChange()
+	err := i.wpCli("core", "update-db")
+	if err != nil {
+		return err
+	}
+
+	err = i.StorageChange()
 	if err != nil {
 		return err
 	}

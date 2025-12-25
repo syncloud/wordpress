@@ -2,6 +2,8 @@ local name = "wordpress";
 local browser = "chrome";
 local go = '1.25';
 local version = '6.9';
+local wp_ldap = '4.1.7';
+local wp_cli = '2.8.1';
 local nginx = '1.29.3-alpine3.22';
 local php = '8.3.9-fpm-bullseye';
 local debian = 'bookworm-slim';
@@ -60,7 +62,7 @@ local build(arch, test_ui, dind) = [{
             image: "php:" + php,
             commands: [
                 "./php/build.sh",
-                "./php/build-wordpress.sh " + version
+                "./php/build-wordpress.sh " + version + " " + wp_ldap + " " + wp_cli
             ],
         },
 {
@@ -315,3 +317,4 @@ local build(arch, test_ui, dind) = [{
 build("amd64", true, "20.10.21-dind") +
 build("arm64", false, "19.03.8-dind") +
 build("arm", false, "19.03.8-dind")
+
