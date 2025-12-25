@@ -240,6 +240,8 @@ func (i *Installer) IsInstalled() bool {
 	old := path.Join(i.commonDir, "installed")
 	_, err := os.Stat(old)
 	if err == nil {
+		i.logger.Info("migrating old installed status")
+
 		err = os.WriteFile(i.installFile, []byte("installed"), 0644)
 		if err != nil {
 			i.logger.Error("cannot migrate installed status", zap.Error(err))
@@ -278,6 +280,7 @@ func (i *Installer) PostRefresh() error {
 	databaseDir := path.Join(i.dataDir, "database")
 	_, err = os.Stat(databaseDir)
 	if err != nil {
+		i.logger.Info("new db path is not foind, migrating", zap.Error(err))
 
 		err = cp.Copy(
 			path.Join(i.commonDir, "database"),
@@ -286,6 +289,7 @@ func (i *Installer) PostRefresh() error {
 		if err != nil {
 			return err
 		}
+
 	}
 	// migrate end
 
