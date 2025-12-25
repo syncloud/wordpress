@@ -69,7 +69,7 @@ def test_users(driver, app_domain, selenium, device_user):
     
 def test_media(driver, app_domain, selenium):
 
-    driver.get("https://{0}/wp-admin/media-new.php".format(app_domain))
+    selenium.opwn_app("/wp-admin/media-new.php")
     selenium.find_by(By.XPATH, '//h1[.="Upload New Media"]')
     selenium.screenshot('media')
     selenium.find_by(By.XPATH, '//button[.="browser uploader"]').click()
@@ -80,3 +80,8 @@ def test_media(driver, app_domain, selenium):
     selenium.find_by(By.CSS_SELECTOR, 'input[id="html-upload"][type="submit"]').click()
     
     selenium.screenshot('media-done')
+
+
+def test_post(selenium):
+    lib.post(selenium)
+    lib.read(selenium)

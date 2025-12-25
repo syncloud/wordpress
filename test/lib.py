@@ -19,3 +19,15 @@ def login(selenium, device_user, device_password):
   
     selenium.screenshot('login-complete')
 
+
+def post(selenium):
+    selenium.open_app("/wp-admin")
+    selenium.click_by(By.XPATH, '//div[.="Posts"]')
+    selenium.click_by(By.XPATH, '//button[.="new post"]')
+
+
+def read(selenium):
+    selenium.open_app()
+    selenium.find_by(By.XPATH, '//div[.="test post"]')
+
+    
