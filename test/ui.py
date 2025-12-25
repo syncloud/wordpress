@@ -72,7 +72,7 @@ def test_media(driver, app_domain, selenium):
     driver.get("https://{0}/wp-admin/media-new.php".format(app_domain))
     selenium.find_by(By.XPATH, '//h1[.="Upload New Media"]')
     selenium.screenshot('media')
-    selenium.find_by(By.XPATH, '//button[.="browswr uploader"]').click()
+    selenium.find_by(By.XPATH, '//button[.="browser uploader"]').click()
     file = selenium.find_by(By.CSS_SELECTOR, 'input[id="async-upload"][type="file"]')
     file.send_keys(join(DIR, 'images', 'profile.jpeg'))
     
