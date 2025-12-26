@@ -33,21 +33,13 @@ def module_setup(request, device, platform_data_dir, app_dir, artifact_dir, data
         device.run_ssh('ps auxfw > {0}/ps.log'.format(TMP_DIR))
         device.run_ssh('netstat -nlp > {0}/netstat.log'.format(TMP_DIR))
         device.run_ssh('journalctl > {0}/journalctl.log'.format(TMP_DIR))
-        device.run_ssh('cp /var/log/syslog {0}/syslog.log'.format(TMP_DIR))
-        device.run_ssh('cp /var/snap/wordpress/common/database/*.err {0}/'.format(TMP_DIR), throw=False)
-        device.run_ssh('cp /var/log/messages {0}/messages.log'.format(TMP_DIR), throw=False)    
         device.run_ssh('ls -la /snap > {0}/snap.ls.log'.format(TMP_DIR), throw=False)    
         device.run_ssh('ls -la {0}/ > {1}/app.ls.log'.format(app_dir, TMP_DIR), throw=False)    
-        device.run_ssh('ls -la /var/snap/wordpress/common/ > {0}/data.ls.log'.format(TMP_DIR), throw=False)    
-        device.run_ssh('ls -la /var/snap/wordpress/common/wp-content/ > {0}/data.wp-content.ls.log'.format(TMP_DIR), throw=False)    
-        device.run_ssh('ls -la /var/snap/wordpress/common/database/ > {0}/database.ls.log'.format(TMP_DIR), throw=False)    
         device.run_ssh('ls -la {0}/wordpress/ > {1}/wordpress.ls.log'.format(app_dir, TMP_DIR), throw=False)  
-        device.run_ssh('ls -la {0}/wp-content.template/ > {0}/wp-content.template.ls.log'.format(app_dir, TMP_DIR), throw=False)  
-        device.run_ssh('ls -la /var/snap/wordpress/common/log/ > {0}/log.ls.log'.format(TMP_DIR), throw=False)  
-        device.run_ssh('{0}/bin/wp-cli core is-installed; echo "is installed: $?" > {1}/wp-cli.isinstalled.log'.format(app_dir, TMP_DIR), env_vars='SNAP_COMMON={0}'.format(data_dir), throw=False)
-        device.run_ssh('{0}/bin/wp-cli option list > {1}/wp-cli.options.log'.format(app_dir, TMP_DIR), env_vars='SNAP_COMMON={0}'.format(data_dir), throw=False)
-        device.run_ssh('{0}/bin/wp-cli --info > {1}/wp-cli.info.log 2>&1'.format(app_dir, TMP_DIR), env_vars='SNAP_COMMON={0}'.format(data_dir), throw=False)  
-        device.run_ssh('{0}/bin/wp-cli user list > {1}/wp-cli.user.list.log 2>&1'.format(app_dir, TMP_DIR), env_vars='SNAP_COMMON={0}'.format(data_dir), throw=False)  
+        device.run_ssh('ls -la {0}/wp-content.template/ > {1}/wp-content.template.ls.log'.format(app_dir, TMP_DIR), throw=False)  
+        device.run_ssh('{0}/bin/wp-cli core is-installed; echo "is installed: $?" > {1}/wp-cli.isinstalled.log'.format(app_dir, TMP_DIR), throw=False)
+        device.run_ssh('{0}/bin/wp-cli option list > {1}/wp-cli.options.log'.format(app_dir, TMP_DIR), throw=False)
+        device.run_ssh('{0}/bin/wp-cli user list > {1}/wp-cli.user.list.log 2>&1'.format(app_dir, TMP_DIR), throw=False)  
 
         app_log_dir  = join(artifact_dir, 'log')
         os.mkdir(app_log_dir )
@@ -61,6 +53,7 @@ def module_setup(request, device, platform_data_dir, app_dir, artifact_dir, data
 def test_start(module_setup, device, app, domain, device_host):
     add_host_alias(app, device_host, domain)
     device.run_ssh('date', retries=100, throw=True)
+    device.run_ssh('mkdir {0}'.format(TMP_DIR))
 
 
 def test_activate_device(device):
@@ -74,7 +67,7 @@ def test_install(app_archive_path, device_session, device_host, device_password,
 
 
 def test_phpinfo(device, app_dir, data_dir, device_password):
-    device.run_ssh('{0}/php/bin/php.sh -i > {1}/log/phpinfo.log'.format(app_dir, data_dir))
+    device.run_ssh('snap run wordpress.php -i > {0}/phpinfo.log'.format(TMP_DIR))
 
 
 def test_index(app_domain):
@@ -82,8 +75,13 @@ def test_index(app_domain):
     assert response.status_code == 200, response.text
 
 
-#def test_storage_change(device_host, app_dir, data_dir, device_password):
-#    device.run_ssh('SNAP_COMMON={1} {0}/hooks/storage-change > {1}/log/storage-change.log'.format(app_dir, data_dir), password=device_password, throw=False)
+def test_storage_change_event(device):
+    device.run_ssh('snap run wordpress.storage-change > {0}/storage-change.log'.format(TMP_DIR))
+
+
+def test_access_change_event(device):
+    device.run_ssh('snap run wordpress.access-change > {0}/access-change.log'.format(TMP_DIR))
+
 
 def test_upgrade(app_archive_path, device_host, device_password, device_session, domain):
     local_install(device_host, device_password, app_archive_path)
