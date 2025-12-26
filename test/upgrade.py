@@ -39,6 +39,3 @@ def test_upgrade(device, device_user, device_password, device_host, app_archive_
     lib.login(selenium, device_user, device_password)
     lib.read(selenium)
 
-
-def test_login(selenium, device_user, device_password):
-    lib.login(selenium, device_user, device_password)
