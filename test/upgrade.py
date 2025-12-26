@@ -31,7 +31,7 @@ def test_upgrade(device, device_user, device_password, device_host, app_archive_
     device.run_ssh('snap install wordpress')
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
     lib.login(selenium, device_user, device_password)
-    lib.post(selenium, True)
+    lib.post_prev(selenium, True)
     lib.read(selenium)
 
     local_install(device_host, device_password, app_archive_path)

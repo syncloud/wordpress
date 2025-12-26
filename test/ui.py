@@ -83,5 +83,5 @@ def test_media(driver, app_domain, selenium):
 
 
 def test_post(selenium, first_time=True):
-    lib.post(selenium, first_time)
+    lib.post_next(selenium, first_time)
     lib.read(selenium)
