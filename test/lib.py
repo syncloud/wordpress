@@ -25,6 +25,7 @@ def post_prev(selenium, first_time):
     selenium.click_by(By.XPATH, '//a[.="Add New"]')
     if first_time:
         selenium.click_by(By.XPATH, '//button[@aria-label="Close"]')
+    selenium.screenshot('post-prev')
     selenium.driver.switch_to.frame("editor-canvas")
     title = selenium.find_by(By.XPATH, "//h1[contains(@class, 'wp-block-post-title')]")
     title.send_keys("syncloud title")
