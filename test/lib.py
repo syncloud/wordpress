@@ -24,6 +24,7 @@ def post(selenium):
     selenium.open_app("/wp-admin")
     selenium.click_by(By.XPATH, '//div[.="Posts"]')
     selenium.click_by(By.XPATH, '//a[.="Add Post"]')
+    selenium.click_by(By.XPATH, '//button[@label="Close"]')
     post = selenium.find_by(By.XPATH, '//textarea[.="Post"]')
     post.send_keys("test post")
 
