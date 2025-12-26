@@ -58,6 +58,6 @@ def post_next(selenium, first_time):
 def read(selenium):
     selenium.open_app()
     selenium.find_by(By.XPATH, '//a[.="syncloud title"]')
-    selenium.find_by(By.XPATH, '//p[.="syncloud paragraph"]')
+    selenium.find_by(By.XPATH, '//p[contains(.,"syncloud paragraph")]')
 
     
