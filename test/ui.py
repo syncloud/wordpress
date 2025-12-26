@@ -82,6 +82,6 @@ def test_media(driver, app_domain, selenium):
     selenium.screenshot('media-done')
 
 
-def test_post(selenium):
-    lib.post(selenium)
+def test_post(selenium, first_time=True):
+    lib.post(selenium, first_time)
     lib.read(selenium)
