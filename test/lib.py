@@ -11,6 +11,7 @@ def login(selenium, device_user, device_password):
     user.clear()
     user.send_keys(device_user)
     password = selenium.find_by(By.ID, "user_pass")
+    password.clear()
     password.send_keys(device_password)
     selenium.screenshot('login')
     password.send_keys(Keys.RETURN)
