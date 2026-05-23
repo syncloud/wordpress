@@ -52,7 +52,7 @@ apps:
     command: bin/php.sh
     
 confinement: strict
-description: Wordpress
+description: Blogging, mailing lists and forums, media galleries, and online stores
 grade: stable
 name: wordpress
-summary: Wordpress
+summary: WordPress
