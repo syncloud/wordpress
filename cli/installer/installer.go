@@ -227,6 +227,11 @@ func (i *Installer) Upgrade() error {
 		return err
 	}
 
+	err = i.updateSettings()
+	if err != nil {
+		return err
+	}
+
 	err = i.StorageChange()
 	if err != nil {
 		return err
