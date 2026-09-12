@@ -17,10 +17,8 @@ mkdir ${DIR}/build
 cd ${DIR}/build
 wget https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz --progress dot:giga
 tar xf wordpress-${WORDPRESS_VERSION}.tar.gz
-cd wordpress
-patch -p0 < ${DIR}/patches/wp-load.patch
-cd ..
 mv wordpress ${BUILD_DIR}
+ln -sf /var/snap/wordpress/current/config/wordpress/wp-config.php ${BUILD_DIR}/wordpress/wp-config.php
 
 # ldap
 cd ${DIR}/build
@@ -38,21 +36,7 @@ cd ${DIR}/build
 wget https://github.com/wp-cli/wp-cli/releases/download/v${WORDPRESS_CLI_VERSION}/wp-cli-${WORDPRESS_CLI_VERSION}.phar --progress dot:giga
 mv wp-cli-${WORDPRESS_CLI_VERSION}.phar wp-cli.phar
 #ls  /usr/local/etc/php
-echo 'phar.readonly = Off' > /usr/local/etc/php/php.ini
-#export PHP_INI_SCAN_DIR=php.ini
 php wp-cli.phar --allow-root cli info
-phar extract -f wp-cli.phar -i utils.php phar
-cd phar/vendor/wp-cli/wp-cli/php
-patch -p0 < ${DIR}/patches/wp-cli.patch
-
-cd ${DIR}/build
-phar list -f wp-cli.phar -i utils.php
-phar delete -f wp-cli.phar -e vendor/wp-cli/wp-cli/php/utils.php
-phar add -f wp-cli.phar phar 
-phar list -f wp-cli.phar -i utils.php
-
-php wp-cli.phar --allow-root cli info
-
 cp wp-cli.phar ${BUILD_DIR}/bin/wp-cli.phar
 
 mv ${BUILD_DIR}/wordpress/wp-content ${BUILD_DIR}/wordpress/wp-content.template
