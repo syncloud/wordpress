@@ -8,8 +8,7 @@ WORDPRESS_VERSION=$1
 WORDPRESS_LDAP_VERSION=$2
 WORDPRESS_CLI_VERSION=$3
 
-apt update
-apt -y install patch
+${DIR}/../ci/apt.sh patch unzip wget ca-certificates
 
 mkdir ${DIR}/build
 
