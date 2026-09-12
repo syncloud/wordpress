@@ -9,24 +9,16 @@ import (
 	"go.uber.org/zap"
 	"os"
 	"path"
-	"strings"
 	"time"
 )
 
 const App = "wordpress"
 
 type Variables struct {
-	App              string
-	AppDir           string
-	DataDir          string
-	CommonDir        string
-	AppKey           string
-	AppUrl           string
-	Domain           string
-	AuthUrl          string
-	AuthClientId     string
-	AuthClientSecret string
-	AuthRedirectUri  string
+	App       string
+	AppDir    string
+	DataDir   string
+	CommonDir string
 }
 
 type Installer struct {
@@ -39,7 +31,6 @@ type Installer struct {
 	appDir             string
 	dataDir            string
 	commonDir          string
-	artisanPath        string
 	executor           *Executor
 	logger             *zap.Logger
 }
@@ -50,7 +41,6 @@ func New(logger *zap.Logger) *Installer {
 	commonDir := fmt.Sprintf("/var/snap/%s/common", App)
 	configDir := path.Join(dataDir, "config")
 	executor := NewExecutor(logger)
-	artisanPath := path.Join(appDir, "/bin/artisan.sh")
 	return &Installer{
 		newVersionFile:     path.Join(appDir, "version"),
 		currentVersionFile: path.Join(dataDir, "version"),
@@ -62,7 +52,6 @@ func New(logger *zap.Logger) *Installer {
 		dataDir:            dataDir,
 		commonDir:          commonDir,
 		executor:           executor,
-		artisanPath:        artisanPath,
 		logger:             logger,
 	}
 }
@@ -414,22 +403,4 @@ func (i *Installer) FixPermissions() error {
 		return err
 	}
 	return nil
-}
-
-func (i *Installer) getOrCreateAppKey() (string, error) {
-	file := path.Join(i.dataDir, ".app_key")
-	_, err := os.Stat(file)
-	if os.IsNotExist(err) {
-		secret, err := i.executor.Run(i.artisanPath, "key:generate", "--show")
-		if err != nil {
-			return "", err
-		}
-		err = os.WriteFile(file, []byte(strings.TrimSpace(secret)), 0644)
-		return secret, err
-	}
-	content, err := os.ReadFile(file)
-	if err != nil {
-		return "", err
-	}
-	return string(content), nil
 }
