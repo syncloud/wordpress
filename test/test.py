@@ -11,6 +11,7 @@ import shutil
 from syncloudlib.integration.installer import local_install, local_remove, wait_for_installer
 from syncloudlib.integration.loop import loop_device_cleanup
 from syncloudlib.integration.ssh import run_scp, run_ssh
+from syncloudlib.http import wait_for_rest
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration import conftest
 
@@ -50,9 +51,10 @@ def module_setup(request, device, platform_data_dir, app_dir, artifact_dir, data
     request.addfinalizer(module_teardown)
 
 
-def test_start(module_setup, device, app, domain, device_host):
+def test_start(module_setup, device, app, domain, device_host, settle):
     add_host_alias(app, device_host, domain)
     device.run_ssh('date', retries=100, throw=True)
+    settle(device)
     device.run_ssh('mkdir {0}'.format(TMP_DIR))
 
 
@@ -61,9 +63,10 @@ def test_activate_device(device):
     assert response.status_code == 200, response.text
 
 
-def test_install(app_archive_path, device_session, device_host, device_password, domain):
+def test_install(app_archive_path, device_session, device_host, device_password, domain, app_domain):
     local_install(device_host, device_password, app_archive_path)
     wait_for_installer(device_session, domain)
+    wait_for_rest(requests.session(), 'https://{0}'.format(app_domain), 200, 100)
 
 
 def test_phpinfo(device, app_dir, data_dir, device_password):

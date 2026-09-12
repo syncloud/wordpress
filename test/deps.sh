@@ -1,9 +1,5 @@
 #!/bin/bash -e
-DIR=$( cd "$( dirname "$0" )" && pwd )
 
-while ! apt-get update; do
-  sleep 1
-  echo "retry"
-done
-apt-get install -y sshpass openssh-client wget
-pip install -r requirements.txt
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+"${DIR}/../ci/apt.sh" sshpass openssh-client wget
+pip install -q -r "${DIR}/requirements.txt"
