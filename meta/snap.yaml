@@ -3,9 +3,6 @@ apps:
     user: wordpress
     command: bin/service.mariadb.sh
     daemon: simple
-    plugs:
-    - network
-    - network-bind
     restart-condition: always
     start-timeout: 600s
     restart-delay: 10s
@@ -14,9 +11,6 @@ apps:
     user: wordpress
     command: bin/service.php-fpm.sh
     daemon: forking
-    plugs:
-    - network
-    - network-bind
     restart-condition: always
     restart-delay: 10s
 
@@ -24,9 +18,6 @@ apps:
     command: bin/service.nginx.sh
     user: wordpress
     daemon: simple
-    plugs:
-    - network
-    - network-bind
     restart-condition: always
     restart-delay: 10s
 
@@ -45,13 +36,15 @@ apps:
   restore-post-start:
     command: bin/cli restore-post-start
 
+  cli:
+    command: bin/cli
+
   wp-cli:
     command: bin/wp-cli
   
   php:
     command: bin/php.sh
     
-confinement: strict
 description: Blogging, mailing lists and forums, media galleries, and online stores
 grade: stable
 name: wordpress
