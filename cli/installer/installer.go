@@ -16,12 +16,14 @@ import (
 const App = "wordpress"
 
 type Variables struct {
-	App        string
-	AppDir     string
-	DataDir    string
-	CommonDir  string
-	AuthUrl    string
-	OIDCSecret string
+	App          string
+	AppDir       string
+	DataDir      string
+	CommonDir    string
+	AuthUrl      string
+	AuthHost     string
+	AuthLocalUrl string
+	OIDCSecret   string
 }
 
 type Installer struct {
@@ -195,7 +197,7 @@ func (i *Installer) wpCli(args ...string) error {
 func (i *Installer) RegisterOIDC() error {
 	secret, err := i.platformClient.RegisterOIDCClient(
 		App,
-		"/wp-admin/admin-ajax.php?action=openid-connect-authorize",
+		[]string{"/wp-admin/admin-ajax.php?action=openid-connect-authorize"},
 		false,
 		"client_secret_basic",
 	)
@@ -368,13 +370,17 @@ func (i *Installer) UpdateConfigs() error {
 		return err
 	}
 
+	authHost := strings.TrimPrefix(strings.TrimPrefix(authUrl, "https://"), "http://")
+
 	variables := Variables{
-		App:        App,
-		AppDir:     i.appDir,
-		DataDir:    i.dataDir,
-		CommonDir:  i.commonDir,
-		AuthUrl:    authUrl,
-		OIDCSecret: i.oidcSecret(),
+		App:          App,
+		AppDir:       i.appDir,
+		DataDir:      i.dataDir,
+		CommonDir:    i.commonDir,
+		AuthUrl:      authUrl,
+		AuthHost:     authHost,
+		AuthLocalUrl: "http://" + authHost,
+		OIDCSecret:   i.oidcSecret(),
 	}
 
 	err = config.Generate(
