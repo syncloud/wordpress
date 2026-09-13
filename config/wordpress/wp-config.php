@@ -85,6 +85,20 @@ define('WP_DEBUG', false);
 if ( !defined('ABSPATH') )
 	define('ABSPATH', getenv('SNAP') . '/php/wordpress');
 
+
+define('OIDC_CLIENT_ID', '{{ .App }}');
+define('OIDC_CLIENT_SECRET', '{{ .OIDCSecret }}');
+define('OIDC_ISSUER', '{{ .AuthUrl }}');
+define('OIDC_ENDPOINT_LOGIN_URL', '{{ .AuthUrl }}/api/oidc/authorization');
+define('OIDC_ENDPOINT_TOKEN_URL', '{{ .AuthUrl }}/api/oidc/token');
+define('OIDC_ENDPOINT_USERINFO_URL', '{{ .AuthUrl }}/api/oidc/userinfo');
+define('OIDC_ENDPOINT_JWKS_URL', '{{ .AuthUrl }}/jwks.json');
+define('OIDC_CLIENT_SCOPE', 'openid profile email groups');
+define('OIDC_LOGIN_TYPE', 'auto');
+define('OIDC_LINK_EXISTING_USERS', true);
+define('OIDC_CREATE_IF_DOES_NOT_EXIST', true);
+define('OIDC_REDIRECT_USER_BACK', true);
+
 require_once(ABSPATH . 'wp-settings.php');
 
 define('FS_METHOD', 'direct');

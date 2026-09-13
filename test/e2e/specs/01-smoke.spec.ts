@@ -3,7 +3,7 @@ import { shoot } from '../helpers/screenshot'
 import { login, expectUserProvisioned } from '../helpers/wordpress'
 
 test.describe('wordpress smoke', () => {
-  test('log in through ldap and reach the dashboard', async ({ page }, testInfo) => {
+  test('log in through syncloud sso and reach the dashboard', async ({ page }, testInfo) => {
     await login(page)
     await shoot(page, testInfo, 'dashboard')
   })

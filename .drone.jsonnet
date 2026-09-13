@@ -1,6 +1,6 @@
 local name = 'wordpress';
 local version = '7.1';
-local wp_ldap = '5.4.5';
+local wp_oidc = '3.11.3';
 local wp_cli = '2.12.0';
 
 local go = '1.25';
@@ -60,7 +60,7 @@ local build(arch, test_ui) = [{
       image: 'php:' + php,
       commands: [
         './php/build.sh',
-        './php/build-wordpress.sh ' + version + ' ' + wp_ldap + ' ' + wp_cli,
+        './php/build-wordpress.sh ' + version + ' ' + wp_oidc + ' ' + wp_cli,
       ],
     },
   ] + [

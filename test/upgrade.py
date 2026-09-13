@@ -74,9 +74,14 @@ def test_users_survived(device):
     assert users.strip() == BEFORE['users'].strip(), (BEFORE['users'], users)
 
 
-def test_ldap_plugin_active(device):
+def test_oidc_plugin_active(device):
     plugins = wp(device, 'plugin list --format=csv')
-    assert 'ldap' in plugins.lower(), plugins
+    assert 'openid-connect' in plugins.lower(), plugins
+
+
+def test_ldap_plugin_gone(device):
+    plugins = wp(device, 'plugin list --format=csv')
+    assert 'ldap-login-for-intranet-sites' not in plugins, plugins
 
 
 def test_no_php_fatals(device):

@@ -8,7 +8,7 @@ test.describe('wordpress post-upgrade', () => {
     await shoot(page, testInfo, 'post-upgrade-post')
   })
 
-  test('ldap login still works after the upgrade', async ({ page }, testInfo) => {
+  test('sso login still works after the upgrade', async ({ page }, testInfo) => {
     await login(page)
     await expectUserProvisioned(page)
     await shoot(page, testInfo, 'post-upgrade-users')

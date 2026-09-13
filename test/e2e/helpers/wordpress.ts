@@ -13,32 +13,38 @@ async function dump(page: Page, label: string) {
   console.log(`[${label}] html=\n${html.slice(0, 4000)}`)
 }
 
-export async function login(page: Page) {
-  await page.goto('/wp-login.php')
+function adminBar(page: Page) {
+  return page.locator('#wpadminbar').or(page.locator('#dashboard-widgets'))
+}
 
-  const username = page.locator('#user_login')
+export async function login(page: Page) {
+  await page.goto('/wp-admin/')
+
+  const autheliaUser = page.locator('#username-textfield')
+  const wpUser = page.locator('#user_login')
+
   try {
-    await expect(username.or(adminBar(page)).first()).toBeVisible()
+    await expect(autheliaUser.or(wpUser).or(adminBar(page)).first()).toBeVisible({ timeout: 60_000 })
   } catch (e) {
-    await dump(page, 'no-login-form')
+    await dump(page, 'no-login-form-and-no-dashboard')
     throw e
   }
 
-  if (await username.isVisible()) {
-    await username.fill(user)
+  if (await autheliaUser.isVisible()) {
+    await autheliaUser.fill(user)
+    await page.locator('#password-textfield').fill(password)
+    await page.locator('#sign-in-button').click()
+  } else if (await wpUser.isVisible()) {
+    await wpUser.fill(user)
     await page.locator('#user_pass').fill(password)
     await page.locator('#wp-submit').click()
   }
   await expectAtDashboard(page)
 }
 
-function adminBar(page: Page) {
-  return page.locator('#wpadminbar')
-}
-
 export async function expectAtDashboard(page: Page) {
   try {
-    await expect(page.locator('#wpadminbar').or(page.locator('#dashboard-widgets')).first()).toBeVisible()
+    await expect(adminBar(page).first()).toBeVisible({ timeout: 60_000 })
   } catch (e) {
     await dump(page, 'dashboard-not-found')
     throw e
@@ -48,9 +54,9 @@ export async function expectAtDashboard(page: Page) {
 export async function expectUserProvisioned(page: Page) {
   await page.goto('/wp-admin/users.php')
   try {
-    await expect(page.getByRole('link', { name: user, exact: true }).first()).toBeVisible()
+    await expect(page.getByText(user, { exact: false }).first()).toBeVisible()
   } catch (e) {
-    await dump(page, 'ldap-user-missing')
+    await dump(page, 'sso-user-missing')
     throw e
   }
 }

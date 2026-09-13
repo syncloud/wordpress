@@ -9,16 +9,19 @@ import (
 	"go.uber.org/zap"
 	"os"
 	"path"
+	"strings"
 	"time"
 )
 
 const App = "wordpress"
 
 type Variables struct {
-	App       string
-	AppDir    string
-	DataDir   string
-	CommonDir string
+	App        string
+	AppDir     string
+	DataDir    string
+	CommonDir  string
+	AuthUrl    string
+	OIDCSecret string
 }
 
 type Installer struct {
@@ -28,6 +31,7 @@ type Installer struct {
 	platformClient     *platform.Client
 	database           *Database
 	installFile        string
+	oidcSecretFile     string
 	appDir             string
 	dataDir            string
 	commonDir          string
@@ -48,6 +52,7 @@ func New(logger *zap.Logger) *Installer {
 		platformClient:     platform.New(),
 		database:           NewDatabase(App, appDir, dataDir, configDir, App, executor, logger),
 		installFile:        path.Join(dataDir, "installed"),
+		oidcSecretFile:     path.Join(dataDir, ".oidc_secret"),
 		appDir:             appDir,
 		dataDir:            dataDir,
 		commonDir:          commonDir,
@@ -110,6 +115,16 @@ func (i *Installer) Configure() error {
 		}
 	}
 
+	err = i.RegisterOIDC()
+	if err != nil {
+		return err
+	}
+
+	err = i.UpdateConfigs()
+	if err != nil {
+		return err
+	}
+
 	err = i.DomainChange()
 	if err != nil {
 		return err
@@ -158,11 +173,6 @@ func (i *Installer) Initialize() error {
 	if err != nil {
 		return err
 	}
-	err = i.updateSettings()
-	if err != nil {
-		return err
-	}
-
 	err = i.wpCli("option", "update", "mo_tour_skipped", "1")
 	if err != nil {
 		return err
@@ -182,32 +192,25 @@ func (i *Installer) wpCli(args ...string) error {
 	return err
 }
 
-func (i *Installer) updateSettings() error {
-	cmds := [][]string{
-		{"option", "update", "mo_ldap_local_register_user", "1"},
-		{"option", "update", "mo_ldap_local_mapping_memberof_attribute", "memberOf"},
-		{"option", "update", "mo_ldap_local_new_registration", "true"},
-		{"option", "update", "mo_ldap_local_enable_admin_wp_login", "1"},
-		{"option", "update", "mo_ldap_local_anonymous_bind", "0"},
-		{"option", "update", "mo_ldap_local_server_url", "ldap://localhost"},
-		{"option", "update", "mo_ldap_local_server_dn", "dc=syncloud,dc=org"},
-		{"option", "update", "mo_ldap_local_server_password", "syncloud"},
-		{"option", "update", "mo_ldap_local_search_filter", "(&(objectClass=*)(cn=?))"},
-		{"option", "update", "mo_ldap_local_search_base", "ou=users,dc=syncloud,dc=org"},
-		{"option", "update", "mo_ldap_local_enable_role_mapping", "1"},
-		{"option", "update", "mo_ldap_local_enable_login", "1"},
-		{"option", "update", "mo_ldap_local_server_url_status", "VALID"},
-		{"option", "update", "mo_ldap_local_service_account_status", "VALID"},
-		{"option", "update", "mo_ldap_local_user_mapping_status", "VALID"},
-		{"option", "update", "mo_ldap_local_mapping_value_default", "administrator"},
+func (i *Installer) RegisterOIDC() error {
+	secret, err := i.platformClient.RegisterOIDCClient(
+		App,
+		"/wp-admin/admin-ajax.php?action=openid-connect-authorize",
+		false,
+		"client_secret_basic",
+	)
+	if err != nil {
+		return err
 	}
-	for _, c := range cmds {
-		if err := i.wpCli(c...); err != nil {
-			return err
-		}
+	return os.WriteFile(i.oidcSecretFile, []byte(secret), 0600)
+}
+
+func (i *Installer) oidcSecret() string {
+	content, err := os.ReadFile(i.oidcSecretFile)
+	if err != nil {
+		return ""
 	}
-	_ = i.wpCli("plugin", "auto-updates", "disable", "--all")
-	return nil
+	return strings.TrimSpace(string(content))
 }
 
 func (i *Installer) Upgrade() error {
@@ -223,11 +226,6 @@ func (i *Installer) Upgrade() error {
 	*/
 
 	err := i.wpCli("core", "update-db")
-	if err != nil {
-		return err
-	}
-
-	err = i.updateSettings()
 	if err != nil {
 		return err
 	}
@@ -298,10 +296,16 @@ func (i *Installer) PostRefresh() error {
 	}
 	// migrate end
 
-	pluginDir := path.Join(i.dataDir, "wp-content", "plugins", "ldap-login-for-intranet-sites")
-	err = os.RemoveAll(pluginDir)
-	if err != nil {
-		return err
+	stale := []string{
+		path.Join(i.dataDir, "wp-content", "plugins", "ldap-login-for-intranet-sites"),
+		path.Join(i.commonDir, "wp-content", "mu-plugins", "ldap-login-for-intranet-sites"),
+		path.Join(i.commonDir, "wp-content", "mu-plugins", "ldap-login-for-intranet-sites.php"),
+	}
+	for _, dir := range stale {
+		err = os.RemoveAll(dir)
+		if err != nil {
+			return err
+		}
 	}
 
 	err = cp.Copy(
@@ -359,11 +363,18 @@ func (i *Installer) UpdateConfigs() error {
 		return err
 	}
 
+	authUrl, err := i.platformClient.GetAppUrl("auth")
+	if err != nil {
+		return err
+	}
+
 	variables := Variables{
-		App:       App,
-		AppDir:    i.appDir,
-		DataDir:   i.dataDir,
-		CommonDir: i.commonDir,
+		App:        App,
+		AppDir:     i.appDir,
+		DataDir:    i.dataDir,
+		CommonDir:  i.commonDir,
+		AuthUrl:    authUrl,
+		OIDCSecret: i.oidcSecret(),
 	}
 
 	err = config.Generate(
