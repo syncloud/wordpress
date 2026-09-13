@@ -199,7 +199,7 @@ func (i *Installer) RegisterOIDC() error {
 		App,
 		[]string{"/wp-admin/admin-ajax.php?action=openid-connect-authorize"},
 		false,
-		"client_secret_basic",
+		"client_secret_post",
 	)
 	if err != nil {
 		return err
