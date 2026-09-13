@@ -97,7 +97,7 @@ define('OIDC_CLIENT_SCOPE', 'openid profile email groups');
 define('SYNCLOUD_AUTH_HOST', '{{ .AuthHost }}');
 define('SYNCLOUD_ADMIN_GROUP', 'syncloud');
 define('SYNCLOUD_AUTH_SOCKET', '/var/snap/platform/current/authelia.socket');
-define('WP_ACCESSIBLE_HOSTS', '{{ .AuthHost }}');
+define('SYNCLOUD_AUTH_LOCAL_HOST', '127.0.0.1');
 define('OIDC_LOGIN_TYPE', 'auto');
 define('OIDC_LINK_EXISTING_USERS', true);
 define('OIDC_CREATE_IF_DOES_NOT_EXIST', true);

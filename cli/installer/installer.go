@@ -379,7 +379,7 @@ func (i *Installer) UpdateConfigs() error {
 		CommonDir:    i.commonDir,
 		AuthUrl:      authUrl,
 		AuthHost:     authHost,
-		AuthLocalUrl: "http://" + authHost,
+		AuthLocalUrl: "http://127.0.0.1",
 		OIDCSecret:   i.oidcSecret(),
 	}
 
