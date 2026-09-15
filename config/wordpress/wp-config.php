@@ -85,6 +85,24 @@ define('WP_DEBUG', false);
 if ( !defined('ABSPATH') )
 	define('ABSPATH', getenv('SNAP') . '/php/wordpress');
 
+
+define('OIDC_CLIENT_ID', '{{ .App }}');
+define('OIDC_CLIENT_SECRET', '{{ .OIDCSecret }}');
+define('OIDC_ISSUER', '{{ .AuthUrl }}');
+define('OIDC_ENDPOINT_LOGIN_URL', '{{ .AuthUrl }}/api/oidc/authorization');
+define('OIDC_ENDPOINT_TOKEN_URL', '{{ .AuthLocalUrl }}/api/oidc/token');
+define('OIDC_ENDPOINT_USERINFO_URL', '{{ .AuthLocalUrl }}/api/oidc/userinfo');
+define('OIDC_ENDPOINT_JWKS_URL', '{{ .AuthLocalUrl }}/jwks.json');
+define('OIDC_CLIENT_SCOPE', 'openid profile email groups');
+define('SYNCLOUD_AUTH_HOST', '{{ .AuthHost }}');
+define('SYNCLOUD_ADMIN_GROUP', 'syncloud');
+define('SYNCLOUD_AUTH_SOCKET', '/var/snap/platform/current/authelia.socket');
+define('SYNCLOUD_AUTH_LOCAL_HOST', '127.0.0.1');
+define('OIDC_LOGIN_TYPE', 'auto');
+define('OIDC_LINK_EXISTING_USERS', true);
+define('OIDC_CREATE_IF_DOES_NOT_EXIST', true);
+define('OIDC_REDIRECT_USER_BACK', true);
+
 require_once(ABSPATH . 'wp-settings.php');
 
 define('FS_METHOD', 'direct');

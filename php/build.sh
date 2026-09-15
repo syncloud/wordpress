@@ -61,7 +61,7 @@ git clone https://github.com/Imagick/imagick.git --depth 1 /tmp/imagick && \
     make install && \
     docker-php-ext-enable imagick
 
-pecl install smbclient
+CFLAGS="${CFLAGS} -D_FILE_OFFSET_BITS=64" pecl install smbclient
 pecl install apcu
 pecl install mcrypt-1.0.7
 pecl install redis

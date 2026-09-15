@@ -45,6 +45,9 @@ apps:
   restore-post-start:
     command: bin/cli restore-post-start
 
+  cli:
+    command: bin/cli
+
   wp-cli:
     command: bin/wp-cli
   
