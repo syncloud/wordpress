@@ -45,6 +45,9 @@ apps:
   restore-post-start:
     command: bin/cli restore-post-start
 
+  cli:
+    command: bin/cli
+
   wp-cli:
     command: bin/wp-cli
   
@@ -52,7 +55,7 @@ apps:
     command: bin/php.sh
     
 confinement: strict
-description: Wordpress
+description: Blogging, mailing lists and forums, media galleries, and online stores
 grade: stable
 name: wordpress
-summary: Wordpress
+summary: WordPress
