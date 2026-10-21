@@ -5,7 +5,7 @@ local wp_cli = '2.12.0';
 
 local go = '1.25';
 local nginx = '1.29.3-alpine3.22';
-local php = '8.3.33-fpm-bookworm';
+local php = '8.3.36-fpm-bookworm';
 local mariadb = '10.5.16-alpine';
 local debian = 'bookworm-slim';
 local python = '3.12-slim-bookworm';
